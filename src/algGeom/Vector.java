@@ -39,27 +39,26 @@ public class Vector extends Point{
 
     /** suma dos puntos (vectores) result = this + b*/
     public Vector suma (Vector b){
-        //XXX
-        return new Vector();
+        return new Vector(x+b.x,y+b.y);
     }
     
     /** resta dos puntos (vectores) result = this - b*/
     public Vector resta (Vector b){
-        //XXX
-        return new Vector();
+        return new Vector(x-b.x,y-b.y);
     }
 
     /** producto escalar: this · b*/
+    /*No es posible de implementar en un espacio 2D
     public double dot (Vector b){
         //XXX
         return 1;
 
     }
+    */
     
     /** producto por un escalar */
     public Vector prodEsc (double t){
-    	//XXX
-        return new Vector();
+        return new Vector(x*t,y*t);
     }
     
 
