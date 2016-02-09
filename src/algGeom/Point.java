@@ -24,7 +24,7 @@ public class Point {
         x = xx;
         y = yy;
     }
-
+    
     /** Crea un nuevo Point copiando el Point p. */
     public Point (Point p) {
         x = p.x;
@@ -41,6 +41,13 @@ public class Point {
         return y;
     }
     
+    /*
+    Ejercicio Constructor a partir de un �ngulo alpha (radianes) y el m�dulo del vector rp
+    */
+    public Point (double alpha, double rp, boolean polar){
+        x = rp*Math.cos(alpha);
+        y = rp*Math.sin(alpha);
+    }
     
     /** constructor a partir de coordenadas polares; considerar el cuadrante**/ 
     //public Point (float alpha, float rp){
@@ -51,11 +58,15 @@ public class Point {
     
     /** devolver el ángulo **/
     public double getAlpha (){
-        return 0; 
+        if(y>0){
+            return Math.atan2(y, x);
+        }
+        return Math.atan2(y, x)+(2*Math.PI); //Solucion a que este en el cuadrante 3 o 4
+
     }
 
     public double getModule () {
-        return 0;
+        return Math.sqrt(Math.pow(x,2)+Math.pow(y,2));
     }
 
     /*dice si dos puntos son prácticamente iguales */
@@ -67,15 +78,14 @@ public class Point {
     /** Obtiene la distancia del Point actual al Point p, calculada como:
      distancia = raiz ((p.x - x)2 + (p.y - y)2). */
     public double distancia (Point p) {
-        return 1;
-    //XXX	
+        return Math.sqrt(((p.x-x)*2)+(p.y-y)*2) ;
+	
     }
 
     /** Obtiene el doble del �rea que forman el tri�ngulo definido por el Point
      actual y los Points a y b, en el orden (*this, a, b). */
     public double areaTriangulo2 (Point a, Point b) {
-       // XXX
-        return 1;
+        return x*a.y-y*a.x+a.x*b.y-a.y*b.x+b.x*y-b.y*x;
     }
     
     
@@ -119,55 +129,72 @@ public class Point {
     public void asignay (double yy) {
         y = yy;
     }
-
-    /** función que clasifica la posición de this con respecto a p1, p2**/
     
+    /** Operacion Resta de punto **/
+    
+    public Point resta(Point a){
+        return (new Point(this.x-a.x,this.y-a.y));
+    }
+    public double modulo(){
+        return Math.sqrt((x*x)+(y*y));
+    }
+    
+    /** función que clasifica la posición de this con respecto a p1, p2**/
     public clasificaPuntoEje clasifica (Point p0, Point p1){
-        Point p2 = this;
-        //XXXX
- 
+        if(izquierda(p0,p1)) return clasificaPuntoEje.IZDA;
+        if(derecha(p0,p1)) return clasificaPuntoEje.DECHA;
+        if(detras(p0,p1)) return clasificaPuntoEje.DETRAS;
+        if(delante(p0,p1)) return clasificaPuntoEje.DELANTE;
+        if(iguales(p0)) return clasificaPuntoEje.ORIGEN;
+        if(iguales(p1)) return clasificaPuntoEje.DESTINO;
         return clasificaPuntoEje.ENMEDIO;
 
     }
 
     /** Indica si el Point esta a la izquierda del segmento definido por los
      Points ab. */
-    public boolean izquierda (Point a, Point b) {
-        //XXXX
-        return true;
+    public boolean izquierda (Point p0, Point p1) {
+        Point p2 = this;
+        Point a = p1.resta(p0);
+        Point b = p2.resta(p0);
+        double sa = a.x * b.y - b.x * a.y;
+        if(sa>BasicGeom.CERO) return true; else return false;
     }
 
     /** Indica si el Point esta a la derecha del segmento definido por los
      Points ab. */
-    public boolean derecha (Point a, Point b) {
-        //XXX
-        return true;
+    public boolean derecha (Point p0, Point p1) {
+        Point p2 = this;
+        Point a = p1.resta(p0);
+        Point b = p2.resta(p0);
+        double sa = a.x * b.y - b.x * a.y;
+        if(sa<BasicGeom.CERO) return true; else return false;
     }
 
     /** Indica si los tres Points son colineales. */
-    public boolean colineal (Point a, Point b) {
-        //XXX
-        return true;
+    public boolean colineal (Point p0, Point p1) {
+    return (!derecha(p0,p1)&&!izquierda(p0,p1));
     }
 
     /** Indica si el Point esta a la izquierda o es colineal al segmento
      definido por los Points ab. */
     public boolean izquierdaSobre (Point a, Point b) {
-        //XXX
-        return true;
+        return (colineal(a,b)&&(izquierda(a,b)));
     }
 
     /** Indica si el Point esta a la derecha o es colineal al segmento definido
      por los Points ab. */
     public boolean derechaSobre (Point a, Point b) {
-        //XXX
-        return true;
+        return (colineal(a,b)&&(derecha(a,b)));
     }
     
     
     /* Dice si está entre o en medio los puntos a y b. */
     public boolean entre (Point a, Point b){
-        //XXXX
+        if(izquierda(a,b)||derecha(a,b)|| colineal(a,b)||izquierdaSobre(a,b) ||
+                derechaSobre(a,b)||delante(a,b)||detras(a,b)){
+            return false;
+        }
         return true;
     }
 
@@ -175,16 +202,14 @@ public class Point {
     /** Indica si el Point esta delante  al segmento definido
      por los Points ab. */
     public boolean delante (Point a, Point b) {
-        //XXX
-        return true;
+        return (a.modulo()<b.modulo());
     }
     
     /** Indica si el Point esta detras  al segmento definido
      por los Points ab.
      **/
     public boolean detras (Point a, Point b) {
-        //XXX
-        return true;
+        return ((a.x*b.x<BasicGeom.CERO)||(a.y*b.y<BasicGeom.CERO));
     }
 
     /** Indica la pendiente que forma con el Point p.
