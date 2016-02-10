@@ -149,15 +149,15 @@ public void asignaby (double yy) {
 /** Indica si el SegmentLine es horizontal, en cuyo caso se devuelve true, y en
  caso contrario se devuelve false. */
 public boolean esHorizontal () {
-    //XXX
-    return true;
+    if (pendiente() == BasicGeom.CERO)return true;
+    return false;
 }	
 
 /** Indica si el SegmentLine es vertical, en cuyo caso se devuelve true, y en
  caso contrario se devuelve false. */
 public boolean esVertical () {
-    //XXX
-    return true;
+    if (pendiente() == BasicGeom.INFINITO)return true;
+    return false;
 }
 
 /** Indica si el Point p esta a la izquierda del SegmentLine. Para ello, se
@@ -172,8 +172,8 @@ Devuelve el punto con dicho valor de t; 0<=t<=1
 */
 
 Point GetPoint (double t){
-	//XXX
-    return new Point();
+    Vector v = new Vector (b.resta(a));
+    return new Point(a.suma(v.prodEsc(t)));
 }
 
 
@@ -201,13 +201,17 @@ public Point getB (){
 
 
 public double pendiente (){
-//XXXX
-    return 0;
+    if(b.x-a.x==BasicGeom.CERO)return BasicGeom.CERO;
+    if(b.y-a.y==BasicGeom.INFINITO) return BasicGeom.INFINITO;
+    return ((b.y-a.y)/(b.x-a.x));
 }
 
 public double getC (){
-	//XXXX
-    return 0;
+    double c=0;
+    if(pendiente()== BasicGeom.INFINITO) return BasicGeom.INFINITO;
+    c = (b.y)-(pendiente()*b.x);
+    if(c<0.0) c*=(-1);
+    return c;
 }
 
 /*

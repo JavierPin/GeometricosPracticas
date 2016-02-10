@@ -135,6 +135,9 @@ public class Point {
     public Point resta(Point a){
         return (new Point(this.x-a.x,this.y-a.y));
     }
+    public Point suma(Point a){
+        return (new Point(this.x+a.x,this.y+a.y));
+    }
     public double modulo(){
         return Math.sqrt((x*x)+(y*y));
     }
