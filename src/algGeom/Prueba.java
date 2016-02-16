@@ -91,13 +91,17 @@ public class Prueba extends Frame implements GLEventListener {
 
 	// called for OpenGL rendering every reshape
 	public void display(GLAutoDrawable drawable) {
-
+           
           // limpiar la pantalla
           gl.glClearColor(0.0f,0.0f,0.0f,0.0f); /* El color de limpiado será cero */
           gl.glClearDepth(1.0);
           gl.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT);
-
-
+          
+          
+          /*HUD*/
+          DrawHud dh= new DrawHud(gl);
+          dh.DrawAxis(gl);
+          
           gl.glPointSize(4);
           Point a = new Point (0,0);
           DrawPoint da = new DrawPoint (a);
@@ -105,7 +109,8 @@ public class Prueba extends Frame implements GLEventListener {
           
 
           
-          Point b = new Point (10, 55);
+          //Point b = new Point (10, 55);
+          Point b = new Point (10, 10);
           DrawPoint db = new DrawPoint (b);
           db.drawObjectC(gl, 0.0f, 0.9f, 0.0f);
           
@@ -113,8 +118,8 @@ public class Prueba extends Frame implements GLEventListener {
           //SegmentLine ab = new SegmentLine (a,b);
           //DrawSegment dab = new DrawSegment (ab);
           //dab.drawObjectC(gl, 1.0f, 0.0f, 0.3f);
-          /*Dibujar un rayo*/
           
+          /*Dibujar un rayo*/
           RayLine rab = new RayLine (a,b);
           DrawRay drab = new DrawRay(rab);
           drab.drawObjectC(gl,0.9f, 0.0f, 0.0f);
