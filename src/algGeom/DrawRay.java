@@ -17,30 +17,82 @@ public class DrawRay extends Draw {
     @Override public void drawObject (GL g){
 
         double ax,ay,bx,by;
-        
-        //XXX dibujar el rayo como un segmento con origen en a y con final en los bordes del canvas
-        
-        /*
+        double m = rl.pendiente();
+        double c = rl.getC();
+       
+        ax = rl.leeax();
+        ay = rl.leeay();
+        bx = rl.leebx();
+        by = rl.leeby();
+       
+        if (m<BasicGeom.INFINITO){ //intersectamos con el lateral
+            if (bx-ax>BasicGeom.CERO){
+                bx = BasicGeom.RANGO;
+                by = m*bx+c;
+            }
+            else{
+                bx = -BasicGeom.RANGO;
+                by = m*bx+c;
+            }
+           
+        } else { //Es una recta perpendicular
+            if(by-ay<BasicGeom.CERO){
+                ax = rl.getA().getX();
+                ay = -BasicGeom.RANGO;
+            }
+            else{
+                bx = rl.getB().getY();
+                by = BasicGeom.RANGO;
+            }
+        }
+       
+       
         ax = convCoordX(ax);
         ay = convCoordX(ay);
         bx = convCoordX(bx);
         by = convCoordX(by);
-        
+       
 
 
         g.glBegin(GL.GL_LINES);
             g.glVertex2d(ax,ay);
             g.glVertex2d(bx,by);//the fourth (w) component is zero!
         g.glEnd();
-        */
+       
     }
 
     @Override public void drawObjectC (GL g, float R, float G, float B){
         double ax,ay,bx,by;
-        
-      //XXX dibujar el rayo como un segmento con origen en a y con final en los bordes del canvas        
-        
-        /*
+        double m = rl.pendiente();
+        double c = rl.getC();
+       
+        ax = rl.leeax();
+        ay = rl.leeay();
+        bx = rl.leebx();
+        by = rl.leeby();
+       
+        if (m<BasicGeom.INFINITO){ //intersectamos con el lateral
+            if (bx-ax>BasicGeom.CERO){
+                bx = BasicGeom.RANGO;
+                by = m*bx+c;
+            }
+            else{
+                bx = -BasicGeom.RANGO;
+                by = m*bx+c;
+            }
+           
+        } else { //Es una recta perpendicular
+            if(by-ay<BasicGeom.CERO){
+                ax = rl.getA().getX();
+                ay = -BasicGeom.RANGO;
+            }
+            else{
+                bx = rl.getB().getY();
+                by = BasicGeom.RANGO;
+            }
+        }
+       
+       
         ax = convCoordX(ax);
         ay = convCoordX(ay);
         bx = convCoordX(bx);
@@ -52,9 +104,7 @@ public class DrawRay extends Draw {
         g.glBegin(GL.GL_LINES);
             g.glVertex2d(ax,ay);
             g.glVertex2d(bx,by);//the fourth (w) component is zero!
-        g.glEnd();
-
-        */       
+        g.glEnd();     
     }
 
 }

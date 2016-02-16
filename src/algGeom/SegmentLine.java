@@ -210,7 +210,6 @@ public double getC (){
     double c=0;
     if(pendiente()== BasicGeom.INFINITO) return BasicGeom.INFINITO;
     c = (b.y)-(pendiente()*b.x);
-    if(c<0.0) c*=(-1);
     return c;
 }
 
@@ -223,10 +222,17 @@ o con colineales y un extremo pertenece al segmento (usar la función Tema2:clas
 */
 
 public boolean intersecSegImpropia (SegmentLine l){
-
-//XXX
-   
-return true;
+    Point a = this.a;
+    Point b = this.b;
+    Point c = l.a;
+    Point d = l.b;
+    if (a.colineal(c,d)  || b.colineal(c,d) || 
+            c.colineal(a,b) || d.colineal(a,b) ){
+        return true;
+    } else {
+        return (a.izquierda(c,d) ^ b.izquierda(c, d)  &&
+                c.izquierda(a,b) ^ d.izquierda(a, b));
+    }
 
 }
 

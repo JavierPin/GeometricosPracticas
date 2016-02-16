@@ -6,6 +6,9 @@ import java.awt.*;
 import javax.media.opengl.*;
 //import java.awt.event.*;
 //import java.util.*;
+import java.io.IOException;
+import java.io.FileNotFoundException;
+
 
 
 //import net.java.games.jogl.*;
@@ -103,11 +106,40 @@ public class Prueba extends Frame implements GLEventListener {
 
           
           Point b = new Point (10, 55);
-          SegmentLine ab = new SegmentLine (a,b);
-          DrawSegment dab = new DrawSegment (ab);
-          dab.drawObjectC(gl, 1.0f, 0.0f, 0.3f);
+          DrawPoint db = new DrawPoint (b);
+          db.drawObjectC(gl, 0.0f, 0.9f, 0.0f);
+          
+          /*Dibuja Segmento*/
+          //SegmentLine ab = new SegmentLine (a,b);
+          //DrawSegment dab = new DrawSegment (ab);
+          //dab.drawObjectC(gl, 1.0f, 0.0f, 0.3f);
+          /*Dibujar un rayo*/
+          
+          RayLine rab = new RayLine (a,b);
+          DrawRay drab = new DrawRay(rab);
+          drab.drawObjectC(gl,0.9f, 0.0f, 0.0f);
+          
+          /*crea poligono-guardar poligono*/
+//          String ruta = "c:/poligono.txt";
+//          String ruta2 = "e:/poligono2.txt";
+//          try{
+//              Polygon poli = new Polygon(ruta);
+//          //    poli.out();
+//              Polygon poli2 = new Polygon(poli);
+//              try{
+//                poli2.salvar(ruta2);
+//              }catch(IOException ex){
+//                System.out.print(ex);
+//              }catch(ErrorAlGuardar ex){
+//                  System.out.print(ex);
+//              }
+//          }catch(IOException ex){
+//              System.out.print(ex);
+//          }catch(ErrorAlLeerFichero ex){
+//              System.out.print(ex);
+//          }
 
-        
+          
 
 /*
         // cuando estén todas las funciones correctamente definidas se verá el resultado
