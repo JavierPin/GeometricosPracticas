@@ -100,7 +100,6 @@ public class Prueba extends Frame implements GLEventListener {
           
           /*HUD*/
           DrawHud dh= new DrawHud(gl);
-          dh.DrawAxis(gl);
           
           gl.glPointSize(4);
           Point a = new Point (0,0);
@@ -111,8 +110,10 @@ public class Prueba extends Frame implements GLEventListener {
           
           //Point b = new Point (10, 55);
           Point b = new Point (10, 10);
-          DrawPoint db = new DrawPoint (b);
-          db.drawObjectC(gl, 0.0f, 0.9f, 0.0f);
+          //DrawPoint db = new DrawPoint (b);
+          //db.drawObjectC(gl, 0.0f, 0.9f, 0.0f);
+          dh.MarcaPunto(b);
+          dh.PuntoAvanzado(b,0.0f, 0.9f, 0.0f);
           
           /*Dibuja Segmento*/
           //SegmentLine ab = new SegmentLine (a,b);
@@ -123,6 +124,25 @@ public class Prueba extends Frame implements GLEventListener {
           RayLine rab = new RayLine (a,b);
           DrawRay drab = new DrawRay(rab);
           drab.drawObjectC(gl,0.9f, 0.0f, 0.0f);
+          
+          /*Dibujar puntos sin mas*/
+          Point pa,pb,pc,pd;
+          pa= new Point (50,60);
+          pb= new Point (-30,20);
+          pc= new Point (-20,-20);
+          pd= new Point (90,-40);
+          dh.PuntoAvanzado(pa,0.9f, 0.9f, 0.9f);
+          dh.PuntoAvanzado(pb,0.9f, 0.9f, 0.9f);
+          dh.PuntoAvanzado(pc,0.9f, 0.9f, 0.9f);
+          dh.PuntoAvanzado(pd,0.9f, 0.9f, 0.9f);
+          
+          /*Segmento pb-pd*/
+          SegmentLine spapb = new SegmentLine(pa,pd);
+          DrawSegment dspapd= new DrawSegment(spapb);
+          dspapd.drawObject(gl);
+          dh.MarcaPunto(pd);
+          dh.MarcaPunto(pa);
+          
           
           /*crea poligono-guardar poligono*/
 //          String ruta = "c:/poligono.txt";
