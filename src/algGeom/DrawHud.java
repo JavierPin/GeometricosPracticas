@@ -72,15 +72,6 @@ public class DrawHud {
    public void PuntoAvanzado (Point p){
        DrawSegment marca;
        
-       SegmentLine sy1 = new SegmentLine(new Point(p.x,p.y+1),
-                                        new Point(p.x,p.y));
-       SegmentLine sy2 = new SegmentLine(new Point(p.x,p.y-1),
-                                        new Point(p.x,p.y));
-       SegmentLine sx1 = new SegmentLine(new Point(p.x-1,p.y),
-                                         new Point(p.x,p.y));
-       SegmentLine sx2 = new SegmentLine(new Point(p.x+1,p.y),
-                                         new Point(p.x,p.y));
-       /*
        SegmentLine sy1 = new SegmentLine(new Point(p.x,p.y+1.2),
                                         new Point(p.x,p.y+0.2));
        SegmentLine sy2 = new SegmentLine(new Point(p.x,p.y-1.5),
@@ -89,7 +80,6 @@ public class DrawHud {
                                          new Point(p.x-0.5,p.y));
        SegmentLine sx2 = new SegmentLine(new Point(p.x+1.2,p.y),
                                          new Point(p.x+0.2,p.y));
-*/
        
        marca= new DrawSegment(sy1);
        marca.drawObjectC(g, R, G, B, 0.01f);
