@@ -91,12 +91,16 @@ public class Prueba extends Frame implements GLEventListener {
 
 	// called for OpenGL rendering every reshape
 	public void display(GLAutoDrawable drawable) {
+           
           // limpiar la pantalla
-          gl.glClearColor(0.0f,0.0f,0.0f,0.0f); /* El color de limpiado ser· cero */
+          gl.glClearColor(0.0f,0.0f,0.0f,0.0f); /* El color de limpiado ser√° cero */
           gl.glClearDepth(1.0);
           gl.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT);
-           
-          /*
+          
+          
+          /*HUD*/
+          DrawHud dh= new DrawHud(gl);
+          
           gl.glPointSize(4);
           Point a = new Point (0,0);
           DrawPoint da = new DrawPoint (a);
@@ -104,57 +108,66 @@ public class Prueba extends Frame implements GLEventListener {
           
 
           
-          Point b = new Point (10, 55);
-          SegmentLine ab = new SegmentLine (a,b);
-          DrawSegment dab = new DrawSegment (ab);
-          dab.drawObjectC(gl, 1.0f, 0.0f, 0.3f);
-          */
-        DrawHud hud= new DrawHud(gl);
-        PointCloud miNube = new PointCloud(16);
-        for(int i=0;i<miNube.nubepuntos.size();i++){
-            hud.PuntoAvanzado(miNube.getPunto(i),0.9f,0.9f,0.9f);
-        }
-        SegmentLine sA =new SegmentLine (miNube.getPunto(0),miNube.getPunto(1));
-        SegmentLine sB =new SegmentLine (miNube.getPunto(2),miNube.getPunto(3));
-        DrawSegment ds =new DrawSegment (sA);
-        ds.drawObject(gl);
-        ds =new DrawSegment (sB);
-        ds.drawObject(gl);
-        
-        RayLine rA =new RayLine (miNube.getPunto(4),miNube.getPunto(5));
-        RayLine rB =new RayLine (miNube.getPunto(6),miNube.getPunto(7));
-        DrawRay dr =new DrawRay (rA);
-        dr.drawObjectC(gl, 0.0f,0.9f,0.0f);
-        dr =new DrawRay (rB);
-        dr.drawObjectC(gl, 0.0f,0.9f,0.0f);
-        
-        Line lA =new Line (miNube.getPunto(8),miNube.getPunto(9));
-        Line lB =new Line (miNube.getPunto(10),miNube.getPunto(11));
-        DrawLine dl =new DrawLine (lA);
-        dl.drawObjectC(gl, 0.0f,0.0f,0.9f);
-        dl =new DrawLine (lB);
-        dl.drawObjectC(gl, 0.0f,0.0f,0.9f);
-        
-        Polygon pA =new Polygon ();
-        Vertex v = new Vertex(miNube.getPunto(12));
-        pA.Vertexs.add(v);
-        pA.nVertexs++;
-        v = new Vertex(miNube.getPunto(13));
-        pA.Vertexs.add(v);
-        pA.nVertexs++;
-        v = new Vertex(miNube.getPunto(14));
-        pA.Vertexs.add(v);
-        pA.nVertexs++;
-        v = new Vertex(miNube.getPunto(15));
-        pA.Vertexs.add(v);
-        pA.nVertexs++;
-        DrawPolygon dp = new DrawPolygon(pA);
-        dp.drawObjectC(gl,0.3f,0.5f,0.f );
-        
-        hud.MarcaPunto(miNube.getPunto(15));
-        
+          //Point b = new Point (10, 55);
+          Point b = new Point (10, 10);
+          //DrawPoint db = new DrawPoint (b);
+          //db.drawObjectC(gl, 0.0f, 0.9f, 0.0f);
+          dh.MarcaPunto(b);
+          dh.PuntoAvanzado(b,0.0f, 0.9f, 0.0f);
+          
+          /*Dibuja Segmento*/
+          //SegmentLine ab = new SegmentLine (a,b);
+          //DrawSegment dab = new DrawSegment (ab);
+          //dab.drawObjectC(gl, 1.0f, 0.0f, 0.3f);
+          
+          /*Dibujar un rayo*/
+          RayLine rab = new RayLine (a,b);
+          DrawRay drab = new DrawRay(rab);
+          drab.drawObjectC(gl,0.9f, 0.0f, 0.0f);
+          
+          /*Dibujar puntos sin mas*/
+          Point pa,pb,pc,pd;
+          pa= new Point (50,60);
+          pb= new Point (-30,20);
+          pc= new Point (-20,-20);
+          pd= new Point (90,-40);
+          dh.PuntoAvanzado(pa,0.9f, 0.9f, 0.9f);
+          dh.PuntoAvanzado(pb,0.9f, 0.9f, 0.9f);
+          dh.PuntoAvanzado(pc,0.9f, 0.9f, 0.9f);
+          dh.PuntoAvanzado(pd,0.9f, 0.9f, 0.9f);
+          
+          /*Segmento pb-pd*/
+          SegmentLine spapb = new SegmentLine(pa,pd);
+          DrawSegment dspapd= new DrawSegment(spapb);
+          dspapd.drawObject(gl);
+          dh.MarcaPunto(pd);
+          dh.MarcaPunto(pa);
+          
+          
+          /*crea poligono-guardar poligono*/
+//          String ruta = "c:/poligono.txt";
+//          String ruta2 = "e:/poligono2.txt";
+//          try{
+//              Polygon poli = new Polygon(ruta);
+//          //    poli.out();
+//              Polygon poli2 = new Polygon(poli);
+//              try{
+//                poli2.salvar(ruta2);
+//              }catch(IOException ex){
+//                System.out.print(ex);
+//              }catch(ErrorAlGuardar ex){
+//                  System.out.print(ex);
+//              }
+//          }catch(IOException ex){
+//              System.out.print(ex);
+//          }catch(ErrorAlLeerFichero ex){
+//              System.out.print(ex);
+//          }
+
+          
+
 /*
-        // cuando estÈn todas las funciones correctamente definidas se ver· el resultado
+        // cuando est√©n todas las funciones correctamente definidas se ver√° el resultado
           Point a = new Point (20,40); DrawPoint aa = new DrawPoint (a);
           Point b = new Point (50,71); DrawPoint bb = new DrawPoint (b);
           aa.drawObject(gl);
@@ -177,7 +190,6 @@ public class Prueba extends Frame implements GLEventListener {
 
 
 	}
-
 
 	// called if display mode or device are changed
 	public void displayChanged(GLAutoDrawable drawable, boolean modeChanged,

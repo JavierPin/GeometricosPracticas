@@ -184,14 +184,7 @@ public class Polygon {
      */
    
     boolean convexo (){
-    	  for (int i=0; i<nVertexs;i++){
-           
-            if (Vertexs.get(i).convexo()==false){
-               
-                return false;
-            }  
-        }
-        
+    	 //XXX
       return true;
     }
         
