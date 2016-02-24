@@ -101,8 +101,9 @@ public class Vertex extends Point {
      * @return true si es convexo, false en otro caso
      */
     boolean convexo (){
-       //XXX
-        return true;
+        Vertex siguiente = new Vertex (siguiente());
+        Vertex anterior = new Vertex (anterior());
+        return (siguiente.izquierda(anterior, this));
     }
 
     /**
@@ -120,16 +121,14 @@ public class Vertex extends Point {
      * @return  Devuelve el siguiente vértice en el polígono en sentido antihorario
      * */
     public Vertex siguiente (){
-        //XXX
-        return new Vertex();
+        return polig.lee((posicion+1)%(polig.numeroVertices()));
     }
 
     /** @return Devuelve el siguiente vértice en el polígono en sentido horario
      * 
      * */
     public Vertex anterior (){
-        //XXX
-        return new Vertex();
+        return polig.lee((posicion-1+polig.numeroVertices())%(polig.numeroVertices()));
     }
 
 
