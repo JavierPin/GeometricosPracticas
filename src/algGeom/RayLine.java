@@ -15,22 +15,43 @@ public class RayLine extends SegmentLine{
     @Override
     public boolean intersecta (Line r, Vector interseccion){
         double s=0,t=0;
-        return(intersecta(new Vector(r.a),new Vector(r.b),s,t)
-               &&(s>=0));
+        if(intersecta(new Vector(r.a),new Vector(r.b),s,t)
+               &&(s>=0)){
+                //Calculo el punto de interseccion
+        interseccion.asignax(b.resta(a).x*s + a.x);
+        interseccion.asignay(b.resta(a).y*s + a.y);
+            return true;
+        }else{
+            return false;
+        }
     }
     
     @Override
     public boolean intersecta (RayLine r, Vector interseccion){
         double s=0,t=0;
-        return(intersecta(new Vector(r.a),new Vector(r.b),s,t)
-               &&(s>=0) && t>=0);
+        if(intersecta(new Vector(r.a),new Vector(r.b),s,t)
+               &&(s>=0) && t>=0){
+                //Calculo el punto de interseccion
+        interseccion.asignax(b.resta(a).x*s + a.x);
+        interseccion.asignay(b.resta(a).y*s + a.y);
+            return true;
+        }else{
+            return false;
+        }
     }
     
         @Override
     public boolean intersecta (SegmentLine r, Vector interseccion){
         double s=0,t=0;
-        return(intersecta(new Vector(r.a),new Vector(r.b),s,t)
-               &&(s>=0) && (t>=0 && t<=1));
+        if(intersecta(new Vector(r.a),new Vector(r.b),s,t)
+               &&(s>=0) && (t>=0 && t<=1)){
+                //Calculo el punto de interseccion
+        interseccion.asignax(b.resta(a).x*s + a.x);
+        interseccion.asignay(b.resta(a).y*s + a.y);
+            return true;
+        }else{
+            return false;
+        }
     }
     
     
