@@ -12,14 +12,33 @@ public class RayLine extends SegmentLine{
         b = s.b;
     }
  
+    public float distPuntoRayo(Vector p){
+        
+        Vector m = new Vector(b.x-a.x,b.y-a.y);
+        Vector b = new Vector(a.x,a.y);
+        
+        double t0 = ((m.dot(p.resta(b)))/(m.dot(m)));
+        
+        if (t0<=BasicGeom.CERO){
+            
+            return (float)(p.resta(b)).modulo();
+        }
+        else{
+            
+            return (float)(p.resta(b.suma(m.prodEsc(t0)))).modulo();
+        }
+        
+    }
+    
     @Override
     public boolean intersecta (Line r, Vector interseccion){
-        double s=0,t=0;
+        double[] t = new double[1];
+        double[] s = new double[1];
         if(intersecta(new Vector(r.a),new Vector(r.b),s,t)
-               &&(s>=0)){
+               &&(s[0]>=0)){
                 //Calculo el punto de interseccion
-        interseccion.asignax(b.resta(a).x*s + a.x);
-        interseccion.asignay(b.resta(a).y*s + a.y);
+        interseccion.asignax(b.resta(a).x*s[0] + a.x);
+        interseccion.asignay(b.resta(a).y*s[0] + a.y);
             return true;
         }else{
             return false;
@@ -28,12 +47,13 @@ public class RayLine extends SegmentLine{
     
     @Override
     public boolean intersecta (RayLine r, Vector interseccion){
-        double s=0,t=0;
+        double[] t = new double[1];
+        double[] s = new double[1];
         if(intersecta(new Vector(r.a),new Vector(r.b),s,t)
-               &&(s>=0) && t>=0){
+               &&(s[0]>=0) && t[0]>=0){
                 //Calculo el punto de interseccion
-        interseccion.asignax(b.resta(a).x*s + a.x);
-        interseccion.asignay(b.resta(a).y*s + a.y);
+        interseccion.asignax(b.resta(a).x*s[0] + a.x);
+        interseccion.asignay(b.resta(a).y*s[0] + a.y);
             return true;
         }else{
             return false;
@@ -42,18 +62,18 @@ public class RayLine extends SegmentLine{
     
         @Override
     public boolean intersecta (SegmentLine r, Vector interseccion){
-        double s=0,t=0;
+        double[] t = new double[1];
+        double[] s = new double[1];
         if(intersecta(new Vector(r.a),new Vector(r.b),s,t)
-               &&(s>=0) && (t>=0 && t<=1)){
+               &&(s[0]>=0) && (t[0]>=0 && t[0]<=1)){
                 //Calculo el punto de interseccion
-        interseccion.asignax(b.resta(a).x*s + a.x);
-        interseccion.asignay(b.resta(a).y*s + a.y);
+        interseccion.asignax(b.resta(a).x*s[0] + a.x);
+        interseccion.asignay(b.resta(a).y*s[0] + a.y);
             return true;
         }else{
             return false;
         }
     }
-    
     
     /** Muestra en pantalla la informacion del RayLine. */
     public void out () {

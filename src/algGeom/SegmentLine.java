@@ -29,14 +29,11 @@ public SegmentLine (double ax, double ay, double bx, double by) {
     b = new Point (bx,by);
 }
 
-
-
 /** Obtiene el doble area formada por el triangulo compuesto por el 
  SegmentLine actual y la union de los extremos de dicho SegmentLine con el Point p. */
 public double areaTriangulo2 (Point p) {
     return p.areaTriangulo2 (a,b);
 }
-
 
 /** Devuelve la longitud del SegmentLine, utilizando el metodo distancia de la
  clase Point. */
@@ -149,15 +146,15 @@ public void asignaby (double yy) {
 /** Indica si el SegmentLine es horizontal, en cuyo caso se devuelve true, y en
  caso contrario se devuelve false. */
 public boolean esHorizontal () {
-    if (pendiente() == BasicGeom.CERO)return true;
-    return false;
+    if (Math.abs(a.x - b.x)>BasicGeom.CERO) return false;
+    return true;
 }	
 
 /** Indica si el SegmentLine es vertical, en cuyo caso se devuelve true, y en
  caso contrario se devuelve false. */
 public boolean esVertical () {
-    if (pendiente() == BasicGeom.INFINITO)return true;
-    return false;
+    if (Math.abs(a.y - b.y)>BasicGeom.CERO) return false;
+    return true;
 }
 
 /** Indica si el Point p esta a la izquierda del SegmentLine. Para ello, se
@@ -166,16 +163,13 @@ public boolean izquierda (Point p) {
     return p.izquierda (a,b);
 }
 
-/*
+/**
 Devuelve el punto con dicho valor de t; 0<=t<=1
 @param t: a + t (b-a)
 */
-
 Point GetPoint (double t){
-    Vector v = new Vector (b.resta(a));
-    return new Point(a.suma(v.prodEsc(t)));
+    return new Point(a.x+t*(b.x-a.x), a.y+t*(b.y-a.y));
 }
-
 
 public boolean intersectaSegmento (SegmentLine l){
     //Point a = this.a;
@@ -190,7 +184,6 @@ public boolean intersectaSegmento (SegmentLine l){
     }
 }
 
-
 public Point getA (){
     return a;
 }
@@ -199,63 +192,79 @@ public Point getB (){
     return b;
 }
 
-
 public double pendiente (){
-    if(b.x-a.x==BasicGeom.CERO)return BasicGeom.CERO;
-    if(b.y-a.y==BasicGeom.INFINITO) return BasicGeom.INFINITO;
-    return ((b.y-a.y)/(b.x-a.x));
+    if ((b.x-a.x) == BasicGeom.CERO) return BasicGeom.CERO;
+    if ((b.y-a.y) == BasicGeom.INFINITO) return BasicGeom.INFINITO;
+    return (b.y-a.y)/(b.x-a.x);
 }
 
 public double getC (){
-    double c=0;
-    if(pendiente()== BasicGeom.INFINITO) return BasicGeom.INFINITO;
-    c = (b.y)-(pendiente()*b.x);
-    return c;
+    if (pendiente() == BasicGeom.INFINITO) return BasicGeom.INFINITO;
+    if (pendiente() == BasicGeom.CERO) return BasicGeom.CERO;
+    return b.y-(pendiente()*b.x);
 }
 
-/*
+/**
 Devuelve true si dos segmentos intersectan de forma propia o impropia. 
 @param: l: segmento con el que puede intersectar
 nota: dos segmentos intersectan de forma impropia cuando se cruzan (intersección propia)
 o con colineales y un extremo pertenece al segmento (usar la función Tema2:clasifica())
 
 */
-
 public boolean intersecSegImpropia (SegmentLine l){
-    Point a = this.a;
-    Point b = this.b;
+   
     Point c = l.a;
     Point d = l.b;
-    if (a.colineal(c,d)  || b.colineal(c,d) || 
-            c.colineal(a,b) || d.colineal(a,b) ){
+    if (a.colineal(c,d)  || b.colineal(c,d) || c.colineal(a,b) || d.colineal(a,b) ){
         return true;
     } else {
-        return (a.izquierda(c,d) ^ b.izquierda(c, d)  &&
-                c.izquierda(a,b) ^ d.izquierda(a, b));
+        return (a.izquierda(c,d) ^ b.izquierda(c, d) && c.izquierda(a,b) ^ d.izquierda(a, b));
     }
+}
 
+public float distPuntoSegmento(Vector p){
+    
+    Vector m = new Vector(b.x-a.x,b.y-a.y);
+    Vector b = new Vector(a.x,a.y);
+
+    double t0 = ((m.dot(p.resta(b)))/(m.dot(m)));
+
+    if (t0<=BasicGeom.CERO){
+
+        return (float)(p.resta(b)).modulo();
+    }
+    else if ((BasicGeom.CERO<t0)&&(t0<1)){
+
+        return (float)(p.resta(b.suma(m.prodEsc(t0)))).modulo();
+    }
+    else{
+        
+        return (float)(p.resta(b.suma(m))).modulo();
+    }
+        
 }
 
 /*
 interseccion dos rectas
 */
-protected boolean intersecta(Vector C, Vector D, double s, double t){
+protected boolean intersecta(Vector C, Vector D, double[] s, double[] t){
     Vector cd,ac,ab;
     cd= new Vector(D.resta(C));
     ac= new Vector(C.x-a.x,C.y-a.y);
     ab= new Vector(b.x-a.x,b.y-b.x);
     double nume,deno;
-    
+   
     deno = (cd.x*ab.y) - (ab.x*cd.y);
     if (deno==0.0f){
-        s= 0;
-        t= 0;
+        s[0]= 0;
+        t[0]= 0;
         return false;
     }else{
         nume = (cd.x*ac.y) - (ac.x*cd.y);
-        s = nume/deno;
+        s[0] = nume/deno;
         nume = (ab.x-ac.y) - (ac.x*ab.y);
-        t= nume/deno;
+        t[0]= nume/deno;
+        System.out.println(s+", "+t);
         return true;
     }
 }
@@ -264,13 +273,13 @@ protected boolean intersecta(Vector C, Vector D, double s, double t){
 interseccion segmento recta
 */
 public boolean intersecta (Line r, Vector interseccion){
-    double s=0,t=0;
+    double[] t = new double[1];
+    double[] s = new double[1];
     if(intersecta(new Vector(r.a),new Vector(r.b),s,t)
-            && (s>=0 && s<=1)){
+            && (s[0]>=0 && s[0]<=1)){
         //Calculo el punto de interseccion
-        interseccion.asignax(b.resta(a).x*s + a.x);
-        interseccion.asignay(b.resta(a).y*s + a.y);
-        
+        interseccion.asignax(b.resta(a).x*s[0] + a.x);
+        interseccion.asignay(b.resta(a).y*s[0] + a.y);
         return true;
     }else{
         return false;
@@ -281,12 +290,13 @@ public boolean intersecta (Line r, Vector interseccion){
 interseccion segmento rayo
 */
 public boolean intersecta (RayLine r, Vector interseccion){
-    double s=0,t=0;
+    double[] t = new double[1];
+    double[] s = new double[1];
     if(intersecta(new Vector(r.a),new Vector(r.b),s,t)
-            && (s>=0 && s<=1) && t>=0){
+            && (s[0]>=0 && s[0]<=1) && t[0]>=0){
         //Calculo el punto de interseccion
-        interseccion.asignax(b.resta(a).x*s + a.x);
-        interseccion.asignay(b.resta(a).y*s + a.y);
+        interseccion.asignax(b.resta(a).x*s[0] + a.x);
+        interseccion.asignay(b.resta(a).y*s[0] + a.y);
         return true;
     }else{
         return false;
@@ -297,12 +307,13 @@ public boolean intersecta (RayLine r, Vector interseccion){
 interseccion segmento rayo
 */
 public boolean intersecta (SegmentLine r, Vector interseccion){
-    double s=0,t=0;
+    double[] t = new double[1];
+    double[] s = new double[1];
     if(intersecta(new Vector(r.a),new Vector(r.b),s,t)
-            && (s>=0 && s<=1) && (t>=0 && t<=1)){
+            && (s[0]>=0 && s[0]<=1) && (t[0]>=0 && t[0]<=1)){
         //Calculo el punto de interseccion
-        interseccion.asignax(b.resta(a).x*s + a.x);
-        interseccion.asignay(b.resta(a).y*s + a.y);
+        interseccion.asignax(b.resta(a).x*s[0] + a.x);
+        interseccion.asignay(b.resta(a).y*s[0] + a.y);
         return true;
     }else{
         return false;

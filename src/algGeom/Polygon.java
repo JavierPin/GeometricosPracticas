@@ -1,15 +1,10 @@
 package algGeom;
 
 
+import java.io.*;
 import java.util.*;
-import java.io.BufferedReader;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /** Representa un Polygon con nVertexs Vertexs. */
 public class Polygon {
@@ -102,7 +97,7 @@ public class Polygon {
     }
     
     
-    /** Devuelve una copia del vÔøΩrtice v que ocupa la posiciÔøΩn pos. */
+    /** Devuelve una copia del vÈrtice v que ocupa la posiciÛn pos. */
     public Vertex leeAsigna (int pos) {
         if (pos >= 0 && pos < nVertexs)
             return new Vertex ((Vertex) Vertexs.get(pos));
@@ -110,7 +105,7 @@ public class Polygon {
             return null;
     }
     
-    /** Devuelve el nÔøΩmero de vÔøΩrtices que tiene el polÔøΩgono. */
+    /** Devuelve el n˙mero de vÈrtices que tiene el polÌgono. */
     public int numeroVertices () {
         return nVertexs;
     }
@@ -128,21 +123,29 @@ public class Polygon {
      * @throws ErrorAlLeerFichero excepci√≥n si hay error en la lectura del fichero 
      */
     public Polygon (String nombre) throws ErrorAlLeerFichero, IOException{
-        double x,y;
+        
         Vertexs = new ArrayList<Vertex>();
-        nVertexs= 0;
-        String cadena;
-        FileReader f = new FileReader(nombre);
-        BufferedReader b = new BufferedReader(f);
-        while((cadena = b.readLine())!=null) {
-            x= Double.parseDouble(cadena.split(",", 2)[0]);
-            y= Double.parseDouble(cadena.split(",", 2)[1]);
-            Vertexs.add((new Vertex(new Point(x,y))));
-            nVertexs++;
+        
+        int pos=0;
+
+        Scanner scanner = new Scanner(new FileReader(nombre));
+
+        while (scanner.hasNextLine()) {
+
+            Scanner line = new Scanner(scanner.nextLine());
+            line.useDelimiter(",");
+
+            while (line.hasNext()){
+
+                Vertexs.add(new Vertex(new Point(Double.parseDouble(line.next()),Double.parseDouble(line.next())),this,pos));
+                pos++;
+            }
         }
         
-      b.close();
-    
+        scanner.close();
+
+        nVertexs = Vertexs.size();
+
     }
     
     /**
@@ -150,20 +153,14 @@ public class Polygon {
      * @param nombre del fichero 
      * @throws ErrorAlGuardar, se lanza una excepci√≥n si exite alg√∫n problema al abrir el fichero
      */
-    public void salvar(String nombre) throws ErrorAlGuardar,IOException{
-        BufferedWriter bw;
-        bw = new BufferedWriter(new FileWriter(nombre));
+    public void salvar(String nombre) throws ErrorAlGuardar, IOException{
         
-        String linea=null;
+        BufferedWriter bw = new BufferedWriter(new FileWriter(nombre));
         
-        for (int i = 0;i < nVertexs;i++) {
-            if(i>0){
-                bw.newLine();
-            }
-           linea=(Double.toString(Vertexs.get(i).getX())+","+Double.toString(Vertexs.get(i).getY()));
-           bw.write(linea);            
+        for (int i=0; i<nVertexs; i++) {
+            bw.write(Vertexs.get(i).x+","+Vertexs.get(i).y+ "\r");
         }
-
+        
         bw.close();
     }
 
@@ -184,17 +181,34 @@ public class Polygon {
      */
    
     boolean convexo (){
-    	  for (int i=0; i<nVertexs;i++){
-           
+              
+        for (int i=0; i<nVertexs;i++){
+            
             if (Vertexs.get(i).convexo()==false){
-               
+                
                 return false;
-            }  
+            }
+            
         }
         
-      return true;
+        return true;
     }
         
+  
+    boolean concavo (){
+              
+        for (int i=0; i<nVertexs;i++){
+            
+            if (Vertexs.get(i).concavo()==false){
+                
+                return false;
+            }
+            
+        }
+        
+        return true;
+    }
+
     public boolean intersecta (Line r, Vector interseccion){
         //toca recorer todos los segmentos que forman las aristas
         SegmentLine s;

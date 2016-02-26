@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- You may freely edit this file. See commented blocks below for -->
 <!-- some examples of how to customize the build. -->
-<project name="practica1geometricos" default="default" basedir=".">
-    <description>Builds, tests, and runs the project practica1geometricos.</description>
+<project name="SimpleJOGL" default="default" basedir=".">
+    <description>Builds, tests, and runs the project SimpleJOGL.</description>
     <import file="nbproject/build-impl.xml"/>
     <import file="nbproject/build-jogl-template-impl.xml"/>
     <!--

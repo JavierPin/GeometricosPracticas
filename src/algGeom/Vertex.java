@@ -26,7 +26,7 @@ public class Vertex extends Point {
         polig = null;
     }
 
-    /** Construye un polígono dado un punto y su polígono asociado*/
+    /** Construye un v�rtice dado un punto y su pol�gono asociado*/
     public Vertex (Point p, Polygon pol) {
         x = p.x; y=p.y;
 	posicion = -1;
@@ -102,7 +102,7 @@ public class Vertex extends Point {
      */
     boolean convexo (){
         Vertex siguiente = new Vertex (siguiente());
-        Vertex anterior = new Vertex (anterior());
+        Vertex anterior = new Vertex (anterior());      
         return (siguiente.izquierda(anterior, this));
     }
 
@@ -112,8 +112,9 @@ public class Vertex extends Point {
      */
     
     boolean concavo (){
-	   //XXX
-        return true;
+	Vertex siguiente = new Vertex (siguiente());
+        Vertex anterior = new Vertex (anterior());      
+        return (siguiente.derecha(anterior, this));
     }
     
 
@@ -121,6 +122,7 @@ public class Vertex extends Point {
      * @return  Devuelve el siguiente vértice en el polígono en sentido antihorario
      * */
     public Vertex siguiente (){
+        
         return polig.lee((posicion+1)%(polig.numeroVertices()));
     }
 
@@ -128,20 +130,19 @@ public class Vertex extends Point {
      * 
      * */
     public Vertex anterior (){
+        
         return polig.lee((posicion-1+polig.numeroVertices())%(polig.numeroVertices()));
     }
 
 
     /** @return Devuelve la arista con origen en el vértice en sentido antihorario*/
     public SegmentLine ejeSig (){
-        //XXX
-        return new SegmentLine();
+        return new SegmentLine(polig.lee(posicion),polig.lee(posicion+1));
     }
 
     /** @return Devuelve la arista con origen en el vértice en sentido horario*/
     public SegmentLine ejeAnt (){
-        //XXX
-        return new SegmentLine();
+        return new SegmentLine(polig.lee(posicion),polig.lee(posicion-1));
     }
 
     

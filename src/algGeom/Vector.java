@@ -39,29 +39,25 @@ public class Vector extends Point{
 
     /** suma dos puntos (vectores) result = this + b*/
     public Vector suma (Vector b){
-        return new Vector(x+b.x,y+b.y);
+        return new Vector(x+b.x, y+b.y);
     }
     
     /** resta dos puntos (vectores) result = this - b*/
     public Vector resta (Vector b){
-        return new Vector(x-b.x,y-b.y);
+        return new Vector(x-b.x, y-b.y);
     }
 
-    /** producto escalar: this · b* en base ortogonales
-     v ( x1 , y1 ) u ( x2 , y2 ) ---> v * u = x1 * x2 + y1 * y2 */
+    /** producto escalar: this · b*/
     public double dot (Vector b){
-        return ((x*b.x) + (y*b.y));
+        return (x*b.x+y*b.y);
+
     }
     
     /** producto por un escalar */
     public Vector prodEsc (double t){
         return new Vector(x*t,y*t);
     }
-    public Vector prodEsc (Vector t){
-        return new Vector(x*t.x,y*t.y);
-    }
-    
-
+        
     /** Obtiene un Vector copia del actual. */
     public  Vector copia () {
         return new Vector (x,y);
@@ -72,7 +68,6 @@ public class Vector extends Point{
         x = v.x;
         y = v.y;
     }
-
 
     /** Devuelve el Vector para ser leido. */
     public Vector get () {
@@ -88,7 +83,11 @@ public class Vector extends Point{
     public double modulo (){
         return Math.sqrt(x*x+y*y);
     }
-    public Vector perpendicular (){
+    
+    public Vector perpendicular(){
+    
         return new Vector(-y,x);
+    
     }
+
 }

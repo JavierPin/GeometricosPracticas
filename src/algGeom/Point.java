@@ -24,13 +24,21 @@ public class Point {
         x = xx;
         y = yy;
     }
-    
+
     /** Crea un nuevo Point copiando el Point p. */
     public Point (Point p) {
         x = p.x;
         y = p.y;
     }
-
+    
+    /** Crea un nuevo Point con coordenadas polares Alpha y RP igual a xx e yy */
+    public Point (double alpha, double rp, boolean polar){
+        
+        x = rp * Math.cos(alpha);
+        y = rp * Math.sin(alpha);
+        
+    }
+    
     /** get x*/
     public double getX(){
         return x;
@@ -41,32 +49,20 @@ public class Point {
         return y;
     }
     
-    /*
-    Ejercicio Constructor a partir de un ángulo alpha (radianes) y el módulo del vector rp
-    */
-    public Point (double alpha, double rp, boolean polar){
-        x = rp*Math.cos(alpha);
-        y = rp*Math.sin(alpha);
-    }
-    
-    /** constructor a partir de coordenadas polares; considerar el cuadrante**/ 
-    //public Point (float alpha, float rp){
-    //  x = alpha;
-    //  y = rp; 
-    //}
-    
-    
-    /** devolver el Ã¡ngulo **/
+    /** devolver el Ángulo **/
     public double getAlpha (){
-        if(y>0){
-            return Math.atan2(y, x);
+        
+        if (y<0){
+            
+            return Math.atan2(y, x)+(2*Math.PI);
+            
         }
-        return Math.atan2(y, x)+(2*Math.PI); //Solucion a que este en el cuadrante 3 o 4
-
+        return Math.atan2(y, x);
     }
 
+    /** devolver el Módulo **/
     public double getModule () {
-        return Math.sqrt(Math.pow(x,2)+Math.pow(y,2));
+        return Math.sqrt(Math.pow(x, 2)+Math.pow(y, 2));
     }
 
     /*dice si dos puntos son prÃ¡cticamente iguales */
@@ -75,19 +71,16 @@ public class Point {
 
     }
 
-    /** Obtiene la distancia del Point actual al Point p, calculada como:
-     distancia = raiz ((p.x - x)2 + (p.y - y)2). */
+    /** Obtiene la distancia del Point actual al Point p */
     public double distancia (Point p) {
-        return Math.sqrt(((p.x-x)*2)+(p.y-y)*2) ;
-	
+        return Math.sqrt((Math.pow(p.x-x,2))+(Math.pow(p.y-y, 2)));	
     }
 
-    /** Obtiene el doble del ï¿½rea que forman el triï¿½ngulo definido por el Point
+    /** Obtiene el doble del ï¿½rea que forman el triángulo definido por el Point
      actual y los Points a y b, en el orden (*this, a, b). */
     public double areaTriangulo2 (Point a, Point b) {
-        return x*a.y-y*a.x+a.x*b.y-a.y*b.x+b.x*y-b.y*x;
+        return (x*a.y-y*a.x+a.x*b.y-a.y*b.x+b.x*y-b.y*x);
     }
-    
     
     /** Compara el Point actual con el Point p, devolviendo true si son
      distintos (si alguna de las coordenadas no coinciden), y false en caso contrario. */
@@ -105,7 +98,6 @@ public class Point {
         x = p.x;
         y = p.y;
     }
-
 
     /** Devuelve el Point para ser leido. */
     public Point get () {
@@ -129,27 +121,29 @@ public class Point {
     public void asignay (double yy) {
         y = yy;
     }
-    
-    /** Operacion Resta de punto **/
-    
-    public Point resta(Point a){
-        return (new Point(this.x-a.x,this.y-a.y));
-    }
-    public Point suma(Point a){
-        return (new Point(this.x+a.x,this.y+a.y));
-    }
-    public double modulo(){
-        return Math.sqrt((x*x)+(y*y));
-    }
-    
+
     /** funciÃ³n que clasifica la posiciÃ³n de this con respecto a p1, p2**/
     public clasificaPuntoEje clasifica (Point p0, Point p1){
-        if(izquierda(p0,p1)) return clasificaPuntoEje.IZDA;
-        if(derecha(p0,p1)) return clasificaPuntoEje.DECHA;
-        if(detras(p0,p1)) return clasificaPuntoEje.DETRAS;
-        if(delante(p0,p1)) return clasificaPuntoEje.DELANTE;
-        if(iguales(p0)) return clasificaPuntoEje.ORIGEN;
-        if(iguales(p1)) return clasificaPuntoEje.DESTINO;
+        Point p2 = this;
+        
+        Vector a = new Vector(p1).resta(new Vector(p0));
+        Vector b = new Vector(p2).resta(new Vector(p0));
+        double sa = a.x*b.y-b.x*a.y;
+        
+        if (sa > 0.0) return clasificaPuntoEje.IZDA;
+        if (sa < 0.0) return clasificaPuntoEje.DECHA;
+        if ((a.x*b.x < 0.0)||(a.y*b.y<0.0)) return clasificaPuntoEje.DETRAS;
+        if (a.modulo() < b.modulo()) return clasificaPuntoEje.DELANTE;
+        if (p0.iguales(p2)) return clasificaPuntoEje.ORIGEN;
+        if (p1.iguales(p2)) return clasificaPuntoEje.DESTINO;
+        
+        /*if (izquierda(p0,p1)) return clasificaPuntoEje.IZDA;
+        if (derecha(p0,p1)) return clasificaPuntoEje.DECHA;
+        if (detras(p0,p1)) return clasificaPuntoEje.DETRAS;
+        if (delante(p0,p1)) return clasificaPuntoEje.DELANTE;
+        if (p0.iguales(p2)) return clasificaPuntoEje.ORIGEN;
+        if (p1.iguales(p2)) return clasificaPuntoEje.DESTINO;*/
+ 
         return clasificaPuntoEje.ENMEDIO;
 
     }
@@ -158,61 +152,111 @@ public class Point {
      Points ab. */
     public boolean izquierda (Point p0, Point p1) {
         Point p2 = this;
-        Point a = p1.resta(p0);
-        Point b = p2.resta(p0);
-        double sa = a.x * b.y - b.x * a.y;
-        if(sa>BasicGeom.CERO) return true; else return false;
+        
+        Vector a = new Vector(p1).resta(new Vector(p0));
+        Vector b = new Vector(p2).resta(new Vector(p0));
+        double sa = a.x*b.y-b.x*a.y;
+        
+        if (sa > 0.0) return true;
+        
+        return false;
     }
 
     /** Indica si el Point esta a la derecha del segmento definido por los
      Points ab. */
     public boolean derecha (Point p0, Point p1) {
         Point p2 = this;
-        Point a = p1.resta(p0);
-        Point b = p2.resta(p0);
-        double sa = a.x * b.y - b.x * a.y;
-        if(sa<BasicGeom.CERO) return true; else return false;
+        
+        Vector a = new Vector(p1).resta(new Vector(p0));
+        Vector b = new Vector(p2).resta(new Vector(p0));
+        double sa = a.x*b.y-b.x*a.y;
+        
+        if (sa < 0.0) return true;
+        
+        return false;
     }
 
     /** Indica si los tres Points son colineales. */
     public boolean colineal (Point p0, Point p1) {
-    return (!derecha(p0,p1)&&!izquierda(p0,p1));
+        Point p2 = this;
+        
+        Vector a = new Vector(p1).resta(new Vector(p0));
+        Vector b = new Vector(p2).resta(new Vector(p0));
+        double sa = a.x*b.y-b.x*a.y;
+        
+        if (sa == 0.0) return true;
+        
+        return false;
     }
 
     /** Indica si el Point esta a la izquierda o es colineal al segmento
      definido por los Points ab. */
-    public boolean izquierdaSobre (Point a, Point b) {
-        return (colineal(a,b)&&(izquierda(a,b)));
+    public boolean izquierdaSobre (Point p0, Point p1) {
+        Point p2 = this;
+        
+        Vector a = new Vector(p1).resta(new Vector(p0));
+        Vector b = new Vector(p2).resta(new Vector(p0));
+        double sa = a.x*b.y-b.x*a.y;
+        
+        if (sa >= 0.0) return true;
+        
+        return false;
     }
 
     /** Indica si el Point esta a la derecha o es colineal al segmento definido
      por los Points ab. */
-    public boolean derechaSobre (Point a, Point b) {
-        return (colineal(a,b)&&(derecha(a,b)));
+    public boolean derechaSobre (Point p0, Point p1) {
+        Point p2 = this;
+        
+        Vector a = new Vector(p1).resta(new Vector(p0));
+        Vector b = new Vector(p2).resta(new Vector(p0));
+        double sa = a.x*b.y-b.x*a.y;
+        
+        if (sa <= 0.0) return true;
+        
+        return false;
     }
-    
     
     /* Dice si estÃ¡ entre o en medio los puntos a y b. */
-    public boolean entre (Point a, Point b){
-        if(izquierda(a,b)||derecha(a,b)|| colineal(a,b)||izquierdaSobre(a,b) ||
-                derechaSobre(a,b)||delante(a,b)||detras(a,b)){
-            return false;
-        }
-        return true;
+    public boolean entre (Point p0, Point p1){
+        Point p2 = this;
+        
+        Vector a = new Vector(p1).resta(new Vector(p0));
+        Vector b = new Vector(p2).resta(new Vector(p0));
+        double sa = a.x*b.y-b.x*a.y;
+        
+        if (colineal(p0, p1) && (!delante(p0,p1)) && (!detras(p0,p1))) return true;
+        
+        return false;
     }
-
     
     /** Indica si el Point esta delante  al segmento definido
      por los Points ab. */
-    public boolean delante (Point a, Point b) {
-        return (a.modulo()<b.modulo());
+    public boolean delante (Point p0, Point p1) {
+        Point p2 = this;
+        
+        Vector a = new Vector(p1).resta(new Vector(p0));
+        Vector b = new Vector(p2).resta(new Vector(p0));
+        double sa = a.x*b.y-b.x*a.y;
+        
+        if (colineal(p0,p1) && (a.modulo()<b.modulo())) return true;
+        
+        return false;
     }
     
     /** Indica si el Point esta detras  al segmento definido
      por los Points ab.
      **/
-    public boolean detras (Point a, Point b) {
-        return ((a.x*b.x<BasicGeom.CERO)||(a.y*b.y<BasicGeom.CERO));
+    public boolean detras (Point p0, Point p1) {
+        Point p2 = this;
+        
+        Vector a = new Vector(p1).resta(new Vector(p0));
+        Vector b = new Vector(p2).resta(new Vector(p0));
+        double sa = a.x*b.y-b.x*a.y;
+        
+        if (colineal(p0,p1) &&((a.x*b.x < 0.0)||(a.y*b.y<0.0))) return true;
+        
+        return false;
     }
 
     /** Indica la pendiente que forma con el Point p.
@@ -223,10 +267,19 @@ public class Point {
 
 	return (p.y - y)/(p.x - x);
     }
-
-
-   
     
+    public void intercambia (){
+        
+        double temp;
+        temp = x;
+        x=y;
+        y=temp;
+    }
+    
+    public Point resta(Point a){
+        return (new Point(this.x-a.x,this.y-a.y));
+    }
+
     /** Muestra en pantalla los valores de las coordenadas del Point. */
     public void out () {
         System.out.print ("Coordenada x: ");

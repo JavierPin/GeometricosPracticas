@@ -3,21 +3,22 @@ package algGeom;
 
 //import com.sun.opengl.util.Animator;
 import java.awt.*;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import javax.media.opengl.*;
 //import java.awt.event.*;
-//import java.util.*;
-import java.io.IOException;
-import java.io.FileNotFoundException;
-
+import java.util.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 
 //import net.java.games.jogl.*;
 
 
-public class Prueba extends Frame implements GLEventListener {
+public class Prueba extends Frame implements GLEventListener, Comparator{
 
-	static int HEIGHT = 800;
-        static int WIDTH = 800;
+	static int HEIGHT = 600;
+        static int WIDTH = 600;
 	static GL gl; // interface to OpenGL
 	static GLCanvas canvas; // drawable in a frame
 	static GLCapabilities capabilities;
@@ -71,7 +72,6 @@ public class Prueba extends Frame implements GLEventListener {
 
 	}
 
-      
 	public void reshape(GLAutoDrawable drawable, int x, int y, int width,
 			int height) {
 
@@ -91,93 +91,220 @@ public class Prueba extends Frame implements GLEventListener {
 
 	// called for OpenGL rendering every reshape
 	public void display(GLAutoDrawable drawable) {
-          // limpiar la pantalla
-          gl.glClearColor(0.0f,0.0f,0.0f,0.0f); /* El color de limpiado ser· cero */
-          gl.glClearDepth(1.0);
-          gl.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT);
-          
-          //Line l = new Line (new SegmentLine(new Point(5,5),new Point(10,10)));
-          
-          /*//Codigo pruebas original
-          gl.glPointSize(4);
-          Point a = new Point (0,0);
-          DrawPoint da = new DrawPoint (a);
-          da.drawObjectC(gl, 0.0f, 0.0f, 0.9f);
 
-          Point b = new Point (10, 55);
-          SegmentLine ab = new SegmentLine (a,b);
-          DrawSegment dab = new DrawSegment (ab);
-          dab.drawObjectC(gl, 1.0f, 0.0f, 0.3f);
-          */
-        DrawHud hud= new DrawHud(gl);
-        PointCloud miNube = new PointCloud(16);
-        for(int i=0;i<miNube.nubepuntos.size();i++){
-            hud.PuntoAvanzado(miNube.getPunto(i),0.9f,0.9f,0.9f);
-        }
-        SegmentLine sA =new SegmentLine (miNube.getPunto(0),miNube.getPunto(1));
-        SegmentLine sB =new SegmentLine (miNube.getPunto(2),miNube.getPunto(3));
-        DrawSegment ds =new DrawSegment (sA);
-        ds.drawObject(gl);
-        ds =new DrawSegment (sB);
-        ds.drawObject(gl);
-        
-        RayLine rA =new RayLine (miNube.getPunto(4),miNube.getPunto(5));
-        RayLine rB =new RayLine (miNube.getPunto(6),miNube.getPunto(7));
-        DrawRay dr =new DrawRay (rA);
-        dr.drawObjectC(gl, 0.0f,0.9f,0.0f);
-        dr =new DrawRay (rB);
-        dr.drawObjectC(gl, 0.0f,0.9f,0.0f);
-        
-        Line lA =new Line (miNube.getPunto(8),miNube.getPunto(9));
-        Line lB =new Line (miNube.getPunto(10),miNube.getPunto(11));
-        DrawLine dl =new DrawLine (lA);
-        dl.drawObjectC(gl, 0.0f,0.0f,0.9f);
-        dl =new DrawLine (lB);
-        dl.drawObjectC(gl, 0.0f,0.0f,0.9f);
-        
-        Polygon pA =new Polygon ();
-        Vertex v = new Vertex(miNube.getPunto(12));
-        pA.Vertexs.add(v);
-        pA.nVertexs++;
-        v = new Vertex(miNube.getPunto(13));
-        pA.Vertexs.add(v);
-        pA.nVertexs++;
-        v = new Vertex(miNube.getPunto(14));
-        pA.Vertexs.add(v);
-        pA.nVertexs++;
-        v = new Vertex(miNube.getPunto(15));
-        pA.Vertexs.add(v);
-        pA.nVertexs++;
-        DrawPolygon dp = new DrawPolygon(pA);
-        dp.drawObjectC(gl,0.3f,0.5f,0.f );
-        
-        hud.MarcaPunto(miNube.getPunto(15));
-        
-/*
-        // cuando estÈn todas las funciones correctamente definidas se ver· el resultado
-          Point a = new Point (20,40); DrawPoint aa = new DrawPoint (a);
-          Point b = new Point (50,71); DrawPoint bb = new DrawPoint (b);
-          aa.drawObject(gl);
-          bb.drawObject(gl);
-          Line d = new Line (a,b);
-          //Line d = new Line(new Point (20,40), new Point (50,71));
-          DrawLine dd = new DrawLine (d);
-          dd.drawObjectC(gl, 0.8f,0.0f,0.2f);
-          System.out.print ("pendiente:");
-          System.out.print(d.pendiente());        
-          
+            // limpiar la pantalla
+            gl.glClearColor(0.0f,0.0f,0.0f,0.0f); /* El color de limpiado ser√° cero */
+            gl.glClearDepth(1.0);
+            gl.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT);
 
-          RayLine r = new RayLine(new Point (-20,-20), new Point (-76,20));
-          DrawRay rr = new DrawRay (r);
-          rr.drawObjectC(gl, 0.8f,0.5f,0.2f);
+            // dibujar los ejes
+            DrawAxis axis = new DrawAxis(WIDTH, HEIGHT);
+            axis.drawObject(gl);
+            
+            Line a = new Line(new Point(-30.0000000001,10),new Point(-30,-10));
+            DrawLine lineA = new DrawLine(a);
+            lineA.drawObject(gl);
+            RayLine b = new RayLine(new Point(-20,-14), new Point(13,4));
+            DrawRay rayB = new DrawRay(b);
+            rayB.drawObject(gl);
+            Line c = new Line(new Point(-100,70),new Point(100,-70));
+            DrawLine lineC = new DrawLine(c);
+            lineC.drawObject(gl);
+            SegmentLine d = new SegmentLine(new Point(36,10), new Point(36,-40));
+            DrawSegment segmentD = new DrawSegment(d);
+            segmentD.drawObject(gl);
+            Point p = new Point(0,-60);
+            DrawPoint pointP = new DrawPoint(p);
+            pointP.drawObject(gl);
+            
+            System.out.println("Distancia de P a A = "+a.distPuntoRecta(new Vector(p)));
+            System.out.println("Distancia de P a B = "+b.distPuntoRayo(new Vector(p)));
+            System.out.println("Distancia de P a C = "+c.distPuntoRecta(new Vector(p)));
+            System.out.println("Distancia de P a D = "+d.distPuntoSegmento(new Vector(p)));
+            System.out.println("Distancia de A a B = "+a.distRectaRayo(b));
+            System.out.println("Distancia de A a C = "+a.distRectaRecta(c));
+            System.out.println("Distancia de A a D = "+a.distRectaSegmento(d));
+            
+            
+            Vector[] v = new Vector[1];
+            v[0] = new Vector();
+            System.out.println("A interstecta con B: "+a.intersecta(b, v[0])+" en el punto "+v[0].x+", "+v[0].y);
+            System.out.println("A interstecta con C: "+a.intersecta(c, v[0])+" en el punto "+v[0].x+", "+v[0].y);
+            System.out.println("A interstecta con D: "+a.intersecta(d, v[0])+" en el punto "+v[0].x+", "+v[0].y);
+            System.out.println("B interstecta con C: "+b.intersecta(c, v[0])+" en el punto "+v[0].x+", "+v[0].y);
+            System.out.println("B interstecta con D: "+b.intersecta(d, v[0])+" en el punto "+v[0].x+", "+v[0].y);
+            System.out.println("C interstecta con D: "+c.intersecta(d, v[0])+" en el punto "+v[0].x+", "+v[0].y);
+            
 
-  */      
+            /*DrawCloud cloud;
+            gl.glPointSize(3);
+            PointCloud pc = new PointCloud(16);
+            cloud = new DrawCloud(pc);
+            cloud.drawObject(gl);
+            try {
+                pc.salvar("./src/algGeom/npuntossalv.txt");
+            } catch (FileNotFoundException ex) {
+                Logger.getLogger(Prueba.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (ErrorAlGuardar ex) {
+                Logger.getLogger(Prueba.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (IOException ex) {
+                Logger.getLogger(Prueba.class.getName()).log(Level.SEVERE, null, ex);
+            }
 
-          gl.glFlush();
+            SegmentLine s1 = new SegmentLine(pc.getPunto(0), pc.getPunto(1));
+            DrawSegment segment = new DrawSegment(s1);
+            segment.drawObjectC(gl,1,0,0);
+            SegmentLine s2 = new SegmentLine(pc.getPunto(2), pc.getPunto(3));
+            segment = new DrawSegment(s2);
+            segment.drawObjectC(gl,1,0,0);
+            
+            
+            RayLine r1 = new RayLine(pc.getPunto(4), pc.getPunto(5));
+            DrawRay ray = new DrawRay(r1);
+            ray.drawObjectC(gl,0,1,0);
+            RayLine r2 = new RayLine(pc.getPunto(6), pc.getPunto(7));
+            ray = new DrawRay(r2);
+            ray.drawObjectC(gl,0,1,0);
+            
+            Line l1 = new Line(pc.getPunto(8), pc.getPunto(9));
+            DrawLine line = new DrawLine(l1);
+            line.drawObjectC(gl,0,0,1);
+            Line l2 = new Line(pc.getPunto(10), pc.getPunto(11));
+            line = new DrawLine(l2);
+            line.drawObjectC(gl,0,0,1);
+            
+            
+            
+            Polygon p = new Polygon();
+            
+            ArrayList<Vertex> Vertices = new ArrayList<Vertex>();
+            
+            Vertices.add(new Vertex(new Point(pc.getPunto(12)),p));
+            Vertices.add(new Vertex(new Point(pc.getPunto(13)),p));
+            Vertices.add(new Vertex(new Point(pc.getPunto(14)),p));
+            Vertices.add(new Vertex(new Point(pc.getPunto(15)),p));
+
+            
+            p.anade(Vertices.get(0));
+            p.anade(Vertices.get(1));
+            p.anade(Vertices.get(2));
+            p.anade(Vertices.get(3));
+            
+            p.out();
+            
+            DrawPolygon polygon = new DrawPolygon(p);
+            polygon.drawObjectC(gl,1,1,1);
+            
+            
+            //Pruebas anteriores
+            Point a = new Point(-10,-10);
+
+            ArrayList<Vertex> Vertices = new ArrayList<Vertex>();
+            Vertex v = new Vertex(a);
+            Vertices.add(v);
+
+            a= new Point(10,-10);
+            v = new Vertex(a);
+            Vertices.add(v);
+
+            a= new Point(10,10);
+            v = new Vertex(a);
+            Vertices.add(v);
+
+            a= new Point(-10,10);
+            v = new Vertex(a);
+            Vertices.add(v);
+
+            Polygon p = new Polygon(Vertices,4);
+            DrawPolygon polygon = new DrawPolygon(p);
+            polygon.drawObject(gl);
+
+            Polygon p2 = null;
+              try {
+                  p2 = new Polygon("./src/algGeom/pol.txt");
+              } catch (ErrorAlLeerFichero ex) {
+                  Logger.getLogger(Prueba.class.getName()).log(Level.SEVERE, null, ex);
+              } catch (IOException ex) {
+                  Logger.getLogger(Prueba.class.getName()).log(Level.SEVERE, null, ex);
+              }
+              DrawPolygon polygon = new DrawPolygon(p2);
+              polygon.drawObject(gl);
+
+              System.out.println(p2.convexo());
+
+              try {
+                  p2.salvar("./src/algGeom/polsalv.txt");
+              } catch (ErrorAlGuardar ex) {
+                  Logger.getLogger(Prueba.class.getName()).log(Level.SEVERE, null, ex);
+              } catch (IOException ex) {
+                  Logger.getLogger(Prueba.class.getName()).log(Level.SEVERE, null, ex);
+              }
+
+            gl.glPointSize(3);
+            Point a = new Point (0,0);
+            DrawPoint da = new DrawPoint (a);
+            da.drawObjectC(gl, 0.0f, 0.0f, 0.9f);
+
+            Point b = new Point (30, -30);
+            DrawPoint db = new DrawPoint (b);
+            db.drawObjectC(gl, 0.0f, 0.0f, 0.9f);
+
+            RayLine rl = new RayLine(a,b);
+            DrawRay ray = new DrawRay(rl);
+
+            ray.drawObject(gl);
+
+            Point c = new Point (20,20);
+            DrawPoint dc = new DrawPoint (c);
+            dc.drawObjectC(gl, 0.0f, 0.0f, 0.9f);
+
+            Point d = new Point (10, -40);
+            DrawPoint dd = new DrawPoint (d);
+            dd.drawObjectC(gl, 0.0f, 0.0f, 0.9f);
+
+            RayLine rl2 = new RayLine(c,d);
+            ray = new DrawRay(rl2);
+
+            ray.drawObject(gl);
+
+            System.out.println(rl2.intersectaSegmento(rl));
+
+
+            Point a1 = new Point(0,0);
+            Point b1 = new Point(0,10);
+            Point c1 = new Point (10,20);
+            Point c = new Point(10,10);
+            Point d = new Point(0,-10);
+            System.out.println(b1.areaTriangulo2(c1, a1));
+
+            SegmentLine ab = new SegmentLine (a,b);
+            DrawSegment dab = new DrawSegment (ab);
+            dab.drawObjectC(gl, 1.0f, 0.0f, 0.3f);
+
+
+          // cuando est√©n todas las funciones correctamente definidas se ver√° el resultado
+            Point a = new Point (20,40); DrawPoint aa = new DrawPoint (a);
+            Point b = new Point (50,71); DrawPoint bb = new DrawPoint (b);
+            aa.drawObject(gl);
+            bb.drawObject(gl);
+            Line d = new Line (a,b);
+            //Line d = new Line(new Point (20,40), new Point (50,71));
+            DrawLine dd = new DrawLine (d);
+            dd.drawObjectC(gl, 0.8f,0.0f,0.2f);
+            System.out.print ("pendiente:");
+            System.out.print(d.pendiente());        
+
+
+            RayLine r = new RayLine(new Point (-20,-20), new Point (-76,20));
+            DrawRay rr = new DrawRay (r);
+            rr.drawObjectC(gl, 0.8f,0.5f,0.2f);
+
+    */      
+
+            gl.glFlush();
 
 
 	}
-
 
 	// called if display mode or device are changed
 	public void displayChanged(GLAutoDrawable drawable, boolean modeChanged,
@@ -195,6 +322,9 @@ public class Prueba extends Frame implements GLEventListener {
          
     }
 
+    public int compare(Object o1, Object o2) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
 
 }
 

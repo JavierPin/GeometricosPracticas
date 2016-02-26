@@ -48,23 +48,4 @@ public class DrawSegment extends Draw {
 
     }
     
-    /*Funcion por mi para añadir el grosor de la linea*/
-    public void drawObjectC (GL g, float R, float G, float B, float lineWidth){
-
-        g.glColor3f(R, G, B);
-        
-        float ax = convCoordX(vs.leeax());
-        float ay = convCoordX(vs.leeay());
-        /** convierte la y en posiciones de pantalla */
-        float bx = convCoordX(vs.leebx());
-        float by = convCoordX(vs.leeby());
-        
-        g.glLineWidth(lineWidth);
-        g.glBegin(GL.GL_LINES);
-            g.glVertex2d(ax, ay);
-            g.glVertex2d(bx, by);
-        g.glEnd();
-
-    }
-    
 }
