@@ -236,7 +236,70 @@ public boolean intersecSegImpropia (SegmentLine l){
 
 }
 
+/*
+interseccion dos rectas
+*/
+protected boolean intersecta(Vector C, Vector D, double s, double t){
+    Vector cd,ac,ab;
+    cd= new Vector(D.resta(C));
+    ac= new Vector(C.x-a.x,C.y-a.y);
+    ab= new Vector(b.x-a.x,b.y-b.x);
+    double nume,deno;
+    
+    deno = (cd.x*ab.y) - (ab.x*cd.y);
+    if (deno==0.0f){
+        s= 0;
+        t= 0;
+        return false;
+    }else{
+        nume = (cd.x*ac.y) - (ac.x*cd.y);
+        s = nume/deno;
+        nume = (ab.x-ac.y) - (ac.x*ab.y);
+        t= nume/deno;
+        return true;
+    }
+}
 
+/*
+interseccion segmento recta
+*/
+public boolean intersecta (Line r, Vector interseccion){
+    double s=0,t=0;
+    if(intersecta(new Vector(r.a),new Vector(r.b),s,t)
+            && (s>=0 && s<=1)){
+        interseccion.asignax(b.resta(a).x*s + a.x);
+        interseccion.asignay(b.resta(a).y*s + a.y);
+        return true;
+    }else{
+        return false;
+    }
+}
+
+/*
+interseccion segmento rayo
+*/
+public boolean intersecta (RayLine r, Vector interseccion){
+    double s=0,t=0;
+    if(intersecta(new Vector(r.a),new Vector(r.b),s,t)
+            && (s>=0 && s<=1) && t>=0){
+        return true;
+    }else{
+        return false;
+    } 
+}
+
+/*
+interseccion segmento rayo
+*/
+public boolean intersecta (SegmentLine r, Vector interseccion){
+    double s=0,t=0;
+    if(intersecta(new Vector(r.a),new Vector(r.b),s,t)
+            && (s>=0 && s<=1) && (t>=0 && t<=1)){
+        return true;
+    }else{
+        return false;
+    } 
+}
 
 /** Muestra en pantalla la informacion del SegmentLine. */
 public void out () {

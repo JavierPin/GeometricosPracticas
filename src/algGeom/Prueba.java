@@ -95,15 +95,15 @@ public class Prueba extends Frame implements GLEventListener {
           gl.glClearColor(0.0f,0.0f,0.0f,0.0f); /* El color de limpiado será cero */
           gl.glClearDepth(1.0);
           gl.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT);
-           
-          /*
+          
+          //Line l = new Line (new SegmentLine(new Point(5,5),new Point(10,10)));
+          
+          /*//Codigo pruebas original
           gl.glPointSize(4);
           Point a = new Point (0,0);
           DrawPoint da = new DrawPoint (a);
           da.drawObjectC(gl, 0.0f, 0.0f, 0.9f);
-          
 
-          
           Point b = new Point (10, 55);
           SegmentLine ab = new SegmentLine (a,b);
           DrawSegment dab = new DrawSegment (ab);

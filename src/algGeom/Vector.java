@@ -47,18 +47,18 @@ public class Vector extends Point{
         return new Vector(x-b.x,y-b.y);
     }
 
-    /** producto escalar: this · b*/
-    /*No es posible de implementar en un espacio 2D
+    /** producto escalar: this · b* en base ortogonales
+     v ( x1 , y1 ) u ( x2 , y2 ) ---> v * u = x1 * x2 + y1 * y2 */
     public double dot (Vector b){
-        //XXX
-        return 1;
-
+        return ((x*b.x) + (y*b.y));
     }
-    */
     
     /** producto por un escalar */
     public Vector prodEsc (double t){
         return new Vector(x*t,y*t);
+    }
+    public Vector prodEsc (Vector t){
+        return new Vector(x*t.x,y*t.y);
     }
     
 
@@ -88,6 +88,7 @@ public class Vector extends Point{
     public double modulo (){
         return Math.sqrt(x*x+y*y);
     }
-
-
+    public Vector perpendicular (){
+        return new Vector(-y,x);
+    }
 }

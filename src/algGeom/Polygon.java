@@ -195,8 +195,53 @@ public class Polygon {
       return true;
     }
         
-  
-
+    public boolean intersecta (Line r, Vector interseccion){
+        //toca recorer todos los segmentos que forman las aristas
+        SegmentLine s;
+        for (int i=0;i<=nVertexs;i++){
+            if(i==nVertexs){
+                s = new SegmentLine(lee(i),lee(0));//esta es la arista final
+            }else{
+                s = new SegmentLine(lee(i),lee(i+1));
+            }
+            if(r.intersecta(s, interseccion)){
+                return true; //en el momento que tengamos una interseccion salimos
+            }
+        }
+        return false;
+    }
+    
+    public boolean intersecta (RayLine r, Vector interseccion){
+        //toca recorer todos los segmentos que forman las aristas
+        SegmentLine s;
+        for (int i=0;i<=nVertexs;i++){
+            if(i==nVertexs){
+                s = new SegmentLine(lee(i),lee(0));//esta es la arista final
+            }else{
+                s = new SegmentLine(lee(i),lee(i+1));
+            }
+            if(r.intersecta(s, interseccion)){
+                return true;
+            }
+        }
+        return false;
+    }
+    
+    public boolean intersecta (SegmentLine r, Vector interseccion){
+        //toca recorer todos los segmentos que forman las aristas
+        SegmentLine s;
+        for (int i=0;i<=nVertexs;i++){
+            if(i==nVertexs){
+                s = new SegmentLine(lee(i),lee(0));//esta es la arista final
+            }else{
+                s = new SegmentLine(lee(i),lee(i+1));
+            }
+            if(r.intersecta(s, interseccion)){
+                return true;
+            }
+        }
+        return false;
+    }
 
 
     /** Muestra por pantalla la informaci�n del pol�gono. */
