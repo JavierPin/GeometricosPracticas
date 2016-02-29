@@ -14,18 +14,18 @@ public class RayLine extends SegmentLine{
  
     public float distPuntoRayo(Vector p){
         
-        Vector m = new Vector(b.x-a.x,b.y-a.y);
-        Vector b = new Vector(a.x,a.y);
-        
-        double t0 = ((m.dot(p.resta(b)))/(m.dot(m)));
+        Vector M, B;
+        B = new Vector(a.x,a.y);
+        M = new Vector((new Vector(b.x,b.y)).resta(B));
+        double t0=M.dot((p.resta(B)))/M.dot(M);
         
         if (t0<=BasicGeom.CERO){
             
-            return (float)(p.resta(b)).modulo();
+            return (float)(p.resta(B)).modulo();
         }
         else{
             
-            return (float)(p.resta(b.suma(m.prodEsc(t0)))).modulo();
+            return (float)(p.resta(B.suma(M.prodEsc(t0)))).modulo();
         }
         
     }
@@ -34,13 +34,14 @@ public class RayLine extends SegmentLine{
     public boolean intersecta (Line r, Vector interseccion){
         double[] t = new double[1];
         double[] s = new double[1];
-        if(intersecta(new Vector(r.a),new Vector(r.b),s,t)
-               &&(s[0]>=0)){
-                //Calculo el punto de interseccion
-        interseccion.asignax(b.resta(a).x*s[0] + a.x);
-        interseccion.asignay(b.resta(a).y*s[0] + a.y);
+        if(intersecta(new Vector(r.a),new Vector(r.b),s,t) &&(s[0]>=0)){
+            //Calculo el punto de interseccion
+            interseccion.asignax(b.resta(a).x*s[0] + a.x);
+            interseccion.asignay(b.resta(a).y*s[0] + a.y);
             return true;
         }else{
+            interseccion.asignax(BasicGeom.INFINITO);
+            interseccion.asignay(BasicGeom.INFINITO);
             return false;
         }
     }
@@ -49,13 +50,14 @@ public class RayLine extends SegmentLine{
     public boolean intersecta (RayLine r, Vector interseccion){
         double[] t = new double[1];
         double[] s = new double[1];
-        if(intersecta(new Vector(r.a),new Vector(r.b),s,t)
-               &&(s[0]>=0) && t[0]>=0){
-                //Calculo el punto de interseccion
-        interseccion.asignax(b.resta(a).x*s[0] + a.x);
-        interseccion.asignay(b.resta(a).y*s[0] + a.y);
+        if(intersecta(new Vector(r.a),new Vector(r.b),s,t) &&(s[0]>=0) && t[0]>=0){
+            //Calculo el punto de interseccion
+            interseccion.asignax(b.resta(a).x*s[0] + a.x);
+            interseccion.asignay(b.resta(a).y*s[0] + a.y);
             return true;
         }else{
+            interseccion.asignax(BasicGeom.INFINITO);
+            interseccion.asignay(BasicGeom.INFINITO);
             return false;
         }
     }
@@ -64,13 +66,14 @@ public class RayLine extends SegmentLine{
     public boolean intersecta (SegmentLine r, Vector interseccion){
         double[] t = new double[1];
         double[] s = new double[1];
-        if(intersecta(new Vector(r.a),new Vector(r.b),s,t)
-               &&(s[0]>=0) && (t[0]>=0 && t[0]<=1)){
-                //Calculo el punto de interseccion
-        interseccion.asignax(b.resta(a).x*s[0] + a.x);
-        interseccion.asignay(b.resta(a).y*s[0] + a.y);
+        if(intersecta(new Vector(r.a),new Vector(r.b),s,t) &&(s[0]>=BasicGeom.CERO) && (t[0]>=BasicGeom.CERO && t[0]<=1)){
+            //Calculo el punto de interseccion/
+            interseccion.asignax(b.resta(a).x*s[0] + a.x);
+            interseccion.asignay(b.resta(a).y*s[0] + a.y);
             return true;
         }else{
+            interseccion.asignax(BasicGeom.INFINITO);
+            interseccion.asignay(BasicGeom.INFINITO);
             return false;
         }
     }
