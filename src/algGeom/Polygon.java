@@ -181,6 +181,7 @@ public class Polygon {
      */
    
     boolean convexo (){
+<<<<<<< HEAD
               
         for (int i=0; i<nVertexs;i++){
             
@@ -192,6 +193,10 @@ public class Polygon {
         }
         
         return true;
+=======
+    	 //XXX
+      return true;
+>>>>>>> master
     }
         
   

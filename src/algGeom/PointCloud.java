@@ -1,5 +1,6 @@
 package algGeom;
 
+<<<<<<< HEAD
 import java.io.BufferedWriter;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -8,6 +9,12 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Random;
 import java.util.Scanner;
+=======
+
+
+import java.util.ArrayList;
+import java.util.Random;
+>>>>>>> master
 
 class ErrorAlGuardar extends Exception {
 	private static final long serialVersionUID = 1L;
@@ -40,7 +47,11 @@ public class PointCloud {
         nubepuntos = new ArrayList<Point>();
         if(tam > 0){
            
+<<<<<<< HEAD
             Random aleatorio = new Random (BasicGeom.semilla);
+=======
+            Random aleatorio = new Random (45);
+>>>>>>> master
 
             double x, y;
             for(int i=0;i<tam;i++){
@@ -61,7 +72,8 @@ public class PointCloud {
      */
     
     public void AddPunto (Point p){
-    	nubepuntos.add(p);
+    	//XXX
+    	
     }
     
     /** 
@@ -84,6 +96,7 @@ public class PointCloud {
      * @throws ErrorAlLeerFichero si no existe el fichero se lanza una excepción
      */
 
+<<<<<<< HEAD
     public PointCloud(String nombre) throws ErrorAlLeerFichero, FileNotFoundException{
     	nubepuntos = new ArrayList<Point>();
         
@@ -104,6 +117,10 @@ public class PointCloud {
         }
         
         scanner.close();            
+=======
+    public PointCloud(String nombre) throws ErrorAlLeerFichero{
+    	//XXX
+>>>>>>> master
     
     }
 
@@ -113,6 +130,7 @@ public class PointCloud {
      * @param nombre del fichero 
      * @throws ErrorAlGuardar, se lanza una excepción si exite algún problema al abrir el fichero
      */
+<<<<<<< HEAD
     public void salvar(String nombre) throws ErrorAlGuardar, IOException{
         BufferedWriter bw = new BufferedWriter(new FileWriter(nombre));
         
@@ -121,6 +139,10 @@ public class PointCloud {
         }
         
         bw.close();
+=======
+    public void salvar(String nombre) throws ErrorAlGuardar{
+        // XXX
+>>>>>>> master
     }
 
 
