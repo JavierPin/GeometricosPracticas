@@ -91,105 +91,6 @@ public class Prueba extends Frame implements GLEventListener, Comparator{
 
 	// called for OpenGL rendering every reshape
 	public void display(GLAutoDrawable drawable) {
-<<<<<<< HEAD
-=======
-           
-          // limpiar la pantalla
-          gl.glClearColor(0.0f,0.0f,0.0f,0.0f); /* El color de limpiado será cero */
-          gl.glClearDepth(1.0);
-          gl.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT);
-          
-          
-          /*HUD*/
-          DrawHud dh= new DrawHud(gl);
-          
-          gl.glPointSize(4);
-          Point a = new Point (0,0);
-          DrawPoint da = new DrawPoint (a);
-          da.drawObjectC(gl, 0.0f, 0.0f, 0.9f);
-          
-
-          
-          //Point b = new Point (10, 55);
-          Point b = new Point (10, 10);
-          //DrawPoint db = new DrawPoint (b);
-          //db.drawObjectC(gl, 0.0f, 0.9f, 0.0f);
-          dh.MarcaPunto(b);
-          dh.PuntoAvanzado(b,0.0f, 0.9f, 0.0f);
-          
-          /*Dibuja Segmento*/
-          //SegmentLine ab = new SegmentLine (a,b);
-          //DrawSegment dab = new DrawSegment (ab);
-          //dab.drawObjectC(gl, 1.0f, 0.0f, 0.3f);
-          
-          /*Dibujar un rayo*/
-          RayLine rab = new RayLine (a,b);
-          DrawRay drab = new DrawRay(rab);
-          drab.drawObjectC(gl,0.9f, 0.0f, 0.0f);
-          
-          /*Dibujar puntos sin mas*/
-          Point pa,pb,pc,pd;
-          pa= new Point (50,60);
-          pb= new Point (-30,20);
-          pc= new Point (-20,-20);
-          pd= new Point (90,-40);
-          dh.PuntoAvanzado(pa,0.9f, 0.9f, 0.9f);
-          dh.PuntoAvanzado(pb,0.9f, 0.9f, 0.9f);
-          dh.PuntoAvanzado(pc,0.9f, 0.9f, 0.9f);
-          dh.PuntoAvanzado(pd,0.9f, 0.9f, 0.9f);
-          
-          /*Segmento pb-pd*/
-          SegmentLine spapb = new SegmentLine(pa,pd);
-          DrawSegment dspapd= new DrawSegment(spapb);
-          dspapd.drawObject(gl);
-          dh.MarcaPunto(pd);
-          dh.MarcaPunto(pa);
-          
-          
-          /*crea poligono-guardar poligono*/
-//          String ruta = "c:/poligono.txt";
-//          String ruta2 = "e:/poligono2.txt";
-//          try{
-//              Polygon poli = new Polygon(ruta);
-//          //    poli.out();
-//              Polygon poli2 = new Polygon(poli);
-//              try{
-//                poli2.salvar(ruta2);
-//              }catch(IOException ex){
-//                System.out.print(ex);
-//              }catch(ErrorAlGuardar ex){
-//                  System.out.print(ex);
-//              }
-//          }catch(IOException ex){
-//              System.out.print(ex);
-//          }catch(ErrorAlLeerFichero ex){
-//              System.out.print(ex);
-//          }
-
-          
-
-/*
-        // cuando estén todas las funciones correctamente definidas se verá el resultado
-          Point a = new Point (20,40); DrawPoint aa = new DrawPoint (a);
-          Point b = new Point (50,71); DrawPoint bb = new DrawPoint (b);
-          aa.drawObject(gl);
-          bb.drawObject(gl);
-          Line d = new Line (a,b);
-          //Line d = new Line(new Point (20,40), new Point (50,71));
-          DrawLine dd = new DrawLine (d);
-          dd.drawObjectC(gl, 0.8f,0.0f,0.2f);
-          System.out.print ("pendiente:");
-          System.out.print(d.pendiente());        
-          
-
-          RayLine r = new RayLine(new Point (-20,-20), new Point (-76,20));
-          DrawRay rr = new DrawRay (r);
-          rr.drawObjectC(gl, 0.8f,0.5f,0.2f);
-
-  */      
-
-          gl.glFlush();
->>>>>>> master
 
             // limpiar la pantalla
             gl.glClearColor(0.0f,0.0f,0.0f,0.0f); /* El color de limpiado será cero */
@@ -306,7 +207,6 @@ public class Prueba extends Frame implements GLEventListener, Comparator{
             v = new Vertex(a);
             Vertices.add(v);
 
-<<<<<<< HEAD
             a= new Point(10,10);
             v = new Vertex(a);
             Vertices.add(v);
@@ -406,8 +306,6 @@ public class Prueba extends Frame implements GLEventListener, Comparator{
 
 	}
 
-=======
->>>>>>> master
 	// called if display mode or device are changed
 	public void displayChanged(GLAutoDrawable drawable, boolean modeChanged,
 			boolean deviceChanged) {

@@ -1,6 +1,7 @@
 package algGeom;
 
 
+
 /** Representa un SegmentLine definido por dos Points. */
 public class SegmentLine {
 
@@ -319,6 +320,16 @@ public boolean intersecta (SegmentLine r, Vector interseccion){
         interseccion.asignax(BasicGeom.INFINITO);
         interseccion.asignay(BasicGeom.INFINITO);
         return false;
+    } 
+}
+
+public posicionTrianguloRecta intersecta (SegmentLine r){
+    double[] t = new double[1];
+    double[] s = new double[1];
+    if(intersecta(new Vector(r.a),new Vector(r.b),s,t) && (s[0]>=0 && s[0]<=1) && (t[0]>=0 && t[0]<=1)){
+        return posicionTrianguloRecta.INTERSECTA;
+    }else{
+        return posicionTrianguloRecta.NO_INTERSECTA;
     } 
 }
 
