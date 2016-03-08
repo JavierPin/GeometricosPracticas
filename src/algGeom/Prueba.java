@@ -86,7 +86,8 @@ public class Prueba extends Frame implements GLEventListener, Comparator{
 		gl.glOrtho(0, width, 0, height, -100, 100);
 		gl.glMatrixMode(GL.GL_MODELVIEW);
 		gl.glLoadIdentity();
-                gl.glTranslatef(WIDTH/2, HEIGHT/2, -100);
+                gl.glTranslatef((WIDTH/2)-50, (HEIGHT/2)-50, -100);
+                //gl.gluLookAt(0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f);
 		
 	}
 
@@ -98,9 +99,8 @@ public class Prueba extends Frame implements GLEventListener, Comparator{
             gl.glClearDepth(1.0);
             gl.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT);
             
-            Line3d l = new Line3d(new Vect3d(0,0,0),new Vect3d(1,0,0));
-            DrawLine3d xAxis = new DrawLine3d(l);
-            xAxis.drawObject(gl);
+            DrawAxis3d axis = new DrawAxis3d();
+            axis.drawObject(gl);
             
 
             // dibujar los ejes
