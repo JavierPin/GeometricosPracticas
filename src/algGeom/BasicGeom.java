@@ -23,7 +23,7 @@ abstract public class BasicGeom {
   }
   
   static double determinante2x2 (double a, double b, double c, double d) {
-	  return (a*c - b*d);	  
+	  return (a*d - b*c);	  
   }
   
 
