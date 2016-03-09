@@ -135,12 +135,7 @@ public class Triangle3d {
         Vect3d v = c.resta(a);
         Vect3d w = p.resta(a);
         
-        if(u.XProduct(v).dot(w)> BasicGeom.CERO){
-            
-            return false;
-        }
-        
-        return true;
+        return u.XProduct(v).dot(w) <= BasicGeom.CERO;
     }
     
     /** Determina la caja envolvente de un triángulo */
@@ -192,7 +187,7 @@ public class Triangle3d {
     public posicionTrianguloRecta intersecta (Edge3d e, DoubleClass t){
         Vect3d aa = new Vect3d (e.orig);
         Vect3d bb = new Vect3d (e.dest);
-        Vect3d cc = new Vect3d (a); //algÃºn punto del plano del triángulo
+        Vect3d cc = new Vect3d (a); //algún punto del plano del triángulo
         Vect3d n = new Vect3d (this.Normal());
         double denom = n.dot(bb.resta(aa));
         if (BasicGeom.iguales(denom, BasicGeom.CERO)){
@@ -385,7 +380,6 @@ public class Triangle3d {
      * @param hv determina el plano 0-1 > plano XY
      * la salida no puede ser degenerada, siempre es un triángulo
      */
-    //funciÃ³n que debe ser comparada 
     public Polygon project (int h , int v){
     	Vect3d a;
     	Point [] pts = new Point[3];
@@ -491,6 +485,102 @@ public class Triangle3d {
         
         return new Triangle3d(v1,v2,v3);
         
+    }
+    
+    /** Calcula la interseccion entre este triángulo y una recta */
+    public boolean LineTriangle3d(Line3d r, Vect3d point){
+        
+        Vect3d e1 = new Vect3d(b.resta(a));
+        Vect3d e2 = new Vect3d(c.resta(a));
+        Vect3d direccion = r.getDestino().resta(r.getOrigen());
+        
+        Vect3d p = new Vect3d(direccion.XProduct(e2));
+        
+        double tmp = p.dot(e1);
+        
+        if(tmp > -BasicGeom.CERO && tmp < BasicGeom.CERO ){
+            
+            return false;
+        }
+        
+        tmp = 1.0/tmp;
+        
+        Vect3d s = new Vect3d(r.getOrigen().resta(a));
+        double u = tmp * s.dot(p);
+        
+        if (u<0.0 || u>1.0){
+            
+            return false;
+            
+        }
+        
+        Vect3d q = new Vect3d(s.XProduct(e1));
+        double v = tmp * (direccion.dot(q));
+        
+        if (v<0.0 || v>1.0){
+            
+            return false;
+            
+        }
+        
+        double t = tmp * (e2.dot(q));
+        
+        point.x=(r.getOrigen().x)+(direccion.prodEscalar(t).x);
+        point.y=(r.getOrigen().y)+(direccion.prodEscalar(t).y);
+        point.z=(r.getOrigen().z)+(direccion.prodEscalar(t).z);
+
+        return true;
+    }
+    
+    /** Calcula la interseccion entre este triángulo y un rayo */
+    public boolean RayTriangle3d(Ray3d r, Vect3d point){
+        
+        Vect3d e1 = new Vect3d(b.resta(a));
+        Vect3d e2 = new Vect3d(c.resta(a));
+        Vect3d direccion = r.getDestino().resta(r.getOrigen());
+        
+        Vect3d p = new Vect3d(direccion.XProduct(e2));
+        
+        double tmp = p.dot(e1);
+        
+        if(tmp > -BasicGeom.CERO && tmp < BasicGeom.CERO ){
+            
+            return false;
+        }
+        
+        tmp = 1.0/tmp;
+        
+        Vect3d s = new Vect3d(r.getOrigen().resta(a));
+        double u = tmp * s.dot(p);
+        
+        if (u<0.0 || u>1.0){
+            
+            return false;
+            
+        }
+        
+        Vect3d q = new Vect3d(s.XProduct(e1));
+        double v = tmp * (direccion.dot(q));
+        
+        if (v<0.0 || v>1.0){
+            
+            return false;
+            
+        }
+        
+        double t = tmp * (e2.dot(q));
+        
+        if (t<0.0){
+            
+            return false;
+            
+        }
+        
+        point.x=(r.getOrigen().x)+(direccion.prodEscalar(t).x);
+        point.y=(r.getOrigen().y)+(direccion.prodEscalar(t).y);
+        point.z=(r.getOrigen().z)+(direccion.prodEscalar(t).z);
+
+        return true;
     }
     
       /**Muestra un punto 3d en pantalla*/

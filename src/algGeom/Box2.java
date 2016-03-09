@@ -237,6 +237,25 @@ public class Box2 implements GLEventListener,
         
         //Cloud3d c = new Cloud3d (30);
 
+        Vect3d[] inters = new Vect3d[1];
+        inters[0]= new Vect3d(0,0,0);
+        
+        Line3d l2 = new Line3d(new Vect3d(0,0,0),new Vect3d(7,0,0));
+        DrawLine3d line2 = new DrawLine3d(l2);
+        line2.drawObjectC(gl,0.9f,0.9f,0.9f);
+        
+        if(t1.LineTriangle3d(l2, inters[0])){
+            
+            System.out.println("El triangulo t1 intersecta con la recta r en:");
+            inters[0].out();
+            
+        }
+        
+        Vect3d pu = new Vect3d(inters[0]);
+        DrawVect3d punto = new DrawVect3d(pu);
+        punto.drawObjectC(gl, 1,0,0);
+        
+
         gl.glFlush();
         
     }
