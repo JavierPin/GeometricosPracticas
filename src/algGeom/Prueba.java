@@ -40,7 +40,8 @@ public class Prueba extends Frame implements GLEventListener, Comparator{
 		add(canvas, BorderLayout.CENTER);
 
 		// 4. interface to OpenGL functions
-		gl = canvas.getGL();
+                
+                
               
 //        addWindowListener(new WindowAdapter() {
 //			public void windowClosing(WindowEvent e) {

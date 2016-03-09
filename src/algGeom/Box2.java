@@ -63,7 +63,8 @@ public class Box2 implements GLEventListener,
     {
         GL gl = drawable.getGL();
         // Set backgroundcolor and shading mode
-        gl.glClearColor(1.0f, 1.0f, 1.0f, 0.0f);
+        gl.glClearColor(1.0f, 1.0f, 1.0f, 0.0f); //Como que duele un poco en blanco
+        //gl.glClearColor(0.0f, 0.0f, 0.0f, 0.0f); //En negro no duele tanto
         gl.glShadeModel(GL.GL_FLAT);
         // descomentar esto para poder ver las sombras de los modelos 
         /*
@@ -181,11 +182,40 @@ public class Box2 implements GLEventListener,
 //	        gl.glVertex3f(0.0f,0.0f,0.0f);
 //        gl.glEnd();
 
-         DrawTriangle3d dt1 = new DrawTriangle3d (t1);
-         dt1.drawObjectC(gl,1,0,1);
+        DrawTriangle3d dt1 = new DrawTriangle3d (t1);
+        dt1.drawObjectC(gl,1,0,1);
          
-         Cloud3d c = new Cloud3d (30);
+        Cloud3d c = new Cloud3d (30);
          
+         /*--------------------------------------
+         -------------¡campo de tiro!------------
+         --------------------------------------*/
+        Vect3d xInf,yInf,zInf;
+        xInf= new Vect3d(100,0,0);
+        yInf= new Vect3d(0,100,0);
+        zInf= new Vect3d(0,0,0);
+         
+        Plane pEje = new Plane(xInf,yInf,zInf,true);
+        DrawPlane dpEje= new DrawPlane(pEje);
+        dpEje.drawObjectC(gl ,1.0f, 0.0f, 0.0f, 0.3f);
+         
+        xInf= new Vect3d(100,0,0);
+        yInf= new Vect3d(0,0,0);
+        zInf= new Vect3d(0,0,100);
+         
+        pEje = new Plane(xInf,yInf,zInf,true);
+        dpEje= new DrawPlane(pEje);
+        dpEje.drawObjectC(gl ,0.0f, 1.0f, 0.0f, 0.3f);
+        xInf= new Vect3d(0,0,0);
+        yInf= new Vect3d(0,100,0);
+        zInf= new Vect3d(0,0,100);
+        pEje = new Plane(xInf,yInf,zInf,true);
+        dpEje= new DrawPlane(pEje);
+        dpEje.drawObjectC(gl ,0.0f, 0.0f, 1.0f, 0.3f);
+
+         /*--------------------------------------
+         -------------¡Fin de campo!-------------
+         --------------------------------------*/
 
         
         gl.glFlush();
