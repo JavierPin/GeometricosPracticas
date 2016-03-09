@@ -41,6 +41,7 @@ public class Prueba extends Frame implements GLEventListener, Comparator{
 
 		// 4. interface to OpenGL functions
                 
+                
               
 //        addWindowListener(new WindowAdapter() {
 //			public void windowClosing(WindowEvent e) {
