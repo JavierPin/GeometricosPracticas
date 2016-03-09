@@ -78,7 +78,6 @@ public class Triangle3d {
         return vt;
     }
 
-
      /**Devuelve una copia del objeto Punto */
      public Triangle3d copia(){
          return new Triangle3d(a,b,c);
@@ -440,7 +439,44 @@ public class Triangle3d {
     	return posicionTrianguloRecta.NO_INTERSECTA;
    }
     
+    public Triangle3d proyecta_XY(){
+        
+        Vect3d v1 = new Vect3d(getA());
+        v1.setZ(0.0f);
+        Vect3d v2 = new Vect3d(getB());
+        v2.setZ(0.0f);
+        Vect3d v3 = new Vect3d(getC());
+        v3.setZ(0.0f);
+        
+        return new Triangle3d(v1,v2,v3);
+        
+    }
     
+    public Triangle3d proyecta_XZ(){
+        
+        Vect3d v1 = new Vect3d(getA());
+        v1.setY(0.0f);
+        Vect3d v2 = new Vect3d(getB());
+        v2.setY(0.0f);
+        Vect3d v3 = new Vect3d(getC());
+        v3.setY(0.0f);
+        
+        return new Triangle3d(v1,v2,v3);
+        
+    }
+    
+    public Triangle3d proyecta_YZ(){
+        
+        Vect3d v1 = new Vect3d(getA());
+        v1.setX(0.0f);
+        Vect3d v2 = new Vect3d(getB());
+        v2.setX(0.0f);
+        Vect3d v3 = new Vect3d(getC());
+        v3.setX(0.0f);
+        
+        return new Triangle3d(v1,v2,v3);
+        
+    }
     
     
       /**Muestra un punto 3d en pantalla*/
