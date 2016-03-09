@@ -84,7 +84,7 @@ public class DrawPlane extends Draw{
         pt4 = pt4.suma(ad);
         
         //g.glColor3f(R, G, B);
-        //vvvvvvvEsto permite el color alphavvvvvv
+        //Esto permite el color alpha
         g.glEnable(g.GL_BLEND);
         g.glBlendFunc(g.GL_SRC_ALPHA, g.GL_ONE_MINUS_SRC_ALPHA);
         //^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^

@@ -5,6 +5,8 @@ import java.awt.Dimension;
 import java.awt.Frame;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.awt.event.MouseMotionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
@@ -17,8 +19,25 @@ import javax.media.opengl.glu.GLU;
 
 public class Box2 implements GLEventListener, 
                              MouseListener, 
-                             MouseMotionListener
+                             MouseMotionListener,
+                             KeyListener
 {
+    GLU glu;
+    GL gl;
+    
+    // translate the scene
+    private float view_trax = 0.0f;
+    private float view_tray = 0.0f;
+    private float view_traz = 0.0f;
+    // rotating the scene
+    private float view_rotx = 0.0f; //20
+    private float view_roty = 0.0f; //30
+    // remember last mouse position
+    private int oldMouseX;
+    private int oldMouseY;
+    //static int HEIGHT = 800, WIDTH = 800;
+    static int HEIGHT = 10, WIDTH = 10;
+    
     public static void main(String[] args) {
     	Draw.ALTO = HEIGHT;
     	Draw.ANCHO = WIDTH;
@@ -48,20 +67,13 @@ public class Box2 implements GLEventListener,
         frame.setLocationRelativeTo(null);
         frame.setVisible(true);
         animator.start();
+        
     }
-    
-    // rotating the scene
-    private float view_rotx = 20.0f; //20
-    private float view_roty = 30.0f; //30
-    // remember last mouse position
-    private int oldMouseX;
-    private int oldMouseY;
-    //static int HEIGHT = 800, WIDTH = 800;
-    static int HEIGHT = 10, WIDTH = 10;
     
     public void init(GLAutoDrawable drawable)
     {
         GL gl = drawable.getGL();
+        
         // Set backgroundcolor and shading mode
         gl.glClearColor(1.0f, 1.0f, 1.0f, 0.0f); //Como que duele un poco en blanco
         //gl.glClearColor(0.0f, 0.0f, 0.0f, 0.0f); //En negro no duele tanto
@@ -92,6 +104,7 @@ public class Box2 implements GLEventListener,
         */
         drawable.addMouseListener(this);
         drawable.addMouseMotionListener(this);
+        drawable.addKeyListener(this);
     }
     
     public void reshape(GLAutoDrawable drawable, 
@@ -118,35 +131,26 @@ public class Box2 implements GLEventListener,
     
     public void display(GLAutoDrawable drawable)
     {
-        GL gl = drawable.getGL();
-        GLU glu = new GLU(); // needed for lookat
+        gl = drawable.getGL();
+        glu = new GLU(); // needed for lookat
         // Clear the drawing area
         gl.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT);
 
-        // A estaba comentado
-        /**
-		gl.glMatrixMode(GL.GL_PROJECTION);
-		gl.glLoadIdentity();
-		gl.glOrtho(0, WIDTH, 0, HEIGHT, -10, 10);
-		gl.glMatrixMode(GL.GL_MODELVIEW);
-		gl.glLoadIdentity();
- **/
-      
-        
-        
+
         gl.glLoadIdentity();
-        glu.gluLookAt(4,8,4,  // eye pos
+        glu.gluLookAt(4,8,8,  // eye pos
                      0,0,0,   // look at
-                     0,0,1);  // up
+                     0,1,0);  // up
 
 
-        gl.glTranslatef(0.5f, 0.5f, 0.5f);       
+        gl.glTranslatef(view_trax, view_tray, view_traz);       
         gl.glRotatef(view_rotx, 1.0f, 0.0f, 0.0f);
         gl.glRotatef(view_roty, 0.0f, 1.0f, 0.0f);
-        gl.glTranslatef(-0.5f, -0.5f, -0.5f);
+  
+        //gl.glTranslatef(-0.5f, -0.5f, -0.5f);
         //oneBox.drawMe(gl);
         
-        Vect3d p1 = new Vect3d (0,0,0);
+        /*Vect3d p1 = new Vect3d (0,0,0);
         Vect3d p2 = new Vect3d (0,2,0);
         Vect3d p3 = new Vect3d (4,1,0);
         DrawVect3d vp1 = new DrawVect3d (p1);
@@ -158,38 +162,34 @@ public class Box2 implements GLEventListener,
         
         Segment3d s = new Segment3d (p1,p2);
         DrawSegment3d ds = new DrawSegment3d (s);
-        ds.drawObject(gl);
+        ds.drawObject(gl);*/
 //        gl.glColor3f(1, 0, 0);
 //        gl.glPointSize(4.0f);
 //        gl.glBegin(GL.GL_POINTS);
 //            gl.glVertex3d(p1.x, p1.y, p1.z);
 //	gl.glEnd();
 //        
+
+        DrawAxis3d axis = new DrawAxis3d();
+        axis.drawObject(gl);
+        
+        
         
         //int ori = p1.orientation(p2, p2);
         //System.out.print("orientacion:");
         //System.out.println(ori);
         
         // no logro ver mi tri√°ngulo
-        Triangle3d t1 = new Triangle3d ( new Vect3d (0, 0.5, 0),
-                new Vect3d (0.7, 0, 0),
-                new Vect3d (0, 0, 0));
+        Triangle3d t1 = new Triangle3d (    new Vect3d (0, 3, 0),
+                                            new Vect3d (1, 0, 0),
+                                            new Vect3d (0, 0, 1)
+                                        );
         
-//        gl.glBegin(GL.GL_TRIANGLES);
-//	        //gl.glNormal3f(-1.0f,0.0f,0.0f);
-//	        gl.glVertex3f(0.0f,3.0f,0.0f);
-//	        gl.glVertex3f(3.0f,0.0f,0.0f);
-//	        gl.glVertex3f(0.0f,0.0f,0.0f);
-//        gl.glEnd();
-
         DrawTriangle3d dt1 = new DrawTriangle3d (t1);
-        dt1.drawObjectC(gl,1,0,1);
-         
-        Cloud3d c = new Cloud3d (30);
-         
-         /*--------------------------------------
-         -------------°campo de tiro!------------
-         --------------------------------------*/
+        dt1.drawObjectC(gl,0.9f,0.9f,0.9f);
+        
+        //Cloud3d c = new Cloud3d (30);
+        
         Vect3d xInf,yInf,zInf;
         xInf= new Vect3d(100,0,0);
         yInf= new Vect3d(0,100,0);
@@ -197,7 +197,7 @@ public class Box2 implements GLEventListener,
          
         Plane pEje = new Plane(xInf,yInf,zInf,true);
         DrawPlane dpEje= new DrawPlane(pEje);
-        dpEje.drawObjectC(gl ,1.0f, 0.0f, 0.0f, 0.3f);
+        dpEje.drawObjectC(gl ,0.0f, 1.0f, 0.0f, 0.3f);
          
         xInf= new Vect3d(100,0,0);
         yInf= new Vect3d(0,0,0);
@@ -205,18 +205,15 @@ public class Box2 implements GLEventListener,
          
         pEje = new Plane(xInf,yInf,zInf,true);
         dpEje= new DrawPlane(pEje);
-        dpEje.drawObjectC(gl ,0.0f, 1.0f, 0.0f, 0.3f);
+        dpEje.drawObjectC(gl ,1.0f, 0.0f, 0.0f, 0.3f);
+        
         xInf= new Vect3d(0,0,0);
         yInf= new Vect3d(0,100,0);
         zInf= new Vect3d(0,0,100);
+        
         pEje = new Plane(xInf,yInf,zInf,true);
         dpEje= new DrawPlane(pEje);
         dpEje.drawObjectC(gl ,0.0f, 0.0f, 1.0f, 0.3f);
-
-         /*--------------------------------------
-         -------------°Fin de campo!-------------
-         --------------------------------------*/
-
         
         gl.glFlush();
     }
@@ -238,11 +235,43 @@ public class Box2 implements GLEventListener,
         int y = e.getY();
         Dimension size = e.getComponent().getSize();
         float thetaY = 360.0f * ( (float)(x-oldMouseX)/(float)size.width);
-        float thetaX = 360.0f * ( (float)(oldMouseY-y)/(float)size.height);
+        float thetaX = 360.0f * ( (float)(y-oldMouseY)/(float)size.height);
         oldMouseX = x;
         oldMouseY = y;
         view_rotx += thetaX;
         view_roty += thetaY;
     }
     public void mouseMoved(MouseEvent e) {}
+    
+    public void keyPressed(KeyEvent e){
+        
+        if(e.getKeyChar()=='a'){
+            view_trax++;
+        }
+        if (e.getKeyChar()=='d'){
+            view_trax--;
+        }
+        if(e.getKeyChar()=='z'){
+            view_tray++;
+        }
+        if (e.getKeyChar()=='q'){
+            view_tray--;
+        }
+        if(e.getKeyChar()=='w'){
+            view_traz++;
+        }
+        if (e.getKeyChar()=='s'){
+            view_traz--;
+        }
+        
+        if (e.getKeyChar()=='r'){
+            view_trax=0.0f;
+            view_tray=0.0f;
+            view_traz=0.0f;
+            
+        }
+        
+    }
+    public void keyReleased(KeyEvent e){}
+    public void keyTyped(KeyEvent e){}
 }

@@ -11,7 +11,7 @@ public class DrawLine3d extends Draw{
         vl = l;
     }
     
-    public Line3d getLine(){
+    public Line3d getEdge3d(){
         
         return vl;
     }
@@ -36,7 +36,7 @@ public class DrawLine3d extends Draw{
 
         g.glBegin(GL.GL_LINES);
             g.glVertex3d(ax,ay,az);
-            g.glVertex3d(bx,by,az);
+            g.glVertex3d(bx,by,bz);
         g.glEnd();
     
     }
@@ -62,7 +62,7 @@ public class DrawLine3d extends Draw{
         g.glColor3f(R, G, B);
         g.glBegin(GL.GL_LINES);
             g.glVertex3d(ax,ay,az);
-            g.glVertex3d(bx,by,az);
+            g.glVertex3d(bx,by,bz);
         g.glEnd();
     
     }
