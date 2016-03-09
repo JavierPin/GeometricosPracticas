@@ -43,7 +43,7 @@ public class Box2 implements GLEventListener,
     	Draw.ANCHO = WIDTH;
     	Draw.FONDO = 100;
     			
-        Frame frame = new Frame("Simple JOGL Application");
+        Frame frame = new Frame("Libreria 3D");
         GLCanvas canvas = new GLCanvas();
         canvas.addGLEventListener(new Box2());
         frame.add(canvas);
@@ -73,6 +73,7 @@ public class Box2 implements GLEventListener,
     public void init(GLAutoDrawable drawable)
     {
         GL gl = drawable.getGL();
+        glu = new GLU();
         
         // Set backgroundcolor and shading mode
         gl.glClearColor(1.0f, 1.0f, 1.0f, 0.0f); //Como que duele un poco en blanco
@@ -131,65 +132,29 @@ public class Box2 implements GLEventListener,
     
     public void display(GLAutoDrawable drawable)
     {
+        
         gl = drawable.getGL();
-        glu = new GLU(); // needed for lookat
-        // Clear the drawing area
+
         gl.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT);
 
 
         gl.glLoadIdentity();
-        glu.gluLookAt(4,8,8,  // eye pos
+        glu.gluLookAt(6,10,10,  // eye pos
                      0,0,0,   // look at
                      0,1,0);  // up
-
 
         gl.glTranslatef(view_trax, view_tray, view_traz);       
         gl.glRotatef(view_rotx, 1.0f, 0.0f, 0.0f);
         gl.glRotatef(view_roty, 0.0f, 1.0f, 0.0f);
-  
-        //gl.glTranslatef(-0.5f, -0.5f, -0.5f);
-        //oneBox.drawMe(gl);
-        
-        /*Vect3d p1 = new Vect3d (0,0,0);
-        Vect3d p2 = new Vect3d (0,2,0);
-        Vect3d p3 = new Vect3d (4,1,0);
-        DrawVect3d vp1 = new DrawVect3d (p1);
-        vp1.drawObject(gl);
-        DrawVect3d vp2 = new DrawVect3d (p2);
-        vp2.drawObjectC(gl,0 ,1 ,0);
-        DrawVect3d vp3 = new DrawVect3d (p3);
-        vp3.drawObjectC(gl, 0, 0, 1);
-        
-        Segment3d s = new Segment3d (p1,p2);
-        DrawSegment3d ds = new DrawSegment3d (s);
-        ds.drawObject(gl);*/
-//        gl.glColor3f(1, 0, 0);
-//        gl.glPointSize(4.0f);
-//        gl.glBegin(GL.GL_POINTS);
-//            gl.glVertex3d(p1.x, p1.y, p1.z);
-//	gl.glEnd();
-//        
 
+
+        //Dibujar los ejes y los planos de cada eje
+        //Ejes
         DrawAxis3d axis = new DrawAxis3d();
         axis.drawObject(gl);
         
         
-        
-        //int ori = p1.orientation(p2, p2);
-        //System.out.print("orientacion:");
-        //System.out.println(ori);
-        
-        // no logro ver mi triángulo
-        Triangle3d t1 = new Triangle3d (    new Vect3d (0, 3, 0),
-                                            new Vect3d (1, 0, 0),
-                                            new Vect3d (0, 0, 1)
-                                        );
-        
-        DrawTriangle3d dt1 = new DrawTriangle3d (t1);
-        dt1.drawObjectC(gl,0.9f,0.9f,0.9f);
-        
-        //Cloud3d c = new Cloud3d (30);
-        
+        //Planos
         Vect3d xInf,yInf,zInf;
         xInf= new Vect3d(100,0,0);
         yInf= new Vect3d(0,100,0);
@@ -215,7 +180,65 @@ public class Box2 implements GLEventListener,
         dpEje= new DrawPlane(pEje);
         dpEje.drawObjectC(gl ,0.0f, 0.0f, 1.0f, 0.3f);
         
+        //^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        
+        Triangle3d t1 = new Triangle3d (    new Vect3d (3, 4, 3),
+                                            new Vect3d (4, 3, 3),
+                                            new Vect3d (3, 3, 4)
+                                        );
+        
+        Triangle3d t1x = t1.proyecta_XY();
+        Triangle3d t1y = t1.proyecta_YZ();
+        Triangle3d t1z = t1.proyecta_XZ();
+
+        //Calculamos primero los triangulos proyectados pero los pintamos al final
+        //Importa el orden de dibujado, si pintamos los triangulos al principio, las lineas se superponen a la geometria
+        Segment3d l = new Segment3d(t1.getA(),t1x.getA());
+        DrawSegment3d line = new DrawSegment3d(l);
+        line.drawObjectC(gl,0,0,0);
+        l = new Segment3d(t1.getB(),t1x.getB());
+        line = new DrawSegment3d(l);
+        line.drawObjectC(gl,0,0,0);
+        l = new Segment3d(t1.getC(),t1x.getC());
+        line = new DrawSegment3d(l);
+        line.drawObjectC(gl,0,0,0);
+        
+        l = new Segment3d(t1.getA(),t1y.getA());
+        line = new DrawSegment3d(l);
+        line.drawObjectC(gl,0,0,0);
+        l = new Segment3d(t1.getB(),t1y.getB());
+        line = new DrawSegment3d(l);
+        line.drawObjectC(gl,0,0,0);
+        l = new Segment3d(t1.getC(),t1y.getC());
+        line = new DrawSegment3d(l);
+        line.drawObjectC(gl,0,0,0);
+        
+        l = new Segment3d(t1.getA(),t1z.getA());
+        line = new DrawSegment3d(l);
+        line.drawObjectC(gl,0,0,0);
+        l = new Segment3d(t1.getB(),t1z.getB());
+        line = new DrawSegment3d(l);
+        line.drawObjectC(gl,0,0,0);
+        l = new Segment3d(t1.getC(),t1z.getC());
+        line = new DrawSegment3d(l);
+        line.drawObjectC(gl,0,0,0);
+        
+        DrawTriangle3d dt1 = new DrawTriangle3d(t1x);
+        dt1.drawObjectC(gl, 1.0f,0,0);
+        dt1 = new DrawTriangle3d(t1y);
+        dt1.drawObjectC(gl, 0,1.0f,0);
+        dt1 = new DrawTriangle3d(t1z);
+        dt1.drawObjectC(gl, 0,0,1.0f);
+        
+        
+        
+        dt1 = new DrawTriangle3d (t1);
+        dt1.drawObjectC(gl,0.5f,0.5f,0.5f);
+        
+        //Cloud3d c = new Cloud3d (30);
+
         gl.glFlush();
+        
     }
     
     public void displayChanged(GLAutoDrawable drawable, 

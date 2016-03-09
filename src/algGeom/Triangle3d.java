@@ -52,7 +52,6 @@ public class Triangle3d {
         c = vc;
     }
 
-
     /**Obtiene el Vect3d de a */
     public Vect3d getA() {
         return a;
@@ -73,6 +72,7 @@ public class Triangle3d {
     	return (i==0 ? a : (i==1? b : c));
     }
     
+    /** Obtiene un array con los vectores del triángulo a, b y c */
     public Vect3d[] getPoints(){
         Vect3d[] vt = {a,b,c};
         return vt;
@@ -98,8 +98,7 @@ public class Triangle3d {
          c = pc;
      }
 
-    /** devuelve la normal al triÃ¡ngulo */
-
+    /** devuelve la normal al triángulo */
     public Vect3d Normal (){
         Vect3d v1 = new Vect3d (b.resta (a));
         Vect3d v2 = new Vect3d (c.resta (a));
@@ -109,11 +108,10 @@ public class Triangle3d {
         return (n.prodEscalar(1.0/longi));
     }
 
-    /** determina la posiciÃ³n del punto con respecto al triÃ¡ngulo,
+    /** determina la posiciÃ³n del punto con respecto al triángulo,
      puede estar en el lado positivo, en el negativo o sobre su superficie*
-     - si al girar abc el punto p estÃ¡ en la direcciÃ³n de avance del tornillo, entonces es negativo
-     - si estÃ¡ en la posiciÃ³n contraria, entonces es positivo */
-    
+     - si al girar abc el punto p está en la direcciÃ³n de avance del tornillo, entonces es negativo
+     - si está en la posiciÃ³n contraria, entonces es positivo */    
     public posicionPunto clasifica (Vect3d p){
         
         Vect3d v = new Vect3d (p.resta(a));
@@ -130,9 +128,22 @@ public class Triangle3d {
         else return posicionPunto.ENCIMA;
     }
 
-
-    /** Determina la caja envolvente de un triÃ¡ngulo */
-
+    /** determina si un punto es coplanar con el plano que contiene al triángulo */
+    public boolean coplanar(Vect3d p){
+        
+        Vect3d u = b.resta(a);
+        Vect3d v = c.resta(a);
+        Vect3d w = p.resta(a);
+        
+        if(u.XProduct(v).dot(w)> BasicGeom.CERO){
+            
+            return false;
+        }
+        
+        return true;
+    }
+    
+    /** Determina la caja envolvente de un triángulo */
     public AABB getAABB () {
         Vect3d min = new Vect3d (BasicGeom.min3(a.x, b.x, c.x),
                                  BasicGeom.min3(a.y, b.y, c.y),
@@ -144,8 +155,7 @@ public class Triangle3d {
 
     }
 
-    /** Compara los triÃ¡ngulos por la Z */
-
+    /** Compara los triángulos por la Z */
     public int Compara_Z (Triangle3d t){
         if (this.getAABB().getMax().getZ() > t.getAABB().getMax().getZ()){
             return -1;
@@ -154,8 +164,7 @@ public class Triangle3d {
         return 0;
     }
 
-
-     /** determina si dos triÃ¡ngulos solapan en la coordenada X*/
+     /** determina si dos triángulos solapan en la coordenada X*/
      public boolean solapa_X (Triangle3d t){
         AABB c1 = this.getAABB();
         AABB c2 = t.getAABB();
@@ -163,8 +172,7 @@ public class Triangle3d {
                 (c2.getMin().x <= c1.getMin().x) && (c1.getMin().x <= c2.getMax().x));
     }
 
-
-     /** determina si dos triÃ¡ngulos solapan en la coordenada Y*/
+     /** determina si dos triángulos solapan en la coordenada Y*/
     public boolean solapa_Y (Triangle3d t){
         AABB c1 = this.getAABB();
         AABB c2 = t.getAABB();
@@ -172,8 +180,7 @@ public class Triangle3d {
                 (c2.getMin().y <= c1.getMin().y) && (c1.getMin().y <= c2.getMax().y));
     }
 
-
-    /** determina si dos triÃ¡ngulos solapan en la coordenada Z*/
+    /** determina si dos triángulos solapan en la coordenada Z*/
     public boolean solapa_Z (Triangle3d t){
         AABB c1 = this.getAABB();
         AABB c2 = t.getAABB();
@@ -182,11 +189,10 @@ public class Triangle3d {
     }
 
     /** devuelve el punto de interseccion eje con el plano del triangulo 3d , pag 100*/
-
     public posicionTrianguloRecta intersecta (Edge3d e, DoubleClass t){
         Vect3d aa = new Vect3d (e.orig);
         Vect3d bb = new Vect3d (e.dest);
-        Vect3d cc = new Vect3d (a); //algÃºn punto del plano del triÃ¡ngulo
+        Vect3d cc = new Vect3d (a); //algÃºn punto del plano del triángulo
         Vect3d n = new Vect3d (this.Normal());
         double denom = n.dot(bb.resta(aa));
         if (BasicGeom.iguales(denom, BasicGeom.CERO)){
@@ -212,7 +218,7 @@ public class Triangle3d {
         result.anade(new Vertex (pb,result));
         result.anade(new Vertex (pc,result));
 
-        // si no estÃ¡n en sentido antihorario intercambio las posiciones 1 y 2 del triangulo
+        // si no están en sentido antihorario intercambio las posiciones 1 y 2 del triangulo
         if (! pa.izquierda(pb,pc)){
             result.modifica(new Vertex(pc,result), 1);
             result.modifica(new Vertex(pb,result), 2);
@@ -220,8 +226,7 @@ public class Triangle3d {
         return result;
     }
 
-    /** determina si la proyecciÃ³n en el plano XY de dos triÃ¡ngulos solapa */
-
+    /** determina si la proyecciÃ³n en el plano XY de dos triángulos solapa */
     boolean proyeccionSolapa_XY (Triangle3d t){
         //boolean result = false;
         boolean seguir = true;
@@ -263,15 +268,13 @@ public class Triangle3d {
         
     }
 
-
     /** true determina que this puede ocultar al triangulo t
      * 1.- solape en x?
      * 2.- solape en y?
-     * 3.- estÃ¡ this enteramente detras o en el plano de t ?
-     * 4.- estÃ¡ t enteramente en frente de this o en su mismo plano?
+     * 3.- está this enteramente detras o en el plano de t ?
+     * 4.- está t enteramente en frente de this o en su mismo plano?
      * 5-. no se solapan las proyecciones de this y t?
      */
-
     public boolean puedeOcluir (Triangle3d t){ // pag 151
 
         // caso 1
@@ -317,8 +320,7 @@ public class Triangle3d {
         
     }
 
-
-    /** El plano contenido en el triangulo p es el que parte al triÃ¡ngulo this en
+    /** El plano contenido en el triangulo p es el que parte al triángulo this en
      * dos o tres piezas
      * @return nÃºmero de piezas en las que se divide el triangulo this
      * pag 153
@@ -377,12 +379,11 @@ public class Triangle3d {
         }
         return (numPos +1 );
     }
-     
     
     /**
      * 
      * @param hv determina el plano 0-1 > plano XY
-     * la salida no puede ser degenerada, siempre es un triÃ¡ngulo
+     * la salida no puede ser degenerada, siempre es un triángulo
      */
     //funciÃ³n que debe ser comparada 
     public Polygon project (int h , int v){
@@ -404,7 +405,6 @@ public class Triangle3d {
     		pp.anade(pts[2]);
     	return pp;
     }
-    
     
     /**
      * 
@@ -439,6 +439,11 @@ public class Triangle3d {
     	return posicionTrianguloRecta.NO_INTERSECTA;
    }
     
+    /**
+     * Calcula la proyección del este triángulo sobre el plano XY
+     * 
+     * @return Triangle3d (v1, v2, v3)
+     */
     public Triangle3d proyecta_XY(){
         
         Vect3d v1 = new Vect3d(getA());
@@ -452,6 +457,11 @@ public class Triangle3d {
         
     }
     
+    /**
+     * Calcula la proyección del este triángulo sobre el plano XZ
+     * 
+     * @return Triangle3d (v1, v2, v3)
+     */
     public Triangle3d proyecta_XZ(){
         
         Vect3d v1 = new Vect3d(getA());
@@ -465,6 +475,11 @@ public class Triangle3d {
         
     }
     
+    /**
+     * Calcula la proyección del este triángulo sobre el plano YZ
+     * 
+     * @return Triangle3d (v1, v2, v3)
+     */
     public Triangle3d proyecta_YZ(){
         
         Vect3d v1 = new Vect3d(getA());
@@ -478,12 +493,9 @@ public class Triangle3d {
         
     }
     
-    
       /**Muestra un punto 3d en pantalla*/
      public void out (){
          System.out.println("Triangle3d: ("+ a +"-"+ b + "-"+ c +")");
      }
-
-
 
 }
