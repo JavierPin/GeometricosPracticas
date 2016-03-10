@@ -10,6 +10,8 @@ import java.awt.event.KeyListener;
 import java.awt.event.MouseMotionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.util.ArrayList;
+import java.util.Random;
 import javax.media.opengl.GL;
 import javax.media.opengl.GLAutoDrawable;
 import javax.media.opengl.GLCanvas;
@@ -38,6 +40,14 @@ public class Box2 implements GLEventListener,
     private int oldMouseY;
     //static int HEIGHT = 800, WIDTH = 800;
     static int HEIGHT = 10, WIDTH = 10;
+    static Animator animator;
+    
+    //Problema de refresco infinito
+    boolean once = true;
+    Vect3d v1, v2, v3;
+    DrawCloud3d cloud;
+    DrawTriangle3d triangle;
+    DrawRay3d rayo;
     
     public static void main(String[] args) {
     	Draw.ALTO = HEIGHT;
@@ -49,7 +59,7 @@ public class Box2 implements GLEventListener,
         canvas.addGLEventListener(new Box2());
         frame.add(canvas);
         frame.setSize(800, 800);
-        final Animator animator = new Animator(canvas);
+        animator = new Animator(canvas);
         frame.addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent e) {
@@ -268,17 +278,96 @@ public class Box2 implements GLEventListener,
         //^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^*/
         
         //nube de puntos
-        Cloud3d c = new Cloud3d (30);
-        DrawCloud3d cloud = new DrawCloud3d(c);
+        
+        if (once){
+            once = false;
+            
+            Cloud3d c = new Cloud3d (30);
+            cloud = new DrawCloud3d(c);
+            
+            //Triangulo con tres puntos random de la nube
+            Random rn = new Random();
+
+            ArrayList<Vect3d> cloudPoints = new ArrayList<Vect3d>();
+            
+            for (int i=0; i<c.tama();i++){
+                
+                cloudPoints.add(c.getPunto(i));
+                
+            }
+
+            int index = rn.nextInt(cloudPoints.size()-1);
+            v1 = cloudPoints.get(index);
+            cloudPoints.remove(index);
+
+            index = rn.nextInt(cloudPoints.size()-1);
+            v2 = cloudPoints.get(index);
+            cloudPoints.remove(index);
+
+            index = rn.nextInt(cloudPoints.size()-1);
+            v3 = cloudPoints.get(index);
+            cloudPoints.remove(index);
+            
+            Triangle3d t1 = new Triangle3d (v1,v2,v3);
+            triangle = new DrawTriangle3d(t1);
+            
+            boolean continua = true;
+            int pivote=1;
+            Vect3d point = new Vect3d (0,0,0);
+            
+            do{
+                
+                Ray3d r1 = new Ray3d(cloudPoints.get(0),cloudPoints.get(pivote));
+                Ray3d r2 = new Ray3d(cloudPoints.get(pivote),cloudPoints.get(0));
+                if(t1.RayTriangle3d(r1, point)){
+                    
+                    System.out.print("El rayo formado por los puntos ");
+                    cloudPoints.get(0).out();
+                    System.out.print(" y ");
+                    cloudPoints.get(pivote);
+                    System.out.print(" intersectan con el triangulo en el punto");
+                    point.out();
+                    continua=false;
+                    rayo = new DrawRay3d(r1);
+                    
+                    
+                }
+                if(t1.RayTriangle3d(r2, point) && continua){
+                    
+                    System.out.println("El rayo formado por los puntos ");
+                    cloudPoints.get(pivote).out();
+                    System.out.println(" y ");
+                    cloudPoints.get(0);
+                    System.out.print(" intersectan con el triangulo en el punto");
+                    point.out();
+                    continua=false;
+                    rayo = new DrawRay3d(r1);
+                    
+                    
+                }
+                pivote++;
+                if(pivote==c.tama()-3){
+                    
+                    pivote=1;
+                    cloudPoints.remove(0);
+                    
+                }
+                
+            }while(continua);
+
+            
+        }
+        
         cloud.drawObject(gl);
+        triangle.drawObjectC(gl,1,0,0); 
+        rayo.drawObjectC(gl,1,1,0);
+
         
         gl.glFlush();
         
     }
     
-    public void displayChanged(GLAutoDrawable drawable, 
-                              boolean modeChanged, boolean deviceChanged)
-    { }
+    public void displayChanged(GLAutoDrawable drawable, boolean modeChanged, boolean deviceChanged) {}
 
     public void mouseClicked(MouseEvent e) {}
     public void mouseEntered(MouseEvent e) {}

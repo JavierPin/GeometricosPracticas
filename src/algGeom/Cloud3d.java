@@ -54,6 +54,12 @@ public class Cloud3d {
 //        // constructor a partir de una mesh
 //    }
     
+    public ArrayList<Vect3d> getCloudList(){
+        
+        return nubepuntos;
+        
+    }
+    
     public Cloud3d(String nombre) throws ErrorAlLeerFichero{
         //Leemos el fichero de puntos
         //Cada linea del fichero tiene la siguiente sintaxis:
@@ -96,7 +102,6 @@ public class Cloud3d {
         }
     }
 
-
     public void salvar(String nombre) throws ErrorAlGuardar{
         FileWriter fichero = null;
         PrintWriter pw;
@@ -128,7 +133,6 @@ public class Cloud3d {
         }
     }
 
-
     public Vect3d getPunto(int pos){
         if((pos >= 0)&&(pos<nubepuntos.size())){
             return nubepuntos.get(pos);
@@ -154,5 +158,4 @@ public class Cloud3d {
     	return ab;
     }
     
-   
 }
