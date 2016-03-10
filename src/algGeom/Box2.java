@@ -5,9 +5,11 @@ import java.awt.Dimension;
 import java.awt.Frame;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.awt.event.MouseWheelListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseMotionListener;
+import java.awt.event.MouseWheelEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.ArrayList;
@@ -22,7 +24,8 @@ import javax.media.opengl.glu.GLU;
 public class Box2 implements GLEventListener, 
                              MouseListener, 
                              MouseMotionListener,
-                             KeyListener
+                             KeyListener,
+                             MouseWheelListener
 {
     GLU glu;
     GL gl;
@@ -48,6 +51,8 @@ public class Box2 implements GLEventListener,
     DrawCloud3d cloud;
     DrawTriangle3d triangle;
     DrawRay3d rayo;
+    Cloud3d c;
+    Triangle3d t1;
     
     public static void main(String[] args) {
     	Draw.ALTO = HEIGHT;
@@ -122,6 +127,7 @@ public class Box2 implements GLEventListener,
         drawable.addMouseListener(this);
         drawable.addMouseMotionListener(this);
         drawable.addKeyListener(this);
+        drawable.addMouseWheelListener(this);
     }
     
     public void reshape(GLAutoDrawable drawable, 
@@ -282,7 +288,7 @@ public class Box2 implements GLEventListener,
         if (once){
             once = false;
             
-            Cloud3d c = new Cloud3d (30);
+            c = new Cloud3d (30);
             cloud = new DrawCloud3d(c);
             
             //Triangulo con tres puntos random de la nube
@@ -308,7 +314,7 @@ public class Box2 implements GLEventListener,
             v3 = cloudPoints.get(index);
             cloudPoints.remove(index);
             
-            Triangle3d t1 = new Triangle3d (v1,v2,v3);
+            t1 = new Triangle3d (v1,v2,v3);
             triangle = new DrawTriangle3d(t1);
             
             boolean continua = true;
@@ -358,11 +364,18 @@ public class Box2 implements GLEventListener,
             
         }
         
+        AABB cb = new AABB(c);
+        DrawAABB cloudBox = new DrawAABB(cb);
+        cloudBox.drawWireObject(gl);
+        
+        Triangle3d t1XY = t1.proyecta_XY(cb);
+        DrawTriangle3d triangleXY = new DrawTriangle3d(t1XY);
+        triangleXY.drawObject(gl);
+        
         cloud.drawObject(gl);
         triangle.drawObjectC(gl,1,0,0); 
         rayo.drawObjectC(gl,1,1,0);
 
-        
         gl.glFlush();
         
     }
@@ -389,6 +402,19 @@ public class Box2 implements GLEventListener,
         view_roty += thetaY;
     }
     public void mouseMoved(MouseEvent e) {}
+    public void mouseWheelMoved(MouseWheelEvent e) {
+        
+        if (e.getWheelRotation()<0){
+            
+            view_scale=view_scale+0.1f;
+            
+        }
+        if (e.getWheelRotation()>0){
+            
+            view_scale=view_scale-0.1f;
+        }
+    
+    }
     
     public void keyPressed(KeyEvent e){
         
