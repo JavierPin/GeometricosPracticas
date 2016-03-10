@@ -24,7 +24,8 @@ public class Box2 implements GLEventListener,
 {
     GLU glu;
     GL gl;
-    
+    //scaling the scene
+    private float view_scale = 1.0f;
     // translate the scene
     private float view_trax = 0.0f;
     private float view_tray = 0.0f;
@@ -143,6 +144,7 @@ public class Box2 implements GLEventListener,
                      0,0,0,   // look at
                      0,1,0);  // up
 
+        gl.glScalef(view_scale,view_scale,view_scale);
         gl.glTranslatef(view_trax, view_tray, view_traz);       
         gl.glRotatef(view_rotx, 1.0f, 0.0f, 0.0f);
         gl.glRotatef(view_roty, 0.0f, 1.0f, 0.0f);
@@ -318,6 +320,18 @@ public class Box2 implements GLEventListener,
             view_trax=0.0f;
             view_tray=0.0f;
             view_traz=0.0f;
+            
+        }
+        
+        if (e.getKeyChar()=='+'){
+            
+            view_scale=view_scale+0.1f;
+            
+        }
+        
+        if (e.getKeyChar()=='-'){
+            
+            view_scale=view_scale-0.1f;
             
         }
         
