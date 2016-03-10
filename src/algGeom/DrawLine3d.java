@@ -64,6 +64,8 @@ public class DrawLine3d extends Draw{
             g.glVertex3d(ax,ay,az);
             g.glVertex3d(bx,by,bz);
         g.glEnd();
+        
+        g.glColor3f(1, 1, 1);
     
     }
     

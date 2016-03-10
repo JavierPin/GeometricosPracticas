@@ -34,6 +34,7 @@ public class DrawVect3d extends Draw {
             g.glVertex3d(v3.x, v3.y, v3.z);
 	g.glEnd();
         
-        
+        g.glColor3f(1, 1, 1);
+
     }
 }

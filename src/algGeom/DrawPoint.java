@@ -48,7 +48,9 @@ public class DrawPoint extends Draw {
         g.glPointSize(5f);
         g.glBegin(GL.GL_POINTS);
             g.glVertex2d(x, y);
-	    g.glEnd();
+        g.glEnd();
+        
+        g.glColor3f(1, 1, 1);
         
     }
 }

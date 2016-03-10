@@ -90,15 +90,15 @@ public class DrawPlane extends Draw{
         //^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
         g.glColor4f(R, G, B, alpha);
 
-        g.glBegin(GL.GL_QUADS);
-        g.glVertex3f((float) pt1.x,(float) pt1.y,(float) pt1.z);
-        g.glVertex3f((float)pt2.x,(float) pt2.y,(float) pt2.z);
-        g.glVertex3f((float) pt4.x,(float) pt4.y,(float) pt4.z);
-        g.glVertex3f((float) pt3.x,(float) pt3.y,(float) pt3.z);
-        
-        g.glColor4f(R, G, B, 1);
-        
+            g.glBegin(GL.GL_QUADS);
+            g.glVertex3f((float) pt1.x,(float) pt1.y,(float) pt1.z);
+            g.glVertex3f((float)pt2.x,(float) pt2.y,(float) pt2.z);
+            g.glVertex3f((float) pt4.x,(float) pt4.y,(float) pt4.z);
+            g.glVertex3f((float) pt3.x,(float) pt3.y,(float) pt3.z);
+            
         g.glEnd();
+        
+        g.glColor4f(1, 1, 1, 1);
 
     }
     

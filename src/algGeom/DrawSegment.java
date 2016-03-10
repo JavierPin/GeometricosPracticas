@@ -45,6 +45,8 @@ public class DrawSegment extends Draw {
             g.glVertex2d(ax, ay);
             g.glVertex2d(bx, by);
         g.glEnd();
+        
+        g.glColor3f(1, 1, 1);
 
     }
     

@@ -52,6 +52,8 @@ public class DrawRay3d extends Draw{
         g.glVertex3f((float) p2.getX(),(float) p2.getY(),(float) p2.getZ());
         
         g.glEnd();
+        
+        g.glColor3f(1, 1, 1);
 
     }
     
