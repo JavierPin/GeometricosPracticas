@@ -80,6 +80,11 @@ public class Box2 implements GLEventListener,
         gl.glClearColor(1.0f, 1.0f, 1.0f, 0.0f); //Como que duele un poco en blanco
         //gl.glClearColor(0.0f, 0.0f, 0.0f, 0.0f); //En negro no duele tanto
         gl.glShadeModel(GL.GL_FLAT);
+        
+        gl.glEnable(GL.GL_POINT_SMOOTH );
+        gl.glEnable(GL.GL_LINE_SMOOTH);
+        gl.glEnable(GL.GL_POLYGON_SMOOTH);
+        
         // descomentar esto para poder ver las sombras de los modelos 
         /*
         float ambient[] = {1.0f,1.0f,1.0f,1.0f };
@@ -184,7 +189,8 @@ public class Box2 implements GLEventListener,
         
         //^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
         
-        Triangle3d t1 = new Triangle3d (    new Vect3d (3, 4, 3),
+        //Creamos un triangulo y sus proyecciones
+        /*Triangle3d t1 = new Triangle3d (    new Vect3d (3, 4, 3),
                                             new Vect3d (4, 3, 3),
                                             new Vect3d (3, 3, 4)
                                         );
@@ -259,12 +265,12 @@ public class Box2 implements GLEventListener,
         AABB b = new AABB(new Vect3d(3,3,3), new Vect3d(4,4,4));
         DrawAABB box = new DrawAABB(b);
         box.drawWireObject(gl);
-        //^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        //^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^*/
         
         //nube de puntos
-        /*Cloud3d c = new Cloud3d (30);
+        Cloud3d c = new Cloud3d (30);
         DrawCloud3d cloud = new DrawCloud3d(c);
-        cloud.drawObject(gl);*/
+        cloud.drawObject(gl);
         
         gl.glFlush();
         

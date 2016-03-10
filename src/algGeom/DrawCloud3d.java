@@ -20,6 +20,7 @@ public class DrawCloud3d extends Draw{
     
     @Override public void drawObject(GL g){
 
+        g.glPointSize(3);
         g.glBegin(GL.GL_POINTS);
             for (int i=0; i<cloud.tama(); i++){
                 g.glVertex3d(cloud.getPunto(i).x, cloud.getPunto(i).y, cloud.getPunto(i).z);
