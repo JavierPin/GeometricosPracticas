@@ -364,18 +364,84 @@ public class Box2 implements GLEventListener,
             
         }
         
-        AABB cb = new AABB(c);
-        DrawAABB cloudBox = new DrawAABB(cb);
-        cloudBox.drawWireObject(gl);
+                /*Dibujamos el plano que contiene al triangulo*/
+        Plane planoTriangulo;
+        //planoTriangulo = new Plane(triangle.tr.a,triangle.tr.b,triangle.tr.c,false);
+        planoTriangulo = new Plane(triangle.tr.getA(),triangle.tr.getB(),triangle.tr.getC(),true);
+        DrawPlane dPlanoTriangulo= new DrawPlane (planoTriangulo);
         
-        Triangle3d t1XY = t1.proyecta_XY(cb);
-        DrawTriangle3d triangleXY = new DrawTriangle3d(t1XY);
-        triangleXY.drawObject(gl);
+        double distPlano = BasicGeom.INFINITO;
+        int puntoCercano=0;
+        /*Seccion A
+            el siguientre trozo de codigo se usa para calcular el punto 
+            más cercano al plano y cambiar su grosor
+        */
+         for (int i = 0; i < 30; i++) {
+            if(planoTriangulo.distancia(cloud.cloud.getPunto(i))<distPlano
+                    
+                    && (cloud.cloud.getPunto(i)==triangle.tr.getA()) //Tampoco puede estar incluido en el triangulo
+                    && (cloud.cloud.getPunto(i)==triangle.tr.getB())
+                    && (cloud.cloud.getPunto(i)==triangle.tr.getC())){
+                puntoCercano=i;
+                distPlano=planoTriangulo.distancia(cloud.cloud.getPunto(i));
+            }
+         }
+        /*Fin Seccion A*/
         
-        cloud.drawObject(gl);
+
+        /*Vamos a hacer que cada punto se dibuje dependiendo de 
+        su posicion respecto al triangulo*/
+         for (int i = 0; i < 30; i++) {
+            posicionPunto tipoPunto;
+            tipoPunto =  triangle.tr.clasifica(cloud.cloud.getPunto(i));
+            
+            if(tipoPunto == posicionPunto.ENCIMA){
+                if(i==puntoCercano){
+                    new DrawVect3d(cloud.cloud.getPunto(i)).drawObjectC(gl, 0,0,0,2);
+                }else{
+                    new DrawVect3d(cloud.cloud.getPunto(i)).drawObjectC(gl, 0,0,0);
+                }
+            }else if(tipoPunto == posicionPunto.NEGATIV0){                
+                if(i==puntoCercano){
+                    new DrawVect3d(cloud.cloud.getPunto(i)).drawObjectC(gl, 1,0,0,2);
+                }else{
+                    new DrawVect3d(cloud.cloud.getPunto(i)).drawObjectC(gl, 1,0,0);
+                }
+            }else if(tipoPunto == posicionPunto.POSITIV0){
+                if(i==puntoCercano){
+                    new DrawVect3d(cloud.cloud.getPunto(i)).drawObjectC(gl, 0,1,0,2);
+                }else{
+                    new DrawVect3d(cloud.cloud.getPunto(i)).drawObjectC(gl, 0,1,0);
+                }
+            }else{
+                if(i==puntoCercano){
+                    new DrawVect3d(cloud.cloud.getPunto(i)).drawObjectC(gl, 1,1,1,2);
+                }else{
+                    new DrawVect3d(cloud.cloud.getPunto(i)).drawObjectC(gl, 1,1,1);
+                }
+            }
+        /*Con eso de ahi ya tenemos clasificados los puntos
+        ojo con los puntos blancos, es que algo falla
+        */
+        }
+         
+         /*AABB de la nuve de puntos*/
+         AABB abNube = new AABB(c);
+         DrawAABB dABnube = new DrawAABB(abNube);
+         
+         Triangle3d boxY = new Triangle3d(t1.proyecta_XY(abNube));
+         DrawTriangle3d proyBoxY = new DrawTriangle3d(boxY);
+         proyBoxY.drawObject(gl);
+
+
+        dPlanoTriangulo.drawObjectC(gl, 1, 1, 0, 0.2f);
+         
+        // cloud.drawObject(gl);//Esto dibuja toda la nube de puntos-Pero vamos a hacer que pinte cada punto por separado
         triangle.drawObjectC(gl,1,0,0); 
         rayo.drawObjectC(gl,1,1,0);
-
+        dABnube.drawWireObject(gl);
+        
+                
         gl.glFlush();
         
     }
