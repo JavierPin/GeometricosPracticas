@@ -452,6 +452,24 @@ public class Triangle3d {
     }
     
     /**
+     * Calcula la proyección del este triángulo sobre el plano XY de su caja envolvente
+     * 
+     * @return Triangle3d (v1, v2, v3)
+     */
+    public Triangle3d proyecta_XY(AABB box){
+        
+        Vect3d v1 = new Vect3d(getA());
+        v1.setZ(box.min.z);
+        Vect3d v2 = new Vect3d(getB());
+        v2.setZ(box.min.z);
+        Vect3d v3 = new Vect3d(getC());
+        v3.setZ(box.min.z);
+        
+        return new Triangle3d(v1,v2,v3);
+        
+    }
+    
+    /**
      * Calcula la proyección del este triángulo sobre el plano XZ
      * 
      * @return Triangle3d (v1, v2, v3)
@@ -464,6 +482,25 @@ public class Triangle3d {
         v2.setY(0.0f);
         Vect3d v3 = new Vect3d(getC());
         v3.setY(0.0f);
+        
+        return new Triangle3d(v1,v2,v3);
+        
+    }
+    
+            
+    /**
+     * Calcula la proyección del este triángulo sobre el plano XZ de su caja envolvente
+     * 
+     * @return Triangle3d (v1, v2, v3)
+     */
+    public Triangle3d proyecta_XZ(AABB box){
+        
+        Vect3d v1 = new Vect3d(getA());
+        v1.setY(box.min.y);
+        Vect3d v2 = new Vect3d(getB());
+        v2.setY(box.min.y);
+        Vect3d v3 = new Vect3d(getC());
+        v3.setY(box.min.y);
         
         return new Triangle3d(v1,v2,v3);
         
@@ -482,6 +519,24 @@ public class Triangle3d {
         v2.setX(0.0f);
         Vect3d v3 = new Vect3d(getC());
         v3.setX(0.0f);
+        
+        return new Triangle3d(v1,v2,v3);
+        
+    }
+    
+    /**
+     * Calcula la proyección del este triángulo sobre el plano XY de su caja envolvente
+     * 
+     * @return Triangle3d (v1, v2, v3)
+     */
+    public Triangle3d proyecta_YZ(AABB box){
+        
+        Vect3d v1 = new Vect3d(getA());
+        v1.setX(box.min.x);
+        Vect3d v2 = new Vect3d(getB());
+        v2.setX(box.min.x);
+        Vect3d v3 = new Vect3d(getC());
+        v3.setX(box.min.x);
         
         return new Triangle3d(v1,v2,v3);
         
