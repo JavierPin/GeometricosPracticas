@@ -35,6 +35,8 @@ public class DrawSegment3d extends Draw {
             g.glVertex3d(e3.orig.x,e3.orig.y,e3.orig.z);
             g.glVertex3d(e3.dest.x,e3.dest.y,e3.dest.z);
         g.glEnd();
+        
+        g.glColor3f(1, 1, 1);
      
  }
    

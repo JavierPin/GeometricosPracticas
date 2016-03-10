@@ -35,6 +35,21 @@ public class Vect3d {
         public double getZ(){
                 return z;
         }
+        
+        public void setX(double xx){
+            
+            x=xx;
+        }
+        
+        public void setY(double yy){
+            
+            y=yy;
+        }
+        
+        public void setZ(double zz){
+            
+            z=zz;
+        }
 
         public double[] getVert(){
                 double[] vt = {x,y,z};

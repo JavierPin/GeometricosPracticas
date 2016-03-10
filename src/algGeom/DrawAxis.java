@@ -21,8 +21,6 @@ public class DrawAxis extends Draw{
     
     @Override public void drawObject (GL gl){
 
-        gl.glColor3f(1,1,1);
-        
         Point a = new Point (-(w/10.0f),0);
         Point b = new Point (w/10.0f,0);
         Point c = new Point (0,-(h/10.0f));
@@ -129,5 +127,8 @@ public class DrawAxis extends Draw{
           segment.drawObjectC(gl,R,G,B);
 
         }
+        
+        gl.glColor3f(1, 0, 0);
+        
     }
 }

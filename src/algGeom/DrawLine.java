@@ -79,7 +79,8 @@ public class DrawLine extends Draw {
             g.glVertex2d(ax,ay);
             g.glVertex2d(bx,by);//the fourth (w) component is zero!
         g.glEnd();
-
+        
+        g.glColor3f(1, 1, 1);
 
     }
 

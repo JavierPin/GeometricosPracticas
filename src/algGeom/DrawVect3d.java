@@ -34,6 +34,19 @@ public class DrawVect3d extends Draw {
             g.glVertex3d(v3.x, v3.y, v3.z);
 	g.glEnd();
         
+        g.glColor3f(1, 1, 1);
+
+    }
+    
+    public void drawObjectC (GL g, float R, float G, float B,float size){
+
+        g.glColor3f(R, G, B);
+        g.glPointSize(4.0f*size);
+        g.glBegin(GL.GL_POINTS);
+            g.glVertex3d(v3.x, v3.y, v3.z);
+	g.glEnd();
         
+        g.glColor3f(1, 1, 1);
+
     }
 }

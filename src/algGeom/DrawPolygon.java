@@ -38,6 +38,8 @@ public class DrawPolygon extends Draw {
         }    
         g.glEnd();
         
+        g.glColor3f(1, 1, 1);
+        
     }
     
 }

@@ -5,9 +5,15 @@ import java.awt.Dimension;
 import java.awt.Frame;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.awt.event.MouseWheelListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.awt.event.MouseMotionListener;
+import java.awt.event.MouseWheelEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.util.ArrayList;
+import java.util.Random;
 import javax.media.opengl.GL;
 import javax.media.opengl.GLAutoDrawable;
 import javax.media.opengl.GLCanvas;
@@ -17,19 +23,48 @@ import javax.media.opengl.glu.GLU;
 
 public class Box2 implements GLEventListener, 
                              MouseListener, 
-                             MouseMotionListener
+                             MouseMotionListener,
+                             KeyListener,
+                             MouseWheelListener
 {
+    GLU glu;
+    GL gl;
+    //scaling the scene
+    private float view_scale = 1.0f;
+    // translate the scene
+    private float view_trax = 0.0f;
+    private float view_tray = 0.0f;
+    private float view_traz = 0.0f;
+    // rotating the scene
+    private float view_rotx = 0.0f; //20
+    private float view_roty = 0.0f; //30
+    // remember last mouse position
+    private int oldMouseX;
+    private int oldMouseY;
+    //static int HEIGHT = 800, WIDTH = 800;
+    static int HEIGHT = 10, WIDTH = 10;
+    static Animator animator;
+    
+    //Problema de refresco infinito
+    boolean once = true;
+    Vect3d v1, v2, v3;
+    DrawCloud3d cloud;
+    DrawTriangle3d triangle;
+    DrawRay3d rayo;
+    Cloud3d c;
+    Triangle3d t1;
+    
     public static void main(String[] args) {
     	Draw.ALTO = HEIGHT;
     	Draw.ANCHO = WIDTH;
     	Draw.FONDO = 100;
     			
-        Frame frame = new Frame("Simple JOGL Application");
+        Frame frame = new Frame("Libreria 3D");
         GLCanvas canvas = new GLCanvas();
         canvas.addGLEventListener(new Box2());
         frame.add(canvas);
         frame.setSize(800, 800);
-        final Animator animator = new Animator(canvas);
+        animator = new Animator(canvas);
         frame.addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent e) {
@@ -48,23 +83,23 @@ public class Box2 implements GLEventListener,
         frame.setLocationRelativeTo(null);
         frame.setVisible(true);
         animator.start();
+        
     }
-    
-    // rotating the scene
-    private float view_rotx = 20.0f; //20
-    private float view_roty = 30.0f; //30
-    // remember last mouse position
-    private int oldMouseX;
-    private int oldMouseY;
-    //static int HEIGHT = 800, WIDTH = 800;
-    static int HEIGHT = 10, WIDTH = 10;
     
     public void init(GLAutoDrawable drawable)
     {
         GL gl = drawable.getGL();
+        glu = new GLU();
+        
         // Set backgroundcolor and shading mode
-        gl.glClearColor(1.0f, 1.0f, 1.0f, 0.0f);
+        gl.glClearColor(1.0f, 1.0f, 1.0f, 0.0f); //Como que duele un poco en blanco
+        //gl.glClearColor(0.0f, 0.0f, 0.0f, 0.0f); //En negro no duele tanto
         gl.glShadeModel(GL.GL_FLAT);
+        
+        gl.glEnable(GL.GL_POINT_SMOOTH );
+        gl.glEnable(GL.GL_LINE_SMOOTH);
+        gl.glEnable(GL.GL_POLYGON_SMOOTH);
+        
         // descomentar esto para poder ver las sombras de los modelos 
         /*
         float ambient[] = {1.0f,1.0f,1.0f,1.0f };
@@ -91,6 +126,8 @@ public class Box2 implements GLEventListener,
         */
         drawable.addMouseListener(this);
         drawable.addMouseMotionListener(this);
+        drawable.addKeyListener(this);
+        drawable.addMouseWheelListener(this);
     }
     
     public void reshape(GLAutoDrawable drawable, 
@@ -117,83 +154,299 @@ public class Box2 implements GLEventListener,
     
     public void display(GLAutoDrawable drawable)
     {
-        GL gl = drawable.getGL();
-        GLU glu = new GLU(); // needed for lookat
-        // Clear the drawing area
+        
+        gl = drawable.getGL();
+
         gl.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT);
 
-        // A estaba comentado
-        /**
-		gl.glMatrixMode(GL.GL_PROJECTION);
-		gl.glLoadIdentity();
-		gl.glOrtho(0, WIDTH, 0, HEIGHT, -10, 10);
-		gl.glMatrixMode(GL.GL_MODELVIEW);
-		gl.glLoadIdentity();
- **/
-      
-        
-        
+
         gl.glLoadIdentity();
-        glu.gluLookAt(4,8,4,  // eye pos
+        glu.gluLookAt(6,10,10,  // eye pos
                      0,0,0,   // look at
-                     0,0,1);  // up
+                     0,1,0);  // up
 
-
-        gl.glTranslatef(0.5f, 0.5f, 0.5f);       
+        gl.glScalef(view_scale,view_scale,view_scale);
+        gl.glTranslatef(view_trax, view_tray, view_traz);       
         gl.glRotatef(view_rotx, 1.0f, 0.0f, 0.0f);
         gl.glRotatef(view_roty, 0.0f, 1.0f, 0.0f);
-        gl.glTranslatef(-0.5f, -0.5f, -0.5f);
-        //oneBox.drawMe(gl);
-        
-        Vect3d p1 = new Vect3d (0,0,0);
-        Vect3d p2 = new Vect3d (0,2,0);
-        Vect3d p3 = new Vect3d (4,1,0);
-        DrawVect3d vp1 = new DrawVect3d (p1);
-        vp1.drawObject(gl);
-        DrawVect3d vp2 = new DrawVect3d (p2);
-        vp2.drawObjectC(gl,0 ,1 ,0);
-        DrawVect3d vp3 = new DrawVect3d (p3);
-        vp3.drawObjectC(gl, 0, 0, 1);
-        
-        Segment3d s = new Segment3d (p1,p2);
-        DrawSegment3d ds = new DrawSegment3d (s);
-        ds.drawObject(gl);
-//        gl.glColor3f(1, 0, 0);
-//        gl.glPointSize(4.0f);
-//        gl.glBegin(GL.GL_POINTS);
-//            gl.glVertex3d(p1.x, p1.y, p1.z);
-//	gl.glEnd();
-//        
-        
-        //int ori = p1.orientation(p2, p2);
-        //System.out.print("orientacion:");
-        //System.out.println(ori);
-        
-        // no logro ver mi tri√°ngulo
-        Triangle3d t1 = new Triangle3d ( new Vect3d (0, 0.5, 0),
-                new Vect3d (0.7, 0, 0),
-                new Vect3d (0, 0, 0));
-        
-//        gl.glBegin(GL.GL_TRIANGLES);
-//	        //gl.glNormal3f(-1.0f,0.0f,0.0f);
-//	        gl.glVertex3f(0.0f,3.0f,0.0f);
-//	        gl.glVertex3f(3.0f,0.0f,0.0f);
-//	        gl.glVertex3f(0.0f,0.0f,0.0f);
-//        gl.glEnd();
 
-         DrawTriangle3d dt1 = new DrawTriangle3d (t1);
-         dt1.drawObjectC(gl,1,0,1);
-         
-         Cloud3d c = new Cloud3d (30);
-         
 
+        //Dibujar los ejes y los planos de cada eje
+        //Ejes
+        DrawAxis3d axis = new DrawAxis3d();
+        axis.drawColoredObject(gl);
         
+        
+        //Planos
+        Vect3d xInf,yInf,zInf;
+        xInf= new Vect3d(100,0,0);
+        yInf= new Vect3d(0,100,0);
+        zInf= new Vect3d(0,0,0);
+         
+        Plane pEje = new Plane(xInf,yInf,zInf,true);
+        DrawPlane dpEje= new DrawPlane(pEje);
+        dpEje.drawObjectC(gl ,0.0f, 1.0f, 0.0f, 0.3f);
+         
+        xInf= new Vect3d(100,0,0);
+        yInf= new Vect3d(0,0,0);
+        zInf= new Vect3d(0,0,100);
+         
+        pEje = new Plane(xInf,yInf,zInf,true);
+        dpEje= new DrawPlane(pEje);
+        dpEje.drawObjectC(gl ,1.0f, 0.0f, 0.0f, 0.3f);
+        
+        xInf= new Vect3d(0,0,0);
+        yInf= new Vect3d(0,100,0);
+        zInf= new Vect3d(0,0,100);
+        
+        pEje = new Plane(xInf,yInf,zInf,true);
+        dpEje= new DrawPlane(pEje);
+        dpEje.drawObjectC(gl ,0.0f, 0.0f, 1.0f, 0.3f);
+        
+        //^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        
+        //Creamos un triangulo y sus proyecciones
+        /*Triangle3d t1 = new Triangle3d (    new Vect3d (3, 4, 3),
+                                            new Vect3d (4, 3, 3),
+                                            new Vect3d (3, 3, 4)
+                                        );
+        
+        Triangle3d t1x = t1.proyecta_XY();
+        Triangle3d t1y = t1.proyecta_YZ();
+        Triangle3d t1z = t1.proyecta_XZ();
+
+        //Calculamos primero los triangulos proyectados pero los pintamos al final
+        //Importa el orden de dibujado, si pintamos los triangulos al principio, las lineas se superponen a la geometria
+        Segment3d l = new Segment3d(t1.getA(),t1x.getA());
+        DrawSegment3d line = new DrawSegment3d(l);
+        line.drawObjectC(gl,0,0,0);
+        l = new Segment3d(t1.getB(),t1x.getB());
+        line = new DrawSegment3d(l);
+        line.drawObjectC(gl,0,0,0);
+        l = new Segment3d(t1.getC(),t1x.getC());
+        line = new DrawSegment3d(l);
+        line.drawObjectC(gl,0,0,0);
+        
+        l = new Segment3d(t1.getA(),t1y.getA());
+        line = new DrawSegment3d(l);
+        line.drawObjectC(gl,0,0,0);
+        l = new Segment3d(t1.getB(),t1y.getB());
+        line = new DrawSegment3d(l);
+        line.drawObjectC(gl,0,0,0);
+        l = new Segment3d(t1.getC(),t1y.getC());
+        line = new DrawSegment3d(l);
+        line.drawObjectC(gl,0,0,0);
+        
+        l = new Segment3d(t1.getA(),t1z.getA());
+        line = new DrawSegment3d(l);
+        line.drawObjectC(gl,0,0,0);
+        l = new Segment3d(t1.getB(),t1z.getB());
+        line = new DrawSegment3d(l);
+        line.drawObjectC(gl,0,0,0);
+        l = new Segment3d(t1.getC(),t1z.getC());
+        line = new DrawSegment3d(l);
+        line.drawObjectC(gl,0,0,0);
+        
+        DrawTriangle3d dt1 = new DrawTriangle3d(t1x);
+        dt1.drawObjectC(gl, 1.0f,0,0);
+        dt1 = new DrawTriangle3d(t1y);
+        dt1.drawObjectC(gl, 0,1.0f,0);
+        dt1 = new DrawTriangle3d(t1z);
+        dt1.drawObjectC(gl, 0,0,1.0f);
+
+        dt1 = new DrawTriangle3d (t1);
+        dt1.drawObjectC(gl,0.5f,0.5f,0.5f);
+
+        //Crear una linea para ver si intersecta con el triangulo
+        Vect3d[] inters = new Vect3d[1];
+        inters[0]= new Vect3d(0,0,0);
+        
+        Line3d l2 = new Line3d(new Vect3d(0,4,1),new Vect3d(7,0,0));
+        DrawLine3d line2 = new DrawLine3d(l2);
+        line2.drawObjectC(gl,0.9f,0.9f,0.9f);
+        
+        if(t1.LineTriangle3d(l2, inters[0])){
+            
+            System.out.println("El triangulo t1 intersecta con la recta r en:");
+            inters[0].out();
+            
+            Vect3d pu = new Vect3d(inters[0]);
+            DrawVect3d punto = new DrawVect3d(pu);
+            punto.drawObjectC(gl, 1,0,0);
+            
+        }
+        //^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        
+        //Caja envolvente del triangulo
+        AABB b = new AABB(new Vect3d(3,3,3), new Vect3d(4,4,4));
+        DrawAABB box = new DrawAABB(b);
+        box.drawWireObject(gl);
+        //^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^*/
+        
+        //nube de puntos
+        
+        if (once){
+            once = false;
+            
+            c = new Cloud3d (30);
+            cloud = new DrawCloud3d(c);
+            
+            //Triangulo con tres puntos random de la nube
+            Random rn = new Random();
+
+            ArrayList<Vect3d> cloudPoints = new ArrayList<Vect3d>();
+            
+            for (int i=0; i<c.tama();i++){
+                
+                cloudPoints.add(c.getPunto(i));
+                
+            }
+
+            int index = rn.nextInt(cloudPoints.size()-1);
+            v1 = cloudPoints.get(index);
+            cloudPoints.remove(index);
+
+            index = rn.nextInt(cloudPoints.size()-1);
+            v2 = cloudPoints.get(index);
+            cloudPoints.remove(index);
+
+            index = rn.nextInt(cloudPoints.size()-1);
+            v3 = cloudPoints.get(index);
+            cloudPoints.remove(index);
+            
+            t1 = new Triangle3d (v1,v2,v3);
+            triangle = new DrawTriangle3d(t1);
+            
+            boolean continua = true;
+            int pivote=1;
+            Vect3d point = new Vect3d (0,0,0);
+            
+            do{
+                
+                Ray3d r1 = new Ray3d(cloudPoints.get(0),cloudPoints.get(pivote));
+                Ray3d r2 = new Ray3d(cloudPoints.get(pivote),cloudPoints.get(0));
+                if(t1.RayTriangle3d(r1, point)){
+                    
+                    System.out.print("El rayo formado por los puntos ");
+                    cloudPoints.get(0).out();
+                    System.out.print(" y ");
+                    cloudPoints.get(pivote);
+                    System.out.print(" intersectan con el triangulo en el punto");
+                    point.out();
+                    continua=false;
+                    rayo = new DrawRay3d(r1);
+                    
+                    
+                }
+                if(t1.RayTriangle3d(r2, point) && continua){
+                    
+                    System.out.println("El rayo formado por los puntos ");
+                    cloudPoints.get(pivote).out();
+                    System.out.println(" y ");
+                    cloudPoints.get(0);
+                    System.out.print(" intersectan con el triangulo en el punto");
+                    point.out();
+                    continua=false;
+                    rayo = new DrawRay3d(r1);
+                    
+                    
+                }
+                pivote++;
+                if(pivote==c.tama()-3){
+                    
+                    pivote=1;
+                    cloudPoints.remove(0);
+                    
+                }
+                
+            }while(continua);
+
+            
+        }
+        
+                /*Dibujamos el plano que contiene al triangulo*/
+        Plane planoTriangulo;
+        //planoTriangulo = new Plane(triangle.tr.a,triangle.tr.b,triangle.tr.c,false);
+        planoTriangulo = new Plane(triangle.tr.getA(),triangle.tr.getB(),triangle.tr.getC(),true);
+        DrawPlane dPlanoTriangulo= new DrawPlane (planoTriangulo);
+        
+        double distPlano = BasicGeom.INFINITO;
+        int puntoCercano=0;
+        /*Seccion A
+            el siguientre trozo de codigo se usa para calcular el punto 
+            m·s cercano al plano y cambiar su grosor
+        */
+         for (int i = 0; i < 30; i++) {
+            if(planoTriangulo.distancia(cloud.cloud.getPunto(i))<distPlano
+                    
+                    && (cloud.cloud.getPunto(i)==triangle.tr.getA()) //Tampoco puede estar incluido en el triangulo
+                    && (cloud.cloud.getPunto(i)==triangle.tr.getB())
+                    && (cloud.cloud.getPunto(i)==triangle.tr.getC())){
+                puntoCercano=i;
+                distPlano=planoTriangulo.distancia(cloud.cloud.getPunto(i));
+            }
+         }
+        /*Fin Seccion A*/
+        
+
+        /*Vamos a hacer que cada punto se dibuje dependiendo de 
+        su posicion respecto al triangulo*/
+         for (int i = 0; i < 30; i++) {
+            posicionPunto tipoPunto;
+            tipoPunto =  triangle.tr.clasifica(cloud.cloud.getPunto(i));
+            
+            if(tipoPunto == posicionPunto.ENCIMA){
+                if(i==puntoCercano){
+                    new DrawVect3d(cloud.cloud.getPunto(i)).drawObjectC(gl, 0,0,0,2);
+                }else{
+                    new DrawVect3d(cloud.cloud.getPunto(i)).drawObjectC(gl, 0,0,0);
+                }
+            }else if(tipoPunto == posicionPunto.NEGATIV0){                
+                if(i==puntoCercano){
+                    new DrawVect3d(cloud.cloud.getPunto(i)).drawObjectC(gl, 1,0,0,2);
+                }else{
+                    new DrawVect3d(cloud.cloud.getPunto(i)).drawObjectC(gl, 1,0,0);
+                }
+            }else if(tipoPunto == posicionPunto.POSITIV0){
+                if(i==puntoCercano){
+                    new DrawVect3d(cloud.cloud.getPunto(i)).drawObjectC(gl, 0,1,0,2);
+                }else{
+                    new DrawVect3d(cloud.cloud.getPunto(i)).drawObjectC(gl, 0,1,0);
+                }
+            }else{
+                if(i==puntoCercano){
+                    new DrawVect3d(cloud.cloud.getPunto(i)).drawObjectC(gl, 1,1,1,2);
+                }else{
+                    new DrawVect3d(cloud.cloud.getPunto(i)).drawObjectC(gl, 1,1,1);
+                }
+            }
+        /*Con eso de ahi ya tenemos clasificados los puntos
+        ojo con los puntos blancos, es que algo falla
+        */
+        }
+         
+         /*AABB de la nuve de puntos*/
+         AABB abNube = new AABB(c);
+         DrawAABB dABnube = new DrawAABB(abNube);
+         
+         Triangle3d boxY = new Triangle3d(t1.proyecta_XY(abNube));
+         DrawTriangle3d proyBoxY = new DrawTriangle3d(boxY);
+         proyBoxY.drawObject(gl);
+
+
+        dPlanoTriangulo.drawObjectC(gl, 1, 1, 0, 0.2f);
+         
+        // cloud.drawObject(gl);//Esto dibuja toda la nube de puntos-Pero vamos a hacer que pinte cada punto por separado
+        triangle.drawObjectC(gl,1,0,0); 
+        rayo.drawObjectC(gl,1,1,0);
+        dABnube.drawWireObject(gl);
+        
+                
         gl.glFlush();
+        
     }
     
-    public void displayChanged(GLAutoDrawable drawable, 
-                              boolean modeChanged, boolean deviceChanged)
-    { }
+    public void displayChanged(GLAutoDrawable drawable, boolean modeChanged, boolean deviceChanged) {}
 
     public void mouseClicked(MouseEvent e) {}
     public void mouseEntered(MouseEvent e) {}
@@ -208,11 +461,68 @@ public class Box2 implements GLEventListener,
         int y = e.getY();
         Dimension size = e.getComponent().getSize();
         float thetaY = 360.0f * ( (float)(x-oldMouseX)/(float)size.width);
-        float thetaX = 360.0f * ( (float)(oldMouseY-y)/(float)size.height);
+        float thetaX = 360.0f * ( (float)(y-oldMouseY)/(float)size.height);
         oldMouseX = x;
         oldMouseY = y;
         view_rotx += thetaX;
         view_roty += thetaY;
     }
     public void mouseMoved(MouseEvent e) {}
+    public void mouseWheelMoved(MouseWheelEvent e) {
+        
+        if (e.getWheelRotation()<0){
+            
+            view_scale=view_scale+0.1f;
+            
+        }
+        if (e.getWheelRotation()>0){
+            
+            view_scale=view_scale-0.1f;
+        }
+    
+    }
+    
+    public void keyPressed(KeyEvent e){
+        
+        if(e.getKeyChar()=='a'){
+            view_trax++;
+        }
+        if (e.getKeyChar()=='d'){
+            view_trax--;
+        }
+        if(e.getKeyChar()=='z'){
+            view_tray++;
+        }
+        if (e.getKeyChar()=='q'){
+            view_tray--;
+        }
+        if(e.getKeyChar()=='w'){
+            view_traz++;
+        }
+        if (e.getKeyChar()=='s'){
+            view_traz--;
+        }
+        
+        if (e.getKeyChar()=='r'){
+            view_trax=0.0f;
+            view_tray=0.0f;
+            view_traz=0.0f;
+            
+        }
+        
+        if (e.getKeyChar()=='+'){
+            
+            view_scale=view_scale+0.1f;
+            
+        }
+        
+        if (e.getKeyChar()=='-'){
+            
+            view_scale=view_scale-0.1f;
+            
+        }
+        
+    }
+    public void keyReleased(KeyEvent e){}
+    public void keyTyped(KeyEvent e){}
 }

@@ -35,6 +35,7 @@ public class DrawTriangle3d extends Draw{
            g.glVertex3d (tr.c.x, tr.c.y, tr.c.z);
         g.glEnd();
 
+        g.glColor3f(1, 1, 1);
     }
 
 }

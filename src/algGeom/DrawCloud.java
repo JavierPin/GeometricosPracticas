@@ -43,6 +43,8 @@ public class DrawCloud extends Draw {
                 g.glVertex2d(x, y);
             }
 	g.glEnd();
+        
+        g.glColor3f(1, 1, 1);
     }
 
 }
