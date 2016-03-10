@@ -229,14 +229,11 @@ public class Box2 implements GLEventListener,
         dt1.drawObjectC(gl, 0,1.0f,0);
         dt1 = new DrawTriangle3d(t1z);
         dt1.drawObjectC(gl, 0,0,1.0f);
-        
-        
-        
+
         dt1 = new DrawTriangle3d (t1);
         dt1.drawObjectC(gl,0.5f,0.5f,0.5f);
-        
-        //Cloud3d c = new Cloud3d (30);
 
+        //Crear una linea para ver si intersecta con el triangulo
         Vect3d[] inters = new Vect3d[1];
         inters[0]= new Vect3d(0,0,0);
         
@@ -254,12 +251,18 @@ public class Box2 implements GLEventListener,
             punto.drawObjectC(gl, 1,0,0);
             
         }
+        //^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
         
-        
-        
+        //Caja envolvente del triangulo
         AABB b = new AABB(new Vect3d(3,3,3), new Vect3d(4,4,4));
         DrawAABB box = new DrawAABB(b);
         box.drawWireObject(gl);
+        //^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        
+        //nube de puntos
+        /*Cloud3d c = new Cloud3d (30);
+        DrawCloud3d cloud = new DrawCloud3d(c);
+        cloud.drawObject(gl);*/
         
         gl.glFlush();
         
