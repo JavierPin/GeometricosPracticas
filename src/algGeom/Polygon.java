@@ -3,8 +3,9 @@ package algGeom;
 
 import java.io.*;
 import java.util.*;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import math.geom2d.polygon.*;
+import math.geom2d.Point2D;
+import math.geom2d.polygon.Polygons2D;
 
 /** Representa un Polygon con nVertexs Vertexs. */
 public class Polygon {
@@ -42,8 +43,16 @@ public class Polygon {
         nVertexs = nV;
     }
     
-    
-    
+    public Polygon (Polygon2D pol) {
+        
+        nVertexs = pol.vertexNumber();
+        Vertexs = new ArrayList<Vertex> (nVertexs);
+        
+        for (int i=0; i<pol.vertexNumber();i++){
+            Vertexs.add(new Vertex(pol.vertex(i)));
+        }
+        
+    }
     /** Devuelve una copia del Polygon actual. */
     public Polygon copia () {
         Polygon nuevoPolygon = new Polygon (nVertexs);
@@ -256,6 +265,51 @@ public class Polygon {
         }
         return false;
     }
+    
+    /**convierte un poligono de algGeom a SimplePolygon2D de JavaGeom.
+     * @return  SimplePolygon2D*/
+    public SimplePolygon2D toJavaGeom(){
+        
+        SimplePolygon2D pol = new SimplePolygon2D();
+        
+        for(int i=0; i<nVertexs; i++){
+            
+            pol.addVertex(Vertexs.get(i).toJavaGeom());
+            
+        }
+        
+        return pol;
+    }
+
+    public Polygon union(Polygon a){
+        
+        Polygons2D calculator = new Polygons2D();        
+        return new Polygon(calculator.union(toJavaGeom(),a.toJavaGeom()));
+        
+    }
+    
+    public Polygon intersection(Polygon a){
+        
+        Polygons2D calculator = new Polygons2D();        
+        return new Polygon(calculator.intersection(toJavaGeom(),a.toJavaGeom()));
+        
+    }
+    
+    public Polygon difference(Polygon a){
+        
+        Polygons2D calculator = new Polygons2D();        
+        return new Polygon(calculator.difference(toJavaGeom(),a.toJavaGeom()));
+        
+    }
+    
+    public Vertex centroid(){
+        
+        Polygons2D calculator = new Polygons2D();        
+        return new Vertex(calculator.computeCentroid(toJavaGeom()));
+        
+    }
+
+
 
 
     /** Muestra por pantalla la informaci�n del pol�gono. */
@@ -266,5 +320,7 @@ public class Polygon {
             v.out ();
         }
     }
+    
+    
 
 }

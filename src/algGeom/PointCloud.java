@@ -8,6 +8,9 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Random;
 import java.util.Scanner;
+import math.geom2d.Point2D;
+import math.geom2d.polygon.*;
+import math.geom2d.polygon.convhull.*;
 
 class ErrorAlGuardar extends Exception {
 	private static final long serialVersionUID = 1L;
@@ -129,6 +132,30 @@ public class PointCloud {
             return nubepuntos.get(pos);
         }
         return null;
+    }
+    
+    public ArrayList<Point2D> toJavaGeom(){
+        
+        ArrayList<Point2D> nubepuntosJavaGeom = new ArrayList<>(nubepuntos.size());
+        
+        for (Point nubepunto : nubepuntos) {
+            nubepuntosJavaGeom.add(new Point2D(nubepunto.getX(), nubepunto.getY()));
+        }
+        
+        return nubepuntosJavaGeom;
+        
+    }
+    
+    public PointCloud toAlgGeom(){
+        
+        
+        return null;
+    }
+    
+    public Polygon convexHull(){
+        
+        ConvexHull2D calculator = new GrahamScan2D();       
+        return new Polygon(calculator.convexHull(toJavaGeom()));
     }
 
 }
