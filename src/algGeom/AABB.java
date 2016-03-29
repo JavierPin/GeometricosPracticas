@@ -1,7 +1,5 @@
 package algGeom;
 
-import java.util.ArrayList;
-
 public class AABB {
 
     Vect3d min; //menor x,y,z
@@ -12,38 +10,54 @@ public AABB (Vect3d menor, Vect3d mayor){
     max = mayor;
 }
 
-public AABB (ArrayList<Vect3d> v){
-    double x1,x2,y1,y2,z1,z2;
+public AABB(Cloud3d cloud){
     
-    x1=BasicGeom.INFINITO;
-    x2=(-BasicGeom.INFINITO);
-    y1=BasicGeom.INFINITO;
-    y2=(-BasicGeom.INFINITO);
-    z1=BasicGeom.INFINITO;
-    z2=(-BasicGeom.INFINITO);
+    double minX=BasicGeom.INFINITO;
+    double minY=BasicGeom.INFINITO;
+    double minZ=BasicGeom.INFINITO;
+    double maxX=-BasicGeom.INFINITO;
+    double maxY=-BasicGeom.INFINITO;
+    double maxZ=-BasicGeom.INFINITO;
     
-    for(int i=0;i<v.size();i++){
-        if(v.get(i).getX()<x1){
-            x1=v.get(i).getX();
+    for (int i=0; i<cloud.tama(); i++){
+        
+        if (cloud.getPunto(i).x<minX){
+            
+            minX=cloud.getPunto(i).x;
+            
         }
-        if(v.get(i).getY()<y1){
-            y1=v.get(i).getY();
+        if (cloud.getPunto(i).x>maxX){
+            
+            maxX=cloud.getPunto(i).x;
+            
         }
-        if(v.get(i).getZ()<z1){
-            z1=v.get(i).getZ();
+        if (cloud.getPunto(i).y<minY){
+            
+            minY=cloud.getPunto(i).y;
+            
         }
-        if(v.get(i).getX()>x2){
-            x2=v.get(i).getX();
+        if (cloud.getPunto(i).y>maxY){
+            
+            maxY=cloud.getPunto(i).y;
+            
         }
-        if(v.get(i).getY()>y2){
-            y2=v.get(i).getY();
+        if (cloud.getPunto(i).z<minZ){
+            
+            minZ=cloud.getPunto(i).z;
+            
         }
-        if(v.get(i).getZ()>z2){
-            z2=v.get(i).getZ();
+        if (cloud.getPunto(i).z>maxZ){
+            
+            maxZ=cloud.getPunto(i).z;
+            
         }
+        
+        
     }
-    min = new Vect3d(x1,y1,z1);
-    max = new Vect3d(x2,y2,z2);
+    
+    min = new Vect3d(minX,minY,minZ);
+    max = new Vect3d(maxX,maxY,maxZ);
+    
 }
 
 /** devuelve el punto de la esquina inferior */
