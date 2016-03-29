@@ -229,8 +229,8 @@ public class Box2 implements GLEventListener,
         
         
         
-        /*Practica 3, apartado 1
-        PointCloud c = new PointCloud(100);
+        //Practica 3, apartado 1
+        /*PointCloud c = new PointCloud(100);
         
         DrawCloud cloud = new DrawCloud(c);
         gl.glPointSize(4);
@@ -242,9 +242,31 @@ public class Box2 implements GLEventListener,
         Polygon p = new Polygon(c.convexHull());
         DrawPolygon poly = new DrawPolygon(p);
         poly.drawObject(gl);
-        gl.glColor4f(1, 1, 1, 1);/*
+        gl.glColor4f(1, 1, 1, 1);
+        */
         
+        //Practica 3, apartado 3
+        PointCloud c2 = new PointCloud(200);
+        points = new ArrayList<>();
+        points.add(new Vertex(new Point(-50,-50)));
+        points.add(new Vertex(new Point(-50,50)));
+        points.add(new Vertex(new Point(50,50)));
+        points.add(new Vertex(new Point(50,-50)));
+        Polygon area = new Polygon(points,4);
         
+        K2tree kt = new K2tree(c2);
+        PointCloud c3 = kt.busquedaRango(-50, -50, 50, 50);
+        //Tengo que empezar a pintar puntos de la nube
+        DrawPoint dp;
+        /*for (int i=0; i<=c3.tama();i++){
+            dp = new DrawPoint(c3.getPunto(i));
+            dp.drawObjectC(gl, 1, 0, 1);
+        }*/
+        DrawPolygon dArea = new DrawPolygon(area);
+        dArea.drawObjectC(gl,0,0,1);
+        
+//        DrawCloud dCloud = new DrawCloud(c2);
+//        dCloud.drawObjectC(gl, 0, 0, 0);
         
         
         /*Practica 2

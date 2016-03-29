@@ -10,9 +10,11 @@ public class K2tree {
     private KDTree2D kTree;
     
     public K2tree(PointCloud pc){
+        ArrayList <Point2D> lp = new ArrayList();
         for(int i=0; i<pc.tama();i++)
-            kTree.add(new Point2D (pc.getPunto(i).getX(),
+            lp.add(new Point2D (pc.getPunto(i).getX(),
                     pc.getPunto(i).getY()));        
+        kTree = new KDTree2D(lp);
     }
     
     public void add (Point p){
@@ -34,8 +36,9 @@ public class K2tree {
     public PointCloud busquedaRango(double xmin, double ymin,double xmax,double ymax){
         PointCloud pc = new PointCloud();
         //obtengo la colecciond e puntos en el rango (Points2D)
-        Collection<Point2D> vp = kTree.rangeSearch(new Box2D(xmin,ymin,xmax,ymax));
-            
+        Box2D caja = new Box2D(xmin,ymin,xmax,ymax);
+        ArrayList<Point2D> vp = new ArrayList<Point2D>(kTree.rangeSearch(caja));
+           
         //recorro la coleccion de puntos y los paso a mi nuve de puntos
         for(Iterator<Point2D> i = vp.iterator(); i.hasNext();){
             Point2D p = i.next();
