@@ -590,7 +590,7 @@ public class Triangle3d {
     /** Calcula la interseccion entre este triángulo y un rayo */
     public boolean RayTriangle3d(Ray3d r, Vect3d point){
         
-        Vect3d e1 = new Vect3d(b.resta(a));
+        /*Vect3d e1 = new Vect3d(b.resta(a));
         Vect3d e2 = new Vect3d(c.resta(a));
         Vect3d direccion = r.getDestino().resta(r.getOrigen());
         
@@ -606,7 +606,7 @@ public class Triangle3d {
         tmp = 1.0/tmp;
         
         Vect3d s = new Vect3d(r.getOrigen().resta(a));
-        double u = tmp * s.dot(p);
+        double u = tmp * (s.dot(p));
         
         if (u<0.0 || u>1.0){
             
@@ -625,18 +625,67 @@ public class Triangle3d {
         
         double t = tmp * (e2.dot(q));
         
+        if (t<BasicGeom.CERO){
+            
+            return false;
+            
+        }
+        
+        point = r.getOrigen().suma(direccion.prodEscalar(t));
+
+
+        return true;*/
+
+
+        float EPSILON = 0.000001f;
+
+        Vect3d e1 = new Vect3d(b.resta(a));
+        Vect3d e2 = new Vect3d(c.resta(a));
+
+        Vect3d direccion = r.getDestino().resta(r.getOrigen());
+        
+        Vect3d p = direccion.XProduct(e2);
+
+        double tmp = e1.dot(p);
+        
+        if(tmp > -EPSILON && tmp < EPSILON ){
+            
+            return false;
+        }
+
+        tmp = 1.0f / tmp;
+        
+        Vect3d s = new Vect3d(r.getOrigen().resta(a));
+        double u = (s.dot(p)) * tmp;
+        
+        if (u<0.0 || u>1.0){
+            
+            return false;
+            
+        }
+
+        Vect3d q = new Vect3d(s.XProduct(e1));
+        double v = (direccion.dot(q))*tmp;
+        
+        if (v < 0.0f || (u + v) > 1.0f){
+            
+          return false;
+          
+        }
+        
+        double t = (e2.dot(q))*tmp;
+
         if (t<0.0){
             
             return false;
             
         }
         
-        point.x=(r.getOrigen().x)+(direccion.prodEscalar(t).x);
-        point.y=(r.getOrigen().y)+(direccion.prodEscalar(t).y);
-        point.z=(r.getOrigen().z)+(direccion.prodEscalar(t).z);
+        point = r.getOrigen().suma(direccion.prodEscalar(t));
+
 
         return true;
-    }
+      }
     
       /**Muestra un punto 3d en pantalla*/
      public void out (){

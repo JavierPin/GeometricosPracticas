@@ -1,5 +1,7 @@
 package algGeom;
 
+import math.geom2d.Point2D;
+
 public class Vertex extends Point {
     /* Posicion que ocupa dentro del Polygon. */
     protected int posicion;
@@ -23,6 +25,14 @@ public class Vertex extends Point {
     public Vertex (Point p) {
         x = p.x; y=p.y;
 	posicion = -1;
+        polig = null;
+    }
+    
+    public Vertex (Point2D p){
+        
+        x = p.x();
+        y = p.y();
+        posicion = -1;
         polig = null;
     }
 
@@ -145,7 +155,11 @@ public class Vertex extends Point {
         return new SegmentLine(polig.lee(posicion),polig.lee(posicion-1));
     }
 
-    
+    public Point2D toJavaGeom(){
+        
+        return new Point2D(x,y);
+        
+    }
 
     /** Muestra por pantalla la informacion del Vertex actual. */
     @Override public void out () {
@@ -157,8 +171,5 @@ public class Vertex extends Point {
         System.out.print ("Posición: ");
         System.out.println (posicion);
     }
-
-
-
     
 }
