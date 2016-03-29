@@ -258,11 +258,24 @@ public class Box2 implements GLEventListener,
         PointCloud c3 = kt.busquedaRango(-50, -50, 50, 50);
         //Tengo que empezar a pintar puntos de la nube
         DrawPoint dp;
-        /*for (int i=0; i<=c3.tama();i++){
-            dp = new DrawPoint(c3.getPunto(i));
-            dp.drawObjectC(gl, 1, 0, 1);
-        }*/
-        DrawPolygon dArea = new DrawPolygon(area);
+        boolean interior;
+        for (int j=0; j<c2.tama();j++){
+            interior = false;
+            for (int i=0; i<c3.tama();i++){
+                if(c2.getPunto(j).getX()==c3.getPunto(i).getX() &&
+                        c2.getPunto(j).getY()==c3.getPunto(i).getY()){
+                    interior=true;
+                }
+            }
+            if(interior){
+               dp = new DrawPoint(c2.getPunto(j));
+               dp.drawObjectC(gl, 1, 1, 1); 
+            }else{
+               dp = new DrawPoint(c2.getPunto(j));
+               dp.drawObjectC(gl, 0, 0, 0);
+            }
+        }   
+        DrawPolygon dArea = new DrawPolygon(area);//cuadrado de incidencia
         dArea.drawObjectC(gl,0,0,1,0.25f);
         
 //        DrawCloud dCloud = new DrawCloud(c2);

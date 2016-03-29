@@ -33,16 +33,29 @@ public class K2tree {
         return new Point (kTree.nearestNeighbor(p2).getX(),
                           kTree.nearestNeighbor(p2).getY());
     }
-    public PointCloud busquedaRango(double xmin, double ymin,double xmax,double ymax){
+//    public PointCloud busquedaRango(double xmin, double ymin, double xmax, double ymax){
+//        PointCloud pc = new PointCloud();
+//        //obtengo la colecciond e puntos en el rango (Points2D)
+//        Box2D caja = new Box2D(xmin,ymin,xmax,ymax);
+//        Collection<Point2D> vp = kTree.rangeSearch(caja);;
+//        
+//                kTree.rangeSearch(caja);
+//           
+//        //recorro la coleccion de puntos y los paso a mi nube de puntos
+//        for(Iterator<Point2D> i = vp.iterator(); i.hasNext();){
+//            Point2D p = i.next();
+//            pc.AddPunto(new Point (p.getX(),p.getY()));
+//        }
+//        
+//        return pc;
+//    }
+    
+    public PointCloud busquedaRango(double xmin, double xmax, double ymin, double ymax){
         PointCloud pc = new PointCloud();
         //obtengo la colecciond e puntos en el rango (Points2D)
-        Box2D caja = new Box2D(xmin,ymin,xmax,ymax);
-        ArrayList<Point2D> vp = new ArrayList<Point2D>(kTree.rangeSearch(caja));
-           
-        //recorro la coleccion de puntos y los paso a mi nuve de puntos
-        for(Iterator<Point2D> i = vp.iterator(); i.hasNext();){
-            Point2D p = i.next();
-            pc.AddPunto(new Point (p.getX(),p.getY()));
+        Box2D caja = new Box2D(xmin,ymin,xmax,ymax); 
+        for(Point2D punto : kTree.rangeSearch(caja)){
+            pc.AddPunto(new Point (punto.x(),punto.y()));
         }
         
         return pc;
