@@ -263,7 +263,7 @@ public class Box2 implements GLEventListener,
             dp.drawObjectC(gl, 1, 0, 1);
         }*/
         DrawPolygon dArea = new DrawPolygon(area);
-        dArea.drawObjectC(gl,0,0,1);
+        dArea.drawObjectC(gl,0,0,1,0.25f);
         
 //        DrawCloud dCloud = new DrawCloud(c2);
 //        dCloud.drawObjectC(gl, 0, 0, 0);
