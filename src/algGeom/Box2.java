@@ -229,8 +229,8 @@ public class Box2 implements GLEventListener,
         
         
         
-        /*Practica 3, apartado 1
-        PointCloud c = new PointCloud(100);
+        //Practica 3, apartado 1
+        /*PointCloud c = new PointCloud(100);
         
         DrawCloud cloud = new DrawCloud(c);
         gl.glPointSize(4);
@@ -242,9 +242,44 @@ public class Box2 implements GLEventListener,
         Polygon p = new Polygon(c.convexHull());
         DrawPolygon poly = new DrawPolygon(p);
         poly.drawObject(gl);
-        gl.glColor4f(1, 1, 1, 1);/*
+        gl.glColor4f(1, 1, 1, 1);
+        */
         
+        //Practica 3, apartado 3
+        PointCloud c2 = new PointCloud(200);
+        points = new ArrayList<>();
+        points.add(new Vertex(new Point(-50,-50)));
+        points.add(new Vertex(new Point(-50,50)));
+        points.add(new Vertex(new Point(50,50)));
+        points.add(new Vertex(new Point(50,-50)));
+        Polygon area = new Polygon(points,4);
         
+        K2tree kt = new K2tree(c2);
+        PointCloud c3 = kt.busquedaRango(-50, -50, 50, 50);
+        //Tengo que empezar a pintar puntos de la nube
+        DrawPoint dp;
+        boolean interior;
+        for (int j=0; j<c2.tama();j++){
+            interior = false;
+            for (int i=0; i<c3.tama();i++){
+                if(c2.getPunto(j).getX()==c3.getPunto(i).getX() &&
+                        c2.getPunto(j).getY()==c3.getPunto(i).getY()){
+                    interior=true;
+                }
+            }
+            if(interior){
+               dp = new DrawPoint(c2.getPunto(j));
+               dp.drawObjectC(gl, 1, 1, 1); 
+            }else{
+               dp = new DrawPoint(c2.getPunto(j));
+               dp.drawObjectC(gl, 0, 0, 0);
+            }
+        }   
+        DrawPolygon dArea = new DrawPolygon(area);//cuadrado de incidencia
+        dArea.drawObjectC(gl,0,0,1,0.25f);
+        
+//        DrawCloud dCloud = new DrawCloud(c2);
+//        dCloud.drawObjectC(gl, 0, 0, 0);
         
         
         /*Practica 2
