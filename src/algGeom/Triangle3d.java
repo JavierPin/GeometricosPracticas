@@ -578,6 +578,8 @@ public class Triangle3d {
             
         }
         
+        if (u+v>1.0) return false;
+        
         double t = tmp * (e2.dot(q));
         
         point.x=(r.getOrigen().x)+(direccion.prodEscalar(t).x);
