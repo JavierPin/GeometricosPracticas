@@ -10,6 +10,13 @@ public AABB (Vect3d menor, Vect3d mayor){
     max = mayor;
 }
 
+public AABB (double mx, double my, double mz, double mxx, double mxy, double mxz){
+    Vect3d menor = new Vect3d (mx,my,mz);
+    Vect3d mayor = new Vect3d (mxx, mxy, mxz);
+    min = menor;
+    max = mayor;
+}
+
 public AABB(Cloud3d cloud){
     
     double minX=BasicGeom.INFINITO;
@@ -70,5 +77,11 @@ public Vect3d getMax (){
     return max;
 }
 
+public void out () {
+        System.out.print ("Coordenadas minimas: ");
+        min.out();
+        System.out.print ("Coordenadas maximas: ");
+        max.out();
+    }
 
 }

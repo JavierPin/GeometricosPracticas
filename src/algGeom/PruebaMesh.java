@@ -1,6 +1,7 @@
 package algGeom;
 
 import com.sun.opengl.util.Animator;
+
 import java.awt.Dimension;
 import java.awt.Frame;
 import java.awt.event.MouseEvent;
@@ -12,59 +13,38 @@ import java.awt.event.MouseMotionListener;
 import java.awt.event.MouseWheelEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.util.ArrayList;
-import java.util.Random;
-import javax.media.opengl.GL;
-import javax.media.opengl.GLAutoDrawable;
-import javax.media.opengl.GLCanvas;
-import javax.media.opengl.GLEventListener;
-import javax.media.opengl.glu.GLU;
+
+import javax.media.opengl.*;
+import javax.media.opengl.glu.*;
+import java.awt.event.KeyListener;
+import java.awt.event.MouseMotionListener;
+import java.awt.event.MouseWheelEvent;
 
 
-public class Box2 implements GLEventListener, 
+
+public class PruebaMesh implements GLEventListener, 
                              MouseListener, 
                              MouseMotionListener,
                              KeyListener,
                              MouseWheelListener
 {
-    GLU glu;
-    GL gl;
-    //scaling the scene
     private float view_scale = 1.0f;
     // translate the scene
     private float view_trax = 0.0f;
     private float view_tray = 0.0f;
     private float view_traz = 0.0f;
-    // rotating the scene
-    private float view_rotx = 0.0f; //20
-    private float view_roty = 0.0f; //30
-    // remember last mouse position
-    private int oldMouseX;
-    private int oldMouseY;
-    //static int HEIGHT = 800, WIDTH = 800;
-    static int HEIGHT = 10, WIDTH = 10;
-    static Animator animator;
-    
-    //Problema de refresco infinito
-    boolean once = true;
-    Vect3d v1, v2, v3;
-    DrawCloud3d cloud;
-    DrawTriangle3d triangle;
-    DrawRay3d rayo;
-    Cloud3d c;
-    Triangle3d t1;
-    
+
     public static void main(String[] args) {
     	Draw.ALTO = HEIGHT;
     	Draw.ANCHO = WIDTH;
     	Draw.FONDO = 100;
     			
-        Frame frame = new Frame("Libreria 3D");
+        Frame frame = new Frame("Simple JOGL Application");
         GLCanvas canvas = new GLCanvas();
-        canvas.addGLEventListener(new Box2());
+        canvas.addGLEventListener(new PruebaMesh());
         frame.add(canvas);
         frame.setSize(800, 800);
-        animator = new Animator(canvas);
+        final Animator animator = new Animator(canvas);
         frame.addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent e) {
@@ -84,28 +64,68 @@ public class Box2 implements GLEventListener,
         frame.setVisible(true);
         animator.start();
         
+        
     }
     
+    // rotating the scene
+    private float view_rotx = 20.0f; //20
+    private float view_roty = 30.0f; //30
+    // remember last mouse position
+    private int oldMouseX;
+    private int oldMouseY;
+    //static int HEIGHT = 800, WIDTH = 800;
+    static int HEIGHT = 100, WIDTH = 100;
+    
+    public Mesh modelo; //variable accesible en toda la clase
+    
     public void init(GLAutoDrawable drawable)
-    {
+    {	
+    	
         GL gl = drawable.getGL();
-        glu = new GLU();
-        
         // Set backgroundcolor and shading mode
-        gl.glClearColor(1.0f, 1.0f, 1.0f, 0.0f); //Como que duele un poco en blanco
-        //gl.glClearColor(0.0f, 0.0f, 0.0f, 0.0f); //En negro no duele tanto
+        gl.glClearColor(1.0f, 1.0f, 1.0f, 0.0f);
         gl.glShadeModel(GL.GL_FLAT);
-        
-        gl.glEnable(GL.GL_POINT_SMOOTH );
-        gl.glEnable(GL.GL_LINE_SMOOTH);
-        gl.glEnable(GL.GL_POLYGON_SMOOTH);
-        
+        // give me some light
+        float ambient[] = {1.0f,1.0f,1.0f,1.0f };
+        float diffuse[] = {1.0f,1.0f,1.0f,1.0f };
+        float specular[]= {0.2f,1.0f,0.2f,1.0f};
+        float position[] = {20.0f,30.0f,20.0f,0.0f };
+        gl.glLightfv(GL.GL_LIGHT0, GL.GL_AMBIENT,ambient,0);
+        gl.glLightfv(GL.GL_LIGHT0, GL.GL_DIFFUSE, diffuse,0);
+        gl.glLightfv(GL.GL_LIGHT0, GL.GL_POSITION, position,0);
+        gl.glMaterialfv(GL.GL_FRONT,GL.GL_SPECULAR, specular, 0);
+        // and some red material
+        float[] mambient ={ 0.1745f, 0.01175f, 0.01175f, 0.55f };
+        float[] mdiffuse ={0.61424f, 0.04136f, 0.04136f, 0.55f };
+        float[] mspecular ={0.727811f, 0.626959f, 0.626959f, 0.55f };
+        float mshine =76.8f ;
+        gl.glMaterialfv(GL.GL_FRONT,GL.GL_AMBIENT,mambient,0);
+        gl.glMaterialfv(GL.GL_FRONT,GL.GL_DIFFUSE,mdiffuse,0);
+        gl.glMaterialfv(GL.GL_FRONT,GL.GL_SPECULAR,mspecular, 0);
+        gl.glMaterialf (GL.GL_FRONT,GL.GL_SHININESS,mshine);
+        gl.glEnable(GL.GL_LIGHTING);
+        gl.glEnable(GL.GL_LIGHT0);
+        gl.glEnable(GL.GL_DEPTH_TEST);
+        gl.glEnable(GL.GL_NORMALIZE);
         
         drawable.addMouseListener(this);
         drawable.addMouseMotionListener(this);
         drawable.addKeyListener(this);
-        
         drawable.addMouseWheelListener(this);
+        
+        
+        try {
+        //modelo = new Mesh ("/home/XXXX/modelos/ajedrez_peon.obj");
+        // indicar correctamente el camino al modelo  
+        modelo = new Mesh ("./src/modelos/ajedrez_peon.obj");
+        System.out.println("Modelo cargado con " + modelo.getSizeCaras() + "caras.");
+        modelo.getAABB().out();
+        
+        }  catch (Exception e) {
+	  System.out.println("Error en la lectura del fichero");
+	}
+
+        
     }
     
     public void reshape(GLAutoDrawable drawable, 
@@ -123,7 +143,9 @@ public class Box2 implements GLEventListener,
         gl.glViewport(0, 0, width, height);
         gl.glMatrixMode(GL.GL_PROJECTION);
         gl.glLoadIdentity();
-        glu.gluPerspective(45.0f, h, 1.0, 20.0);
+        
+        //EDICION DEL TAMA?O DEL FRUSTUM PARA PODER VISUALIZAR EL OBJETO DESDE MAS LEJOS
+        glu.gluPerspective(45.0f, h, 1.0, 2000.0);
         gl.glMatrixMode(GL.GL_MODELVIEW);
         gl.glLoadIdentity();
         
@@ -132,63 +154,52 @@ public class Box2 implements GLEventListener,
     
     public void display(GLAutoDrawable drawable)
     {
-        
-        gl = drawable.getGL();
-
+        GL gl = drawable.getGL();
+        GLU glu = new GLU(); // needed for lookat
+        // Clear the drawing area
         gl.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT);
 
-
+        // Reset the current matrix to the "identity"
         gl.glLoadIdentity();
-        glu.gluLookAt(6,10,10,  // eye pos
+        
+        //alteramos la eye pos para ver la figura desde mas lejos.  HACE FALTA CAMBIAR EL TAMA?O DEL FRUSTUM MAS ARRIBA
+        glu.gluLookAt(-356,340,340,  // eye pos
                      0,0,0,   // look at
                      0,1,0);  // up
 
         gl.glScalef(view_scale,view_scale,view_scale);
-        gl.glTranslatef(view_trax, view_tray, view_traz);       
+        gl.glTranslatef(view_trax, view_tray, view_traz);        
         gl.glRotatef(view_rotx, 1.0f, 0.0f, 0.0f);
         gl.glRotatef(view_roty, 0.0f, 1.0f, 0.0f);
 
+        gl.glBegin(GL.GL_LINES);
+	      gl.glVertex3d(0,50,0);
+	      gl.glVertex3d(0,-50,0);
+		gl.glEnd();
+        gl.glBegin(GL.GL_LINES);
+	      gl.glVertex3d(-50,0,0);
+	      gl.glVertex3d(50,0,0);
+		gl.glEnd();
+        gl.glBegin(GL.GL_LINES);
+	      gl.glVertex3d(0,0,-50);
+	      gl.glVertex3d(0,0,50);
+        gl.glEnd();
+        
 
-        //Dibujar los ejes y los planos de cada eje
-        //Ejes
-        DrawAxis3d axis = new DrawAxis3d();
-        axis.drawColoredObject(gl);
+        //hacemos un translate para intentar aproximar el modelo al punto (0,0,0)
+        gl.glTranslatef(70, -150, 0);
         
-        
-        //Planos
-        Vect3d xInf,yInf,zInf;
-        xInf= new Vect3d(100,0,0);
-        yInf= new Vect3d(0,100,0);
-        zInf= new Vect3d(0,0,0);
-         
-        Plane pEje = new Plane(xInf,yInf,zInf,true);
-        DrawPlane dpEje= new DrawPlane(pEje);
-        dpEje.drawObjectC(gl ,0.0f, 1.0f, 0.0f, 0.3f);
-         
-        xInf= new Vect3d(100,0,0);
-        yInf= new Vect3d(0,0,0);
-        zInf= new Vect3d(0,0,100);
-         
-        pEje = new Plane(xInf,yInf,zInf,true);
-        dpEje= new DrawPlane(pEje);
-        dpEje.drawObjectC(gl ,1.0f, 0.0f, 0.0f, 0.3f);
-        
-        xInf= new Vect3d(0,0,0);
-        yInf= new Vect3d(0,100,0);
-        zInf= new Vect3d(0,0,100);
-        
-        pEje = new Plane(xInf,yInf,zInf,true);
-        dpEje= new DrawPlane(pEje);
-        dpEje.drawObjectC(gl ,0.0f, 0.0f, 1.0f, 0.3f);
-        
-        //^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        //dibujamos el modelo
+        DrawMesh dmodel = new DrawMesh(modelo);
+        dmodel.drawObject(gl);
         
                 
-        gl.glFlush();
-        
+         gl.glFlush();
     }
     
-    public void displayChanged(GLAutoDrawable drawable, boolean modeChanged, boolean deviceChanged) {}
+    public void displayChanged(GLAutoDrawable drawable, 
+                              boolean modeChanged, boolean deviceChanged)
+    { }
 
     public void mouseClicked(MouseEvent e) {}
     public void mouseEntered(MouseEvent e) {}
