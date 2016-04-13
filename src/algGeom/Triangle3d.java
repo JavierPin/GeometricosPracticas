@@ -588,55 +588,10 @@ public class Triangle3d {
     }
     
     /** Calcula la interseccion entre este triángulo y un rayo */
-    public boolean RayTriangle3d(Ray3d r, Vect3d point){
+    public boolean RayTriangle3d(Ray3d r, Vect3d[] _point){
         
-        /*Vect3d e1 = new Vect3d(b.resta(a));
-        Vect3d e2 = new Vect3d(c.resta(a));
-        Vect3d direccion = r.getDestino().resta(r.getOrigen());
+        Vect3d point = _point[0];
         
-        Vect3d p = new Vect3d(direccion.XProduct(e2));
-        
-        double tmp = p.dot(e1);
-        
-        if(tmp > -BasicGeom.CERO && tmp < BasicGeom.CERO ){
-            
-            return false;
-        }
-        
-        tmp = 1.0/tmp;
-        
-        Vect3d s = new Vect3d(r.getOrigen().resta(a));
-        double u = tmp * (s.dot(p));
-        
-        if (u<0.0 || u>1.0){
-            
-            return false;
-            
-        }
-        
-        Vect3d q = new Vect3d(s.XProduct(e1));
-        double v = tmp * (direccion.dot(q));
-        
-        if (v<0.0 || v>1.0){
-            
-            return false;
-            
-        }
-        
-        double t = tmp * (e2.dot(q));
-        
-        if (t<BasicGeom.CERO){
-            
-            return false;
-            
-        }
-        
-        point = r.getOrigen().suma(direccion.prodEscalar(t));
-
-
-        return true;*/
-
-
         float EPSILON = 0.000001f;
 
         Vect3d e1 = new Vect3d(b.resta(a));
@@ -649,7 +604,6 @@ public class Triangle3d {
         double tmp = e1.dot(p);
         
         if(tmp > -EPSILON && tmp < EPSILON ){
-            
             return false;
         }
 
@@ -673,8 +627,12 @@ public class Triangle3d {
           
         }
         
+        double det,in_det;
+        
         double t = (e2.dot(q))*tmp;
-
+        
+        System.out.println("Triangle3d: ("+t);
+        
         if (t<0.0){
             
             return false;
@@ -682,8 +640,18 @@ public class Triangle3d {
         }
         
         point = r.getOrigen().suma(direccion.prodEscalar(t));
-
-
+        
+        
+        //point.x=(r.getOrigen().x)+(direccion.prodEscalar(t).x);
+        //point.y=(r.getOrigen().y)+(direccion.prodEscalar(t).y);
+        //point.z=(r.getOrigen().z)+(direccion.prodEscalar(t).z);
+        point.setX((r.getOrigen().x)+(direccion.prodEscalar(t).x));
+        point.setY((r.getOrigen().y)+(direccion.prodEscalar(t).y));
+        point.setZ((r.getOrigen().z)+(direccion.prodEscalar(t).z));
+        _point[0] = new Vect3d((r.getOrigen().x)+(direccion.prodEscalar(t).x),
+                ((r.getOrigen().y)+(direccion.prodEscalar(t).y)),
+                ((r.getOrigen().z)+(direccion.prodEscalar(t).z)));
+        //point.out();
         return true;
       }
     
