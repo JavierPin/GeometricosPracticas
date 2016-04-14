@@ -187,12 +187,17 @@ public class PruebaMesh implements GLEventListener,
         
 
         //hacemos un translate para intentar aproximar el modelo al punto (0,0,0)
-        gl.glTranslatef(70, -150, 0);
+        //gl.glTranslatef(70, -150, 0);
         
         //dibujamos el modelo
-        DrawMesh dmodel = new DrawMesh(modelo);
-        dmodel.drawObject(gl);
+        //DrawMesh dmodel = new DrawMesh(modelo);
+        //dmodel.drawObject(gl);
         
+        Cloud3d n = new Cloud3d(30);
+        DrawCloud3d nube = new DrawCloud3d(n);
+        nube.drawObjectC(gl,1,0,0);
+        
+        Octree o = new Octree(n,0);
                 
          gl.glFlush();
     }
