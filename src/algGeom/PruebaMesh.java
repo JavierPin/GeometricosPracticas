@@ -19,6 +19,7 @@ import javax.media.opengl.glu.*;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseMotionListener;
 import java.awt.event.MouseWheelEvent;
+import java.util.ArrayList;
 
 
 
@@ -115,11 +116,9 @@ public class PruebaMesh implements GLEventListener,
         
         
         try {
-        //modelo = new Mesh ("/home/XXXX/modelos/ajedrez_peon.obj");
-        // indicar correctamente el camino al modelo  
-        modelo = new Mesh ("./src/modelos/bailarina.obj");
-        System.out.println("Modelo cargado con " + modelo.getSizeCaras() + "caras.");
-        modelo.getAABB().out();
+            modelo = new Mesh ("./src/modelos/cat.obj");
+            System.out.println("Modelo cargado con " + modelo.getSizeCaras() + "caras.");
+            modelo.getAABB().out();
         
         }  catch (Exception e) {
 	  System.out.println("Error en la lectura del fichero");
@@ -164,56 +163,84 @@ public class PruebaMesh implements GLEventListener,
         
         //posicion para visualizar geometria con mesh, cámara más lejos.
         //alteramos la eye pos para ver la figura desde mas lejos.  HACE FALTA CAMBIAR EL TAMA?O DEL FRUSTUM MAS ARRIBA
-        /*glu.gluLookAt(-356,340,340,  // eye pos
-                     0,0,0,   // look at
-                     0,1,0);  // up*/
-        
-        //posicion para visualizar geometría sin mesh, cámara más cerca
-        glu.gluLookAt(3,1,3,  // eye pos
+        glu.gluLookAt(-356,340,340,  // eye pos
                      0,0,0,   // look at
                      0,1,0);  // up
+        
+        //posicion para visualizar geometría sin mesh, cámara más cerca
+        /*glu.gluLookAt(3,1,3,  // eye pos
+                     0,0,0,   // look at
+                     0,1,0);  // up*/
         
         gl.glScalef(view_scale,view_scale,view_scale);
         gl.glTranslatef(view_trax, view_tray, view_traz);        
         gl.glRotatef(view_rotx, 1.0f, 0.0f, 0.0f);
         gl.glRotatef(view_roty, 0.0f, 1.0f, 0.0f);
 
+        DrawAxis3d axis = new DrawAxis3d();
+        axis.drawColoredObject(gl);
         
+
+        //hacemos un translate para intentar aproximar el modelo al punto (0,0,0)
+        //gl.glTranslatef(-520, 500, 0);
+        
+        
+        //dibujamos el modelogl.glEnable(GL.GL_LIGHTING);
         gl.glEnable(GL.GL_LIGHTING);
         gl.glEnable(GL.GL_LIGHT0);
         gl.glEnable(GL.GL_DEPTH_TEST);
         gl.glEnable(GL.GL_NORMALIZE);
-        gl.glBegin(GL.GL_LINES);
-	      gl.glVertex3d(0,50,0);
-	      gl.glVertex3d(0,-50,0);
-		gl.glEnd();
-        gl.glBegin(GL.GL_LINES);
-	      gl.glVertex3d(-50,0,0);
-	      gl.glVertex3d(50,0,0);
-		gl.glEnd();
-        gl.glBegin(GL.GL_LINES);
-	      gl.glVertex3d(0,0,-50);
-	      gl.glVertex3d(0,0,50);
-        gl.glEnd();
-        
-
-        //hacemos un translate para intentar aproximar el modelo al punto (0,0,0)
-        //gl.glTranslatef(70, -150, 0);
-        
-        
-        //dibujamos el modelo
         DrawMesh dmodel = new DrawMesh(modelo);
         dmodel.drawObject(gl);
-        
         gl.glDisable(GL.GL_LIGHTING);
         gl.glDisable(GL.GL_LIGHT0);
         gl.glDisable(GL.GL_DEPTH_TEST);
         gl.glDisable(GL.GL_NORMALIZE);
-        AABB modelBox = modelo.getAABB();
-        Octree om = new Octree(modelBox,0,modelo.getListaVertices());
-        DrawOctree octree2 = new DrawOctree(om);
-        octree2.drawObjectC(gl,0.5f,0.5f,0);
         
+        //Ray3d r = new Ray3d(new Vect3d(-50,50,80), new Vect3d(50,50,-100));
+        //DrawRay3d ray = new DrawRay3d(r);
+        //ray.drawObjectC(gl, 0,0,1);
+        
+        RayBeam rb = new RayBeam(new Vect3d(50,150,200), new Vect3d(50,150,-100),300,15);
+        rb.DrawRayBeam(gl,0,0,1);
+        
+        ArrayList<Triangle3d> tMalla = modelo.getTriangulos();
+        
+        Vect3d[] point = new Vect3d[1];
+        
+        long time_start, time_end, time_acum=0;
+        
+        time_start = System.nanoTime();
+
+        for (int j=0; j<rb.rays.size();j++){
+            
+            Ray3d r = rb.rays.get(j);
+            
+            for (int i=0; i<tMalla.size();i++){
+                boolean intersecta = tMalla.get(i).RayTriangle3d(r, point);
+                if(intersecta){
+                    time_end = System.nanoTime();
+                    
+                    time_acum=time_acum+time_end-time_start;
+
+                    DrawTriangle3d triangle = new DrawTriangle3d(tMalla.get(i));
+                    triangle.drawObjectC(gl, 0.3f,1,0.3f);
+                    DrawVect3d punto = new DrawVect3d(point[0]);
+                    punto.drawObjectC(gl, 0,0,1);
+
+                    i=tMalla.size();
+                }
+            }
+        }
+        
+        System.out.println("Operación realizada en "+ ( time_acum )/1000000.0f +" millisegundos");
+        
+        //Dibujamos el octree. Hemos deshabilitado la luz para poder pintarlo del color que queramos
+        /*AABB modelBox = modelo.getAABB();
+        Octree om = new Octree(modelBox,5,modelo.getListaVertices());
+        DrawOctree octree2 = new DrawOctree(om);
+        octree2.drawObjectC(gl,0.5f,0.5f,0);*/
+
         //desactivar luces para obtener el color deseado con DrawObjectC
         /*gl.glDisable(GL.GL_LIGHTING);
         gl.glDisable(GL.GL_LIGHT0);
@@ -223,6 +250,7 @@ public class PruebaMesh implements GLEventListener,
         Cloud3d n = new Cloud3d(30);
         gl.glPointSize(4);
         
+        //Octree con nube de puntos
         Octree o = new Octree(n,5);
         DrawOctree octree = new DrawOctree(o);
         octree.drawObjectC(gl, 0.1f,0.2f,0.1f);
