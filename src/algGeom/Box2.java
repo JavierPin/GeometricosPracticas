@@ -183,7 +183,27 @@ public class Box2 implements GLEventListener,
         
         //^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
         
-                
+        Cloud3d n = new Cloud3d(30);
+ 
+        Octree o = new Octree(n,5);
+        DrawOctree octree = new DrawOctree(o);
+        octree.drawObjectC(gl, 1,0,0);
+        
+        gl.glPointSize(5);
+        DrawCloud3d nube = new DrawCloud3d(n);
+        nube.drawObjectC(gl,1,1,0);
+        
+        /*Triangle3d t = new Triangle3d(new Vect3d(0,0,0),new Vect3d(3,0,0),new Vect3d(1.5,3,0));
+        DrawTriangle3d triangle = new DrawTriangle3d(t);
+        triangle.drawObjectC(gl, 1, 0, 0);
+        
+        Ray3d r = new Ray3d (new Vect3d(0,1.5,-0.5), new Vect3d(1.5,1.5,10));
+        DrawRay3d ray = new DrawRay3d(r);
+        ray.drawObjectC(gl,0,1,0);
+        
+        Vect3d point = new Vect3d();
+        System.out.println(t.RayTriangle3d(r, point));*/
+        
         gl.glFlush();
         
     }

@@ -83,7 +83,7 @@ public class PruebaMesh implements GLEventListener,
     	
         GL gl = drawable.getGL();
         // Set backgroundcolor and shading mode
-        gl.glClearColor(1.0f, 1.0f, 1.0f, 0.0f);
+        gl.glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
         gl.glShadeModel(GL.GL_FLAT);
         // give me some light
         float ambient[] = {1.0f,1.0f,1.0f,1.0f };
@@ -162,16 +162,27 @@ public class PruebaMesh implements GLEventListener,
         // Reset the current matrix to the "identity"
         gl.glLoadIdentity();
         
+        //posicion para visualizar geometria con mesh, cámara más lejos.
         //alteramos la eye pos para ver la figura desde mas lejos.  HACE FALTA CAMBIAR EL TAMA?O DEL FRUSTUM MAS ARRIBA
-        glu.gluLookAt(-356,340,340,  // eye pos
+        /*glu.gluLookAt(-356,340,340,  // eye pos
+                     0,0,0,   // look at
+                     0,1,0);  // up*/
+        
+        //posicion para visualizar geometría sin mesh, cámara más cerca
+        glu.gluLookAt(3,1,3,  // eye pos
                      0,0,0,   // look at
                      0,1,0);  // up
-
+        
         gl.glScalef(view_scale,view_scale,view_scale);
         gl.glTranslatef(view_trax, view_tray, view_traz);        
         gl.glRotatef(view_rotx, 1.0f, 0.0f, 0.0f);
         gl.glRotatef(view_roty, 0.0f, 1.0f, 0.0f);
 
+        
+        gl.glEnable(GL.GL_LIGHTING);
+        gl.glEnable(GL.GL_LIGHT0);
+        gl.glEnable(GL.GL_DEPTH_TEST);
+        gl.glEnable(GL.GL_NORMALIZE);
         gl.glBegin(GL.GL_LINES);
 	      gl.glVertex3d(0,50,0);
 	      gl.glVertex3d(0,-50,0);
@@ -192,13 +203,22 @@ public class PruebaMesh implements GLEventListener,
         //dibujamos el modelo
         //DrawMesh dmodel = new DrawMesh(modelo);
         //dmodel.drawObject(gl);
+
+        //desactivar luces para obtener el color deseado con DrawObjectC
+        gl.glDisable(GL.GL_LIGHTING);
+        gl.glDisable(GL.GL_LIGHT0);
+        gl.glDisable(GL.GL_DEPTH_TEST);
+        gl.glDisable(GL.GL_NORMALIZE);
         
         Cloud3d n = new Cloud3d(30);
-        DrawCloud3d nube = new DrawCloud3d(n);
-        nube.drawObjectC(gl,1,0,0);
+        gl.glPointSize(4);
         
-        Octree o = new Octree(n,0);
-                
+        Octree o = new Octree(n,5);
+        DrawOctree octree = new DrawOctree(o);
+        octree.drawObjectC(gl, 0.1f,0.2f,0.1f);
+        DrawCloud3d nube = new DrawCloud3d(n);
+        nube.drawObjectC(gl,0.9f,0,0.9f);
+        
          gl.glFlush();
     }
     

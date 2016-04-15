@@ -7,6 +7,7 @@ public class Octree {
     private Vector<Vect3d> vPuntos;
     private int topeNivel;
     private NodoOctree raiz;
+    AABB box;
     
     public Octree(){
         topeNivel = 1;
@@ -20,7 +21,7 @@ public class Octree {
         topeNivel = tNivel;
         nPuntos=nb.tama();
         vPuntos = new Vector<Vect3d>();
-        AABB box = nb.getAABB();
+        box = nb.getAABB();
         raiz = new NodoOctree(0,null,box.getMin(),box.getMax(),this);
         for (int i=0; i<nPuntos;i++){
             Vect3d p= nb.getPunto(i);
@@ -31,6 +32,12 @@ public class Octree {
     
     public int getLimite(){
         return topeNivel;
+    }
+    
+    public NodoOctree getRaiz(){
+        
+        return raiz;
+        
     }
     
     

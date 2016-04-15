@@ -10,6 +10,7 @@ public class NodoOctree {
     Octree oct;
     NodoOctree[] hijos;
     boolean hijosCreados;
+    AABB box;
     
     public NodoOctree(int nnivel, NodoOctree nodoP, Vect3d min, Vect3d max, Octree o){
         
@@ -24,6 +25,7 @@ public class NodoOctree {
         minimo = min;
         maximo = max;
         pContenidos = new Vector<Vect3d>();
+        box = new AABB(minimo, maximo);
     }
     
     public void insertaPunto(Vect3d p){
@@ -32,7 +34,7 @@ public class NodoOctree {
         }
         else{
             if(!hijosCreados()){
-                creaHijos();
+                creaHijos(); 
             }
             double coorX = p.getX();
             double coorY = p.getY();
@@ -113,5 +115,67 @@ public class NodoOctree {
     
     private boolean hijosCreados(){
         return hijosCreados;
+    }
+    
+    public NodoOctree[] getHijos(){
+        
+        return hijos;
+        
+    }
+    
+    private NodoOctree buscar(Vect3d p){
+        if (nivel==oct.getLimite()){
+            return this;
+        }
+        double coorX = p.getX();
+        double coorY = p.getY();
+        double coorZ = p.getZ();
+        double minX = minimo.getX();
+        double minY = minimo.getY();
+        double minZ = minimo.getZ();
+        double maxX = maximo.getX();
+        double maxY = maximo.getY();
+        double maxZ = maximo.getZ();
+        double medX = (maxX+minX)/2;
+        double medY = (maxY+minY)/2;
+        double medZ = (maxZ+minZ)/2;
+        NodoOctree result;
+        if(coorY >= medY){
+            if(coorX >= medX){
+                if(coorZ >= medZ){
+                    result = hijos[7].buscar(p);
+                }
+                else{
+                    result = hijos[5].buscar(p);
+                }
+            }
+            else{
+                if(coorZ >= medZ){
+                    result = hijos[6].buscar(p);
+                }
+                else{
+                    result = hijos[4].buscar(p);
+                }
+            }
+        }
+        else{
+            if(coorX >= medX){
+                if(coorZ >= medZ){
+                    result = hijos[3].buscar(p);
+                }
+                else{
+                    result = hijos[1].buscar(p);
+                }
+            }
+            else{
+                if(coorZ >= medZ){
+                    result = hijos[2].buscar(p);
+                }
+                else{
+                    result = hijos[0].buscar(p);
+                }
+            }
+        }
+        return result;
     }
 }
