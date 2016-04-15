@@ -83,7 +83,7 @@ public class PruebaMesh implements GLEventListener,
     	
         GL gl = drawable.getGL();
         // Set backgroundcolor and shading mode
-        gl.glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+        gl.glClearColor(1.0f, 1.0f, 1.0f, 0.0f);
         gl.glShadeModel(GL.GL_FLAT);
         // give me some light
         float ambient[] = {1.0f,1.0f,1.0f,1.0f };
@@ -117,7 +117,7 @@ public class PruebaMesh implements GLEventListener,
         try {
         //modelo = new Mesh ("/home/XXXX/modelos/ajedrez_peon.obj");
         // indicar correctamente el camino al modelo  
-        modelo = new Mesh ("./src/modelos/ajedrez_peon.obj");
+        modelo = new Mesh ("./src/modelos/bailarina.obj");
         System.out.println("Modelo cargado con " + modelo.getSizeCaras() + "caras.");
         modelo.getAABB().out();
         
@@ -200,12 +200,22 @@ public class PruebaMesh implements GLEventListener,
         //hacemos un translate para intentar aproximar el modelo al punto (0,0,0)
         //gl.glTranslatef(70, -150, 0);
         
+        
         //dibujamos el modelo
-        //DrawMesh dmodel = new DrawMesh(modelo);
-        //dmodel.drawObject(gl);
-
-        //desactivar luces para obtener el color deseado con DrawObjectC
+        DrawMesh dmodel = new DrawMesh(modelo);
+        dmodel.drawObject(gl);
+        
         gl.glDisable(GL.GL_LIGHTING);
+        gl.glDisable(GL.GL_LIGHT0);
+        gl.glDisable(GL.GL_DEPTH_TEST);
+        gl.glDisable(GL.GL_NORMALIZE);
+        AABB modelBox = modelo.getAABB();
+        Octree om = new Octree(modelBox,0,modelo.getListaVertices());
+        DrawOctree octree2 = new DrawOctree(om);
+        octree2.drawObjectC(gl,0.5f,0.5f,0);
+        
+        //desactivar luces para obtener el color deseado con DrawObjectC
+        /*gl.glDisable(GL.GL_LIGHTING);
         gl.glDisable(GL.GL_LIGHT0);
         gl.glDisable(GL.GL_DEPTH_TEST);
         gl.glDisable(GL.GL_NORMALIZE);
@@ -217,7 +227,7 @@ public class PruebaMesh implements GLEventListener,
         DrawOctree octree = new DrawOctree(o);
         octree.drawObjectC(gl, 0.1f,0.2f,0.1f);
         DrawCloud3d nube = new DrawCloud3d(n);
-        nube.drawObjectC(gl,0.9f,0,0.9f);
+        nube.drawObjectC(gl,0.9f,0,0.9f);*/
         
          gl.glFlush();
     }
@@ -254,8 +264,10 @@ public class PruebaMesh implements GLEventListener,
             
         }
         if (e.getWheelRotation()>0){
+            if(view_scale>=0.1f){
+                view_scale=view_scale-0.1f;
+            }
             
-            view_scale=view_scale-0.1f;
         }
     
     }
