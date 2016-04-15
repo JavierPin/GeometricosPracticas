@@ -183,7 +183,25 @@ public class Box2 implements GLEventListener,
         
         //^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
         
-                
+        Triangle3d t = new Triangle3d(new Vect3d(0,0,0),new Vect3d(3,0,0),new Vect3d(1.5,3,0));
+        DrawTriangle3d triangle = new DrawTriangle3d(t);
+        triangle.drawObjectC(gl, 1, 0, 0);
+        
+        Ray3d r = new Ray3d (new Vect3d(1.5,1.5,-0.5), new Vect3d(1.5,1.5,10));
+        DrawRay3d ray = new DrawRay3d(r);
+        ray.drawObjectC(gl,0,1,0);
+        
+        Vect3d[] p = new Vect3d[1];
+        boolean intersecta = t.RayTriangle3d(r, p);
+        
+        if (intersecta){
+            System.out.println(intersecta+" en el punto:");
+            p[0].out();
+            gl.glPointSize(7);
+            DrawVect3d point = new DrawVect3d(p[0]);
+            point.drawObjectC(gl, 1,1,1);
+        }
+        
         gl.glFlush();
         
     }

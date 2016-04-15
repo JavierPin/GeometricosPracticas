@@ -1,4 +1,5 @@
 package algGeom;
+import java.util.ArrayList;
 import java.util.Vector;
 
 public class Octree {
@@ -15,6 +16,19 @@ public class Octree {
         vPuntos = new Vector<Vect3d>();
         raiz = new NodoOctree(0,null,null,null,null);
         
+    }
+    
+    public Octree(AABB bb, int tNivel, ArrayList<Vect3d> vertex){
+        topeNivel = tNivel;
+        nPuntos=vertex.size();
+        vPuntos = new Vector<Vect3d>();
+        box = bb;
+        raiz = new NodoOctree(0,null,box.getMin(),box.getMax(),this);
+        for (int i=0; i<nPuntos;i++){
+            Vect3d p= vertex.get(i);
+            vPuntos.add(p);
+            raiz.insertaPunto(p);
+        }
     }
     
     public Octree(Cloud3d nb, int tNivel){

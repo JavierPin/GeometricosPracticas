@@ -9,7 +9,11 @@
         <file>file:/E:/Universidad/Geometricos/src/algGeom/JavaGeom1.java</file>
         <file>file:/E:/Universidad/Geometricos/src/algGeom/Box2.java</file>
         <group>
+<<<<<<< HEAD
             <file>file:/C:/Git/src/algGeom/DrawMesh.java</file>
+=======
+            <file>file:/C:/Git/src/algGeom/PruebaMesh.java</file>
+>>>>>>> Samu
         </group>
     </open-files>
 </project-private>

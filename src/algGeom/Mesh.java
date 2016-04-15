@@ -247,7 +247,9 @@ public final class Mesh {
 	    	return vertices.size();
 	    }
 
-	   
+	   public ArrayList<Vect3d> getListaVertices(){
+               return vertices;
+           }
 	    
 	    private int[] read3Integer(String line)
 		{

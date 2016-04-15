@@ -590,10 +590,8 @@ public class Triangle3d {
     }
     
     /** Calcula la interseccion entre este triángulo y un rayo */
-    public boolean RayTriangle3d(Ray3d r, Vect3d[] _point){
-        
-        Vect3d point = _point[0];
-        
+    public boolean RayTriangle3d(Ray3d r, Vect3d[] point){
+
         float EPSILON = 0.000001f;
 
         Vect3d e1 = new Vect3d(b.resta(a));
@@ -606,6 +604,7 @@ public class Triangle3d {
         double tmp = e1.dot(p);
         
         if(tmp > -EPSILON && tmp < EPSILON ){
+            
             return false;
         }
 
@@ -629,31 +628,22 @@ public class Triangle3d {
           
         }
         
-        double det,in_det;
+        if(u+v>1.0){
+            
+            return false;
+            
+        }
         
         double t = (e2.dot(q))*tmp;
-        
-        System.out.println("Triangle3d: ("+t);
-        
+
         if (t<0.0){
             
             return false;
             
         }
         
-        point = r.getOrigen().suma(direccion.prodEscalar(t));
+        point[0] = r.getOrigen().suma(direccion.prodEscalar(t));
         
-        
-        //point.x=(r.getOrigen().x)+(direccion.prodEscalar(t).x);
-        //point.y=(r.getOrigen().y)+(direccion.prodEscalar(t).y);
-        //point.z=(r.getOrigen().z)+(direccion.prodEscalar(t).z);
-        point.setX((r.getOrigen().x)+(direccion.prodEscalar(t).x));
-        point.setY((r.getOrigen().y)+(direccion.prodEscalar(t).y));
-        point.setZ((r.getOrigen().z)+(direccion.prodEscalar(t).z));
-        _point[0] = new Vect3d((r.getOrigen().x)+(direccion.prodEscalar(t).x),
-                ((r.getOrigen().y)+(direccion.prodEscalar(t).y)),
-                ((r.getOrigen().z)+(direccion.prodEscalar(t).z)));
-        //point.out();
         return true;
       }
     
