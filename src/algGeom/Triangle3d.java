@@ -590,7 +590,7 @@ public class Triangle3d {
     }
     
     /** Calcula la interseccion entre este triángulo y un rayo */
-    public boolean RayTriangle3d(Ray3d r, Vect3d point){
+    public boolean RayTriangle3d(Ray3d r, Vect3d[] point){
 
         float EPSILON = 0.000001f;
 
@@ -642,9 +642,8 @@ public class Triangle3d {
             
         }
         
-        point = r.getOrigen().suma(direccion.prodEscalar(t));
-
-
+        point[0] = r.getOrigen().suma(direccion.prodEscalar(t));
+        
         return true;
       }
     
