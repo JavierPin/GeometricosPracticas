@@ -33,9 +33,9 @@ public class DrawMesh extends Draw{
          
 	 }
 	 
-@Override public void drawObjectC (GL g, float R, float G, float B){
-
-//XXX
-
-}
+	 @Override public void drawObjectC (GL g, float R, float G, float B){
+	
+	//XXX
+	
+	 }
 }

@@ -116,7 +116,7 @@ public class PruebaMesh implements GLEventListener,
         
         
         try {
-            modelo = new Mesh ("./src/modelos/cat.obj");
+            modelo = new Mesh ("./src/modelos/ballet.obj");
             System.out.println("Modelo cargado con " + modelo.getSizeCaras() + "caras.");
             modelo.getAABB().out();
         
@@ -161,7 +161,6 @@ public class PruebaMesh implements GLEventListener,
         // Reset the current matrix to the "identity"
         gl.glLoadIdentity();
         
-        //posicion para visualizar geometria con mesh, cámara más lejos.
         //alteramos la eye pos para ver la figura desde mas lejos.  HACE FALTA CAMBIAR EL TAMA?O DEL FRUSTUM MAS ARRIBA
         glu.gluLookAt(-356,340,340,  // eye pos
                      0,0,0,   // look at
@@ -201,7 +200,7 @@ public class PruebaMesh implements GLEventListener,
         //DrawRay3d ray = new DrawRay3d(r);
         //ray.drawObjectC(gl, 0,0,1);
         
-        RayBeam rb = new RayBeam(new Vect3d(50,150,200), new Vect3d(50,150,-100),300,15);
+        RayBeam rb = new RayBeam(new Vect3d(10,200,200), new Vect3d(10,200,-100),150,15);
         rb.DrawRayBeam(gl,0,0,1);
         
         ArrayList<Triangle3d> tMalla = modelo.getTriangulos();
@@ -237,7 +236,7 @@ public class PruebaMesh implements GLEventListener,
         
         //Dibujamos el octree. Hemos deshabilitado la luz para poder pintarlo del color que queramos
         /*AABB modelBox = modelo.getAABB();
-        Octree om = new Octree(modelBox,5,modelo.getListaVertices());
+        Octree om = new Octree(modelBox,4,modelo.getListaVertices());
         DrawOctree octree2 = new DrawOctree(om);
         octree2.drawObjectC(gl,0.5f,0.5f,0);*/
 
