@@ -202,18 +202,20 @@ public class Box2 implements GLEventListener,
             point.drawObjectC(gl, 1,1,1);
         }
         */
-        AABB ab = new AABB(0,0,0,2,2,2);
+        AABB ab = new AABB(-1,-1,-1,1,1,1);
+        
         DrawAABB dab = new DrawAABB(ab);
-        Ray3d r = new Ray3d(new Vect3d(1,1,3.0), new Vect3d (10,10,-2));
+        Ray3d r = new Ray3d( new Vect3d (-2,-2,1),new Vect3d(9,9,9));
+
         DrawRay3d dr = new DrawRay3d(r);
         Vect3d[] punto = new Vect3d[1];
         
         if (ab.RayAABB(r, punto)){
             System.out.println("SI!");
+            //punto[0].out();
         }else{
             System.out.println("NO!");
         }
-        
         
         dr.drawObjectC(gl, 0,0,1);
         dab.drawObjectC(gl,0.6f,0,0);

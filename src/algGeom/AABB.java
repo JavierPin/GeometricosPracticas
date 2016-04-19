@@ -73,32 +73,29 @@ public boolean RayAABB(Ray3d _r, Vect3d[] point){
     tfar = new double[1];
     tnear[0] = -BasicGeom.INFINITO; 
     tfar[0] = BasicGeom.INFINITO;
-    boolean ix = true, iy = true, iz = true; //interseccion con el par de planos
+    boolean intersecta = true;
     
-    Ray3d r = new Ray3d (_r.orig, _r.getDestino().resta(_r.getOrigen()).suma(_r.orig));
-    Vect3d direccion = r.getDestino().resta(r.getOrigen());
-    if(testRayCara(tnear,tfar,r.orig.getX(),_r.dest.getX(),min.getX(),max.getX())){
+    Vect3d direccion = _r.getDestino().resta(_r.getOrigen());
+    if(!testRayCara(tnear,tfar,_r.orig.getX(),direccion.getX(),min.getX(),max.getX())){
         point[0] = _r.getOrigen().suma(direccion.prodEscalar(tnear[0]));
-        return true;
+        intersecta = false;
     }
-    if(testRayCara(tnear,tfar,r.orig.getY(),_r.dest.getY(),min.getY(),max.getY())){
+    if(!testRayCara(tnear,tfar,_r.orig.getY(),direccion.getY(),min.getY(),max.getY())){
         point[0] = _r.getOrigen().suma(direccion.prodEscalar(tnear[0]));
-        return true;
+        intersecta = false;
     }
-    if(testRayCara(tnear,tfar,r.orig.getZ(),_r.dest.getZ(),min.getZ(),max.getZ())){
+    if(!testRayCara(tnear,tfar,_r.orig.getZ(),direccion.getZ(),min.getZ(),max.getZ())){
         point[0] = _r.getOrigen().suma(direccion.prodEscalar(tnear[0]));
-        return true;
+        intersecta = false;
     }
-    return false;
+    return intersecta;
 }
 
 private boolean testRayCara(double[] tnear, double[] tfar, double ox,double dx, double x1, double x2){
     double t1,t2;
     if(dx == 0){
        //Es paralelo al plano
-       if(ox < x1 || ox > x2){
-           return false; //No intersecta
-       }
+       if(ox < x1 || ox > x2) return false; //No intersecta
     }else{
         t1 = (x1-ox)/dx;
         t2 = (x2-ox)/dx;
@@ -118,6 +115,7 @@ private boolean testRayCara(double[] tnear, double[] tfar, double ox,double dx, 
     if(tfar[0]<0) return false;
     return true;
 }
+
 
 /** devuelve el punto de la esquina inferior */
 public Vect3d getMin (){
