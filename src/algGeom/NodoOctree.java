@@ -178,4 +178,21 @@ public class NodoOctree {
         }
         return result;
     }
+        
+    public boolean RayOctree(Ray3d r, Vect3d[] v){
+        if(box.RayAABB(r,v)){
+            if(hijosCreados){
+                for (int i = 0; i<hijos.length;i++){
+                    hijos[i].RayOctree(r, v);
+                }
+                return true;//un nodo intermedio tiene al hijo objetivo
+            }
+            //A este punto solo llega si es el ultimo
+            //Devolver lo que tenga que devolver
+            return true;
+        }
+        //este nodo no tiene interseccion con el ray
+        return false;
+    }
+    
 }

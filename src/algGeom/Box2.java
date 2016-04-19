@@ -206,7 +206,6 @@ public class Box2 implements GLEventListener,
         
         DrawAABB dab = new DrawAABB(ab);
         Ray3d r = new Ray3d( new Vect3d (-2,-2,1),new Vect3d(9,9,9));
-
         DrawRay3d dr = new DrawRay3d(r);
         Vect3d[] punto = new Vect3d[1];
         

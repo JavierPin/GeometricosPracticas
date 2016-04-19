@@ -49,10 +49,22 @@ public class Octree {
     }
     
     public NodoOctree getRaiz(){
-        
+    
         return raiz;
         
     }
+        
+    public boolean RayOctree(Ray3d r){
+        
+        Vect3d[] pIntersecion= new Vect3d[1];
+        if(box.RayAABB(r, pIntersecion)){
+            raiz.RayOctree(r,pIntersecion); 
+            //Hay que dar donde estamos
+            return true;
+        }
+        return false;
+    }
     
+
     
 }
