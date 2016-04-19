@@ -235,10 +235,10 @@ public class PruebaMesh implements GLEventListener,
         System.out.println("Operación realizada en "+ ( time_acum )/1000000.0f +" millisegundos");
         
         //Dibujamos el octree. Hemos deshabilitado la luz para poder pintarlo del color que queramos
-        /*AABB modelBox = modelo.getAABB();
-        Octree om = new Octree(modelBox,4,modelo.getListaVertices());
+        AABB modelBox = modelo.getAABB();
+        Octree om = new Octree(modelBox,3,modelo.getListaVertices());
         DrawOctree octree2 = new DrawOctree(om);
-        octree2.drawObjectC(gl,0.5f,0.5f,0);*/
+        octree2.drawObjectC(gl,0.5f,0.5f,0);
 
         //desactivar luces para obtener el color deseado con DrawObjectC
         /*gl.glDisable(GL.GL_LIGHTING);

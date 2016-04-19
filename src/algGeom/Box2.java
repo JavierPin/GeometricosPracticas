@@ -182,7 +182,7 @@ public class Box2 implements GLEventListener,
         dpEje.drawObjectC(gl ,0.0f, 0.0f, 1.0f, 0.3f);
         
         //^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-        
+        /*
         Triangle3d t = new Triangle3d(new Vect3d(0,0,0),new Vect3d(3,0,0),new Vect3d(1.5,3,0));
         DrawTriangle3d triangle = new DrawTriangle3d(t);
         triangle.drawObjectC(gl, 1, 0, 0);
@@ -201,6 +201,23 @@ public class Box2 implements GLEventListener,
             DrawVect3d point = new DrawVect3d(p[0]);
             point.drawObjectC(gl, 1,1,1);
         }
+        */
+        AABB ab = new AABB(0,0,0,2,2,2);
+        DrawAABB dab = new DrawAABB(ab);
+        Ray3d r = new Ray3d(new Vect3d(1,1,3.0), new Vect3d (10,10,-2));
+        DrawRay3d dr = new DrawRay3d(r);
+        Vect3d[] punto = new Vect3d[1];
+        
+        if (ab.RayAABB(r, punto)){
+            System.out.println("SI!");
+        }else{
+            System.out.println("NO!");
+        }
+        
+        
+        dr.drawObjectC(gl, 0,0,1);
+        dab.drawObjectC(gl,0.6f,0,0);
+        
         
         gl.glFlush();
         
