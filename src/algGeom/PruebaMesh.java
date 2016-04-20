@@ -238,7 +238,7 @@ public class PruebaMesh implements GLEventListener,
         
         //Dibujamos el octree. Hemos deshabilitado la luz para poder pintarlo del color que queramos
         AABB modelBox = modelo.getAABB();
-        Octree om = new Octree(modelBox,5,modelo.getListaVertices());
+        Octree om = new Octree(modelBox,5,modelo.getListaVertices(), modelo.getTriangulos());
         DrawOctree octree2 = new DrawOctree(om);
         //octree2.drawObjectC(gl,0.5f,0.5f,0);
         om.RayOctree(r, gl);
