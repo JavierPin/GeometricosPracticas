@@ -15,13 +15,13 @@ public class DrawRay3d extends Draw{
             
         
         p1 = new Vect3d(
-                l.dest.x + (l.orig.x- l.dest.x) * 100,
-                l.dest.y + (l.orig.y - l.dest.y)*100,
-                l.dest.z + (l.orig.z - l.dest.z)*100);
+                l.dest.x + (l.orig.x- l.dest.x),
+                l.dest.y + (l.orig.y - l.dest.y),
+                l.dest.z + (l.orig.z - l.dest.z));
         p2 = new Vect3d(
-                l.orig.x - (l.orig.x - l.dest.x),
-                l.orig.y - (l.orig.y - l.dest.y),
-                l.orig.z - (l.orig.z - l.dest.z));
+                l.orig.x - (l.orig.x - l.dest.x ) * 100000,
+                l.orig.y - (l.orig.y - l.dest.y)* 100000,
+                l.orig.z - (l.orig.z - l.dest.z)* 100000);
 
         g.glBegin(GL.GL_LINES);
         g.glVertex3f((float) p1.getX(),(float) p1.getY(),(float) p1.getZ());
@@ -38,13 +38,13 @@ public class DrawRay3d extends Draw{
             
         
         p1 = new Vect3d(
-                l.dest.x + (l.orig.x- l.dest.x) * 100,
-                l.dest.y + (l.orig.y - l.dest.y)*100,
-                l.dest.z + (l.orig.z - l.dest.z)*100);
+                l.dest.x + (l.orig.x- l.dest.x),
+                l.dest.y + (l.orig.y - l.dest.y),
+                l.dest.z + (l.orig.z - l.dest.z));
         p2 = new Vect3d(
-                l.orig.x - (l.orig.x - l.dest.x),
-                l.orig.y - (l.orig.y - l.dest.y),
-                l.orig.z - (l.orig.z - l.dest.z));
+                l.orig.x - (l.orig.x - l.dest.x ) * 100,
+                l.orig.y - (l.orig.y - l.dest.y)* 100,
+                l.orig.z - (l.orig.z - l.dest.z)* 100);
 
         g.glColor3f(R, G, B);
         g.glBegin(GL.GL_LINES);

@@ -189,7 +189,10 @@ public class NodoOctree {
             }
             //A este punto solo llega si es el ultimo
             //Devolver lo que tenga que devolver
-            if(!hijosCreados && !pContenidos.isEmpty()){
+            if(!hijosCreados){
+                //Triangle3d t = new Triangle3d (pContenidos.get(0),pContenidos.get(1),pContenidos.get(2));
+                //DrawTriangle3d dt = new DrawTriangle3d(t);
+                //dt.drawObject(g);
                 DrawAABB dbox = new DrawAABB (this.box);
                 dbox.drawWireObjectC(g, 1, 0.5f , 0);
             }

@@ -3,7 +3,7 @@ package algGeom;
 public class Ray3d extends Edge3d{
 
    public Ray3d (Vect3d o, Vect3d d)  {
-	   super (d,o);
+	   super (o,d);
    }
         
 	

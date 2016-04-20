@@ -116,7 +116,7 @@ public class PruebaMesh implements GLEventListener,
         
         
         try {
-            modelo = new Mesh ("./src/modelos/ballet.obj");
+            modelo = new Mesh ("./src/modelos/cat.obj");
             System.out.println("Modelo cargado con " + modelo.getSizeCaras() + "caras.");
             modelo.getAABB().out();
         
@@ -196,7 +196,7 @@ public class PruebaMesh implements GLEventListener,
         gl.glDisable(GL.GL_DEPTH_TEST);
         gl.glDisable(GL.GL_NORMALIZE);
         
-        Ray3d r = new Ray3d(new Vect3d(0,300,0), new Vect3d(0,301,0));
+        Ray3d r = new Ray3d(new Vect3d(0,0,0), new Vect3d(1,1,1));
         DrawRay3d ray = new DrawRay3d(r);
         ray.drawObjectC(gl, 0,0,1);
         
@@ -230,6 +230,7 @@ public class PruebaMesh implements GLEventListener,
                     i=tMalla.size();
                 }
             //}
+            
         }
         
         
