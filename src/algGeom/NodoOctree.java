@@ -1,5 +1,6 @@
 package algGeom;
 import java.util.Vector;
+import javax.media.opengl.GL;
 
 public class NodoOctree {
     NodoOctree padre;
@@ -179,16 +180,22 @@ public class NodoOctree {
         return result;
     }
         
-    public boolean RayOctree(Ray3d r, Vect3d[] v){
+    public boolean RayOctree(Ray3d r, Vect3d[] v, GL g){
         if(box.RayAABB(r,v)){
             if(hijosCreados){
                 for (int i = 0; i<hijos.length;i++){
-                    hijos[i].RayOctree(r, v);
+                    hijos[i].RayOctree(r, v,g);
                 }
-                return true;//un nodo intermedio tiene al hijo objetivo
             }
             //A este punto solo llega si es el ultimo
             //Devolver lo que tenga que devolver
+            if(!hijosCreados){
+                //Triangle3d t = new Triangle3d (pContenidos.get(0),pContenidos.get(1),pContenidos.get(2));
+                //DrawTriangle3d dt = new DrawTriangle3d(t);
+                //dt.drawObject(g);
+                DrawAABB dbox = new DrawAABB (this.box);
+                dbox.drawWireObjectC(g, 1, 0.5f , 0);
+            }
             return true;
         }
         //este nodo no tiene interseccion con el ray
