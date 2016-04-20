@@ -196,12 +196,12 @@ public class PruebaMesh implements GLEventListener,
         gl.glDisable(GL.GL_DEPTH_TEST);
         gl.glDisable(GL.GL_NORMALIZE);
         
-        //Ray3d r = new Ray3d(new Vect3d(-50,50,80), new Vect3d(50,50,-100));
-        //DrawRay3d ray = new DrawRay3d(r);
-        //ray.drawObjectC(gl, 0,0,1);
+        Ray3d r = new Ray3d(new Vect3d(0,300,0), new Vect3d(0,301,0));
+        DrawRay3d ray = new DrawRay3d(r);
+        ray.drawObjectC(gl, 0,0,1);
         
-        RayBeam rb = new RayBeam(new Vect3d(10,200,200), new Vect3d(10,200,-100),150,15);
-        rb.DrawRayBeam(gl,0,0,1);
+        //RayBeam rb = new RayBeam(new Vect3d(10,200,200), new Vect3d(10,200,-100),150,15);
+        //rb.DrawRayBeam(gl,0,0,1);
         
         ArrayList<Triangle3d> tMalla = modelo.getTriangulos();
         
@@ -211,9 +211,9 @@ public class PruebaMesh implements GLEventListener,
         
         time_start = System.nanoTime();
 
-        for (int j=0; j<rb.rays.size();j++){
+        //for (int j=0; j<rb.rays.size();j++){
             
-            Ray3d r = rb.rays.get(j);
+            //Ray3d r = rb.rays.get(j);
             
             for (int i=0; i<tMalla.size();i++){
                 boolean intersecta = tMalla.get(i).RayTriangle3d(r, point);
@@ -229,16 +229,18 @@ public class PruebaMesh implements GLEventListener,
 
                     i=tMalla.size();
                 }
-            }
+            //}
         }
+        
         
         System.out.println("Operación realizada en "+ ( time_acum )/1000000.0f +" millisegundos");
         
         //Dibujamos el octree. Hemos deshabilitado la luz para poder pintarlo del color que queramos
         AABB modelBox = modelo.getAABB();
-        Octree om = new Octree(modelBox,3,modelo.getListaVertices());
+        Octree om = new Octree(modelBox,5,modelo.getListaVertices());
         DrawOctree octree2 = new DrawOctree(om);
-        octree2.drawObjectC(gl,0.5f,0.5f,0);
+        //octree2.drawObjectC(gl,0.5f,0.5f,0);
+        om.RayOctree(r, gl);
 
         //desactivar luces para obtener el color deseado con DrawObjectC
         /*gl.glDisable(GL.GL_LIGHTING);

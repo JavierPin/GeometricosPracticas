@@ -1,6 +1,7 @@
 package algGeom;
 import java.util.ArrayList;
 import java.util.Vector;
+import javax.media.opengl.GL;
 
 public class Octree {
     
@@ -54,11 +55,11 @@ public class Octree {
         
     }
         
-    public boolean RayOctree(Ray3d r){
+    public boolean RayOctree(Ray3d r , GL g){
         
         Vect3d[] pIntersecion= new Vect3d[1];
         if(box.RayAABB(r, pIntersecion)){
-            raiz.RayOctree(r,pIntersecion); 
+            raiz.RayOctree(r,pIntersecion,g); 
             //Hay que dar donde estamos
             return true;
         }
