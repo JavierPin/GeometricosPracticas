@@ -1,5 +1,7 @@
 package algGeom;
 
+import java.lang.Math;
+
 public class AABB {
 
     Vect3d min; //menor x,y,z

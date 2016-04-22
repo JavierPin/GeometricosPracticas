@@ -69,8 +69,8 @@ public class PruebaMesh implements GLEventListener,
     }
     
     // rotating the scene
-    private float view_rotx = 20.0f; //20
-    private float view_roty = 30.0f; //30
+    private float view_rotx = 0.0f; //20
+    private float view_roty = 0.0f; //30
     // remember last mouse position
     private int oldMouseX;
     private int oldMouseY;
@@ -162,8 +162,8 @@ public class PruebaMesh implements GLEventListener,
         gl.glLoadIdentity();
         
         //alteramos la eye pos para ver la figura desde mas lejos.  HACE FALTA CAMBIAR EL TAMA?O DEL FRUSTUM MAS ARRIBA
-        glu.gluLookAt(-356,340,340,  // eye pos
-                     0,0,0,   // look at
+        glu.gluLookAt(300,300,300,  // eye pos
+                     0,150,0,   // look at
                      0,1,0);  // up
         
         //posicion para visualizar geometría sin mesh, cámara más cerca
@@ -196,12 +196,12 @@ public class PruebaMesh implements GLEventListener,
         gl.glDisable(GL.GL_DEPTH_TEST);
         gl.glDisable(GL.GL_NORMALIZE);
         
-        //Ray3d r = new Ray3d(new Vect3d(-50,50,80), new Vect3d(50,50,-100));
-        //DrawRay3d ray = new DrawRay3d(r);
-        //ray.drawObjectC(gl, 0,0,1);
+        Ray3d r = new Ray3d(new Vect3d(0,0,0), new Vect3d(20,20,20));
+        DrawRay3d ray = new DrawRay3d(r);
+        ray.drawObjectC(gl, 0,0,1);
         
-        RayBeam rb = new RayBeam(new Vect3d(10,200,200), new Vect3d(10,200,-100),150,15);
-        rb.DrawRayBeam(gl,0,0,1);
+        //RayBeam rb = new RayBeam(new Vect3d(10,200,200), new Vect3d(10,200,-100),150,15);
+        //rb.DrawRayBeam(gl,0,0,1);
         
         ArrayList<Triangle3d> tMalla = modelo.getTriangulos();
         
@@ -211,9 +211,9 @@ public class PruebaMesh implements GLEventListener,
         
         time_start = System.nanoTime();
 
-        for (int j=0; j<rb.rays.size();j++){
+        //for (int j=0; j<rb.rays.size();j++){
             
-            Ray3d r = rb.rays.get(j);
+            //Ray3d r = rb.rays.get(j);
             
             for (int i=0; i<tMalla.size();i++){
                 boolean intersecta = tMalla.get(i).RayTriangle3d(r, point);
@@ -227,10 +227,10 @@ public class PruebaMesh implements GLEventListener,
                     DrawVect3d punto = new DrawVect3d(point[0]);
                     punto.drawObjectC(gl, 0,0,1);
 
-                    i=tMalla.size();
+                    break;
                 }
             }
-        }
+        //}
         
         System.out.println("Operación realizada en "+ ( time_acum )/1000000.0f +" millisegundos");
         
@@ -342,4 +342,5 @@ public class PruebaMesh implements GLEventListener,
     }
     public void keyReleased(KeyEvent e){}
     public void keyTyped(KeyEvent e){}
+ 
 }

@@ -64,8 +64,7 @@ public final class Mesh {
         /**
          * 
          * @return Devuelve las coordenadas de todos los vértices de los triángulos en la mesh 
-         */
-        
+         */    
 	public double[] getVerticesTriangulos (){
 		double [] tri = new double [caras.size()*9];
 		for (int i=0; i<caras.size(); i++){
