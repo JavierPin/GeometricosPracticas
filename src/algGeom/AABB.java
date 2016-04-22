@@ -69,6 +69,56 @@ public AABB(Cloud3d cloud){
     
 }
 
+public boolean RayAABB(Ray3d _r, Vect3d[] point){
+    double[] tnear,tfar;
+    tnear = new double[1];
+    tfar = new double[1];
+    tnear[0] = -BasicGeom.INFINITO; 
+    tfar[0] = BasicGeom.INFINITO;
+    boolean intersecta = true;
+    
+    Vect3d direccion = _r.getDestino().resta(_r.getOrigen());
+    if(!testRayCara(tnear,tfar,_r.orig.getX(),direccion.getX(),min.getX(),max.getX())){
+        point[0] = _r.getOrigen().suma(direccion.prodEscalar(tnear[0]));
+        intersecta = false;
+    }
+    if(!testRayCara(tnear,tfar,_r.orig.getY(),direccion.getY(),min.getY(),max.getY())){
+        point[0] = _r.getOrigen().suma(direccion.prodEscalar(tnear[0]));
+        intersecta = false;
+    }
+    if(!testRayCara(tnear,tfar,_r.orig.getZ(),direccion.getZ(),min.getZ(),max.getZ())){
+        point[0] = _r.getOrigen().suma(direccion.prodEscalar(tnear[0]));
+        intersecta = false;
+    }
+    return intersecta;
+}
+
+private boolean testRayCara(double[] tnear, double[] tfar, double ox,double dx, double x1, double x2){
+    double t1,t2;
+    if(dx == 0){
+       //Es paralelo al plano
+       if(ox < x1 || ox > x2) return false; //No intersecta
+    }else{
+        t1 = (x1-ox)/dx;
+        t2 = (x2-ox)/dx;
+        if (t1>t2){
+            double aux = t1;
+            t1=t2;
+            t2=aux;
+        }
+        if(t1>tnear[0]){
+            tnear[0]=t1;
+        }
+        if(t2<tfar[0]){
+            tfar[0]=t2;
+        }
+    }
+    if(tnear[0]>tfar[0]) return false;
+    if(tfar[0]<0) return false;
+    return true;
+}
+
+
 /** devuelve el punto de la esquina inferior */
 public Vect3d getMin (){
     return min;
