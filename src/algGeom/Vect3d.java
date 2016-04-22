@@ -98,6 +98,29 @@ public class Vect3d {
             return Math.sqrt(x*x+y*y+z*z);
         }
         
+        public double findMin(){
+            
+            if(x<y && x<z){
+                return x;
+            }
+            else if (y<z){
+                return y;
+            }
+            return z;     
+        }
+        
+        public double findMax(){
+            
+            if(x>y && x>z){
+                return x;
+            }
+            else if (y>z){
+                return y;
+            }
+            return z; 
+            
+        }
+        
         /** Muestra en pantalla los valores de las coordenadas del Point. */
         public void out () {
             System.out.print ("Coordenada x: ");

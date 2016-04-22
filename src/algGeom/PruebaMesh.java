@@ -189,21 +189,33 @@ public class PruebaMesh implements GLEventListener,
         gl.glEnable(GL.GL_LIGHT0);
         gl.glEnable(GL.GL_DEPTH_TEST);
         gl.glEnable(GL.GL_NORMALIZE);
-        DrawMesh dmodel = new DrawMesh(modelo);
-        dmodel.drawObject(gl);
+        //DrawMesh dmodel = new DrawMesh(modelo);
+        //dmodel.drawObject(gl);
         gl.glDisable(GL.GL_LIGHTING);
         gl.glDisable(GL.GL_LIGHT0);
         gl.glDisable(GL.GL_DEPTH_TEST);
         gl.glDisable(GL.GL_NORMALIZE);
         
-        Ray3d r = new Ray3d(new Vect3d(0,0,0), new Vect3d(20,20,20));
+        /*Ray3d r = new Ray3d(new Vect3d(10,10,10), new Vect3d(20,20,20));
         DrawRay3d ray = new DrawRay3d(r);
-        ray.drawObjectC(gl, 0,0,1);
+        ray.drawObjectC(gl, 0,0,1);*/
+        
+        Triangle3d t = new Triangle3d(new Vect3d(-30,0,19), new Vect3d(30,0,19), new Vect3d(15,30,9));
+        DrawTriangle3d triangle = new DrawTriangle3d(t);
+        triangle.drawObjectC(gl, 0,1,0);
+        
+        AABB b = new AABB(1,1,1,17,17,17);
+        DrawAABB box = new DrawAABB(b);
+        box.drawWireObjectC(gl, 1, 0, 0);
+        
+        System.out.println(b.aabbTri(t));
+
+        
         
         //RayBeam rb = new RayBeam(new Vect3d(10,200,200), new Vect3d(10,200,-100),150,15);
         //rb.DrawRayBeam(gl,0,0,1);
         
-        ArrayList<Triangle3d> tMalla = modelo.getTriangulos();
+        /*ArrayList<Triangle3d> tMalla = modelo.getTriangulos();
         
         Vect3d[] point = new Vect3d[1];
         
@@ -232,7 +244,7 @@ public class PruebaMesh implements GLEventListener,
             }
         //}
         
-        System.out.println("Operación realizada en "+ ( time_acum )/1000000.0f +" millisegundos");
+        System.out.println("Operación realizada en "+ ( time_acum )/1000000.0f +" millisegundos");*/
         
         //Dibujamos el octree. Hemos deshabilitado la luz para poder pintarlo del color que queramos
         /*AABB modelBox = modelo.getAABB();
