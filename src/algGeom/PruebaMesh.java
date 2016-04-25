@@ -20,6 +20,8 @@ import java.awt.event.KeyListener;
 import java.awt.event.MouseMotionListener;
 import java.awt.event.MouseWheelEvent;
 import java.util.ArrayList;
+import java.util.*;
+import java.util.Vector;
 
 
 
@@ -34,6 +36,7 @@ public class PruebaMesh implements GLEventListener,
     private float view_trax = 0.0f;
     private float view_tray = 0.0f;
     private float view_traz = 0.0f;
+    private boolean once = false;
 
     public static void main(String[] args) {
     	Draw.ALTO = HEIGHT;
@@ -116,7 +119,7 @@ public class PruebaMesh implements GLEventListener,
         
         
         try {
-            modelo = new Mesh ("./src/modelos/cat.obj");
+            modelo = new Mesh ("./src/modelos/ballet.obj");
             System.out.println("Modelo cargado con " + modelo.getSizeCaras() + "caras.");
             modelo.getAABB().out();
         
@@ -196,24 +199,25 @@ public class PruebaMesh implements GLEventListener,
         gl.glDisable(GL.GL_DEPTH_TEST);
         gl.glDisable(GL.GL_NORMALIZE);
         
-        Ray3d r = new Ray3d(new Vect3d(0,0,0), new Vect3d(1,1,1));
+        Ray3d r = new Ray3d(new Vect3d(-80,150,-80), new Vect3d(-1,150,-1));
         DrawRay3d ray = new DrawRay3d(r);
         ray.drawObjectC(gl, 0,0,1);
         
-        //RayBeam rb = new RayBeam(new Vect3d(10,200,200), new Vect3d(10,200,-100),150,15);
-        //rb.DrawRayBeam(gl,0,0,1);
+        RayBeam rb = new RayBeam(new Vect3d(10,200,200), new Vect3d(10,200,-100),150,15);
+        rb.DrawRayBeam(gl,0,0,1);
         
         ArrayList<Triangle3d> tMalla = modelo.getTriangulos();
         
         Vect3d[] point = new Vect3d[1];
         
         long time_start, time_end, time_acum=0;
+        long time_start2, time_end2, time_acum2=0;
         
         time_start = System.nanoTime();
 
-        //for (int j=0; j<rb.rays.size();j++){
+        for (int j=0; j<rb.rays.size();j++){
             
-            //Ray3d r = rb.rays.get(j);
+            r = rb.rays.get(j);
             
             for (int i=0; i<tMalla.size();i++){
                 boolean intersecta = tMalla.get(i).RayTriangle3d(r, point);
@@ -229,20 +233,59 @@ public class PruebaMesh implements GLEventListener,
 
                     i=tMalla.size();
                 }
-            //}
+            }
             
         }
         
         
         System.out.println("Operación realizada en "+ ( time_acum )/1000000.0f +" millisegundos");
         
+        
         //Dibujamos el octree. Hemos deshabilitado la luz para poder pintarlo del color que queramos
         AABB modelBox = modelo.getAABB();
-        Octree om = new Octree(modelBox,5,modelo.getListaVertices());
+        Octree om = new Octree(modelBox,5,modelo.getListaVertices(), modelo.getTriangulos());
         DrawOctree octree2 = new DrawOctree(om);
         //octree2.drawObjectC(gl,0.5f,0.5f,0);
-        om.RayOctree(r, gl);
+        Vector<Vect3d> pPuntos = new Vector<Vect3d>();
+        
+        time_start2 = System.nanoTime();
+        for(int h = 0; h < rb.rays.size(); h++){// con el rayBeam
+            r = rb.rays.get(h);
+            
+            pPuntos.clear();
+            om.RayOctree(r, pPuntos, gl);
+            
+            ArrayList<Triangle3d> idTri = new ArrayList<Triangle3d>();
 
+            //recorro la coleccion de puntos y los paso a mi nube de puntos
+            for(Iterator<Vect3d> j = pPuntos.iterator(); j.hasNext();){
+                Vect3d v = j.next();
+                for(Iterator<Triangle3d> i = modelo.getTriangulos().iterator(); i.hasNext();){
+                    Triangle3d t = i.next();
+                    if(t.isPointIn(v)){
+                        idTri.add(t);
+                    }
+                }
+            }
+
+            //System.out.println("Triangulos candidatos: " + idTri.size() + "/" + modelo.getTriangulos().size());
+            for(int i = 0; i<idTri.size(); i++){
+                boolean intersecta = idTri.get(i).RayTriangle3d(r, point);
+                    if(intersecta){
+                        time_end2 = System.nanoTime();
+                        time_acum2 = time_acum2 + time_end2 - time_start2;
+
+                        DrawTriangle3d triangle = new DrawTriangle3d(idTri.get(i));
+                        triangle.drawObjectC(gl, 0.3f,1,0.3f);
+                        DrawVect3d punto = new DrawVect3d(point[0]);
+                        punto.drawObjectC(gl, 0,0,1);
+
+                        i=tMalla.size();
+                    }
+            }
+        }
+        System.out.println("Operación 2 realizada en "+ ( time_acum2 )/1000000.0f +" millisegundos");
+        
         //desactivar luces para obtener el color deseado con DrawObjectC
         /*gl.glDisable(GL.GL_LIGHTING);
         gl.glDisable(GL.GL_LIGHT0);

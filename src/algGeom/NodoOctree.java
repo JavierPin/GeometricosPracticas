@@ -1,10 +1,12 @@
 package algGeom;
+import java.util.ArrayList;
 import java.util.Vector;
 import javax.media.opengl.GL;
 
 public class NodoOctree {
     NodoOctree padre;
     Vector<Vect3d> pContenidos;
+    private ArrayList<Triangle3d> triangles;
     Vect3d minimo;
     Vect3d maximo;
     int nivel;
@@ -27,6 +29,19 @@ public class NodoOctree {
         maximo = max;
         pContenidos = new Vector<Vect3d>();
         box = new AABB(minimo, maximo);
+    }
+    public void insertaTriangulo(Triangle3d t){
+        //triangles.add(t);
+        if(nivel==oct.getLimite()){
+            triangles.add(t);
+        }else{
+            for(int i=0; i<8; i++){
+                if(hijos[i].box.AABBTri(t)){
+                    hijos[i].insertaTriangulo(t);
+                }
+            }
+        }
+        
     }
     
     public void insertaPunto(Vect3d p){
@@ -180,22 +195,24 @@ public class NodoOctree {
         return result;
     }
         
-    public boolean RayOctree(Ray3d r, Vect3d[] v, GL g){
+    public boolean RayOctree(Ray3d r, Vect3d[] v, Vector<Vect3d> pPuntos, GL g){
         if(box.RayAABB(r,v)){
             if(hijosCreados){
                 for (int i = 0; i<hijos.length;i++){
-                    hijos[i].RayOctree(r, v,g);
+                    hijos[i].RayOctree(r,v,pPuntos,g);
                 }
             }
             //A este punto solo llega si es el ultimo
             //Devolver lo que tenga que devolver
-            if(!hijosCreados){
+            if(!hijosCreados && !pContenidos.isEmpty()){
                 //Triangle3d t = new Triangle3d (pContenidos.get(0),pContenidos.get(1),pContenidos.get(2));
                 //DrawTriangle3d dt = new DrawTriangle3d(t);
                 //dt.drawObject(g);
-                DrawAABB dbox = new DrawAABB (this.box);
-                dbox.drawWireObjectC(g, 1, 0.5f , 0);
+                //DrawAABB dbox = new DrawAABB (this.box);
+                //dbox.drawWireObjectC(g, 1, 0.5f , 0);
+                pPuntos.addAll(pContenidos);
             }
+            //Aqui va el test de ray-triangle
             return true;
         }
         //este nodo no tiene interseccion con el ray

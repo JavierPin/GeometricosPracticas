@@ -9,6 +9,7 @@ public class Octree {
     private Vector<Vect3d> vPuntos;
     private int topeNivel;
     private NodoOctree raiz;
+    private ArrayList<Triangle3d> triangles;
     AABB box;
     
     public Octree(){
@@ -30,7 +31,25 @@ public class Octree {
             vPuntos.add(p);
             raiz.insertaPunto(p);
         }
+        for (int i=0; i<triangles.size();i++){
+            raiz.insertaTriangulo(triangles.get(i));
+        }
     }
+    
+    public Octree(AABB bb, int tNivel, ArrayList<Vect3d> vertex, ArrayList<Triangle3d> t){
+        topeNivel = tNivel;
+        nPuntos=vertex.size();
+        vPuntos = new Vector<Vect3d>();
+        box = bb;
+        triangles = t;
+        raiz = new NodoOctree(0,null,box.getMin(),box.getMax(),this);
+        for (int i=0; i<nPuntos;i++){
+            Vect3d p= vertex.get(i);
+            vPuntos.add(p);
+            raiz.insertaPunto(p);
+        }
+    }
+    
     
     public Octree(Cloud3d nb, int tNivel){
         topeNivel = tNivel;
@@ -55,12 +74,10 @@ public class Octree {
         
     }
         
-    public boolean RayOctree(Ray3d r , GL g){
-        
+    public boolean RayOctree(Ray3d r ,Vector<Vect3d> pPuntos, GL g){
         Vect3d[] pIntersecion= new Vect3d[1];
         if(box.RayAABB(r, pIntersecion)){
-            raiz.RayOctree(r,pIntersecion,g); 
-            //Hay que dar donde estamos
+            raiz.RayOctree(r,pIntersecion,pPuntos,g); 
             return true;
         }
         return false;
