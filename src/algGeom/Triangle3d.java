@@ -647,6 +647,21 @@ public class Triangle3d {
         return true;
       }
     
+    
+    public boolean isPointIn(Vect3d v){
+        
+        if(a.x == v.x && a.y == v.y && a.z == v.z){
+            return true;
+        }
+        if(b.x == v.x && b.y == v.y && b.z == v.z){
+            return true;
+        }
+        if(c.x == v.x && c.y == v.y && c.z == v.z){
+            return true;
+        }
+        return false;
+    }
+    
       /**Muestra un punto 3d en pantalla*/
      public void out (){
          System.out.println("Triangle3d: ("+ a +"-"+ b + "-"+ c +")");

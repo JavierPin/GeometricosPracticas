@@ -74,11 +74,10 @@ public class Octree {
         
     }
         
-    public boolean RayOctree(Ray3d r , GL g){
+    public boolean RayOctree(Ray3d r ,Vector<Vect3d> pPuntos, GL g){
         Vect3d[] pIntersecion= new Vect3d[1];
         if(box.RayAABB(r, pIntersecion)){
-            raiz.RayOctree(r,pIntersecion,g); 
-            //Hay que dar donde estamos
+            raiz.RayOctree(r,pIntersecion,pPuntos,g); 
             return true;
         }
         return false;

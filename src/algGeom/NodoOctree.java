@@ -195,21 +195,22 @@ public class NodoOctree {
         return result;
     }
         
-    public boolean RayOctree(Ray3d r, Vect3d[] v, GL g){
+    public boolean RayOctree(Ray3d r, Vect3d[] v, Vector<Vect3d> pPuntos, GL g){
         if(box.RayAABB(r,v)){
             if(hijosCreados){
                 for (int i = 0; i<hijos.length;i++){
-                    hijos[i].RayOctree(r, v,g);
+                    hijos[i].RayOctree(r,v,pPuntos,g);
                 }
             }
             //A este punto solo llega si es el ultimo
             //Devolver lo que tenga que devolver
-            if(!hijosCreados){
+            if(!hijosCreados && !pContenidos.isEmpty()){
                 //Triangle3d t = new Triangle3d (pContenidos.get(0),pContenidos.get(1),pContenidos.get(2));
                 //DrawTriangle3d dt = new DrawTriangle3d(t);
                 //dt.drawObject(g);
-                DrawAABB dbox = new DrawAABB (this.box);
-                dbox.drawWireObjectC(g, 1, 0.5f , 0);
+                //DrawAABB dbox = new DrawAABB (this.box);
+                //dbox.drawWireObjectC(g, 1, 0.5f , 0);
+                pPuntos.addAll(pContenidos);
             }
             //Aqui va el test de ray-triangle
             return true;
