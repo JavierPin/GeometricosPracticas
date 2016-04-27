@@ -69,8 +69,8 @@ public class PruebaMesh implements GLEventListener,
     }
     
     // rotating the scene
-    private float view_rotx = 20.0f; //20
-    private float view_roty = 30.0f; //30
+    private float view_rotx = 0.0f; //20
+    private float view_roty = 0.0f; //30
     // remember last mouse position
     private int oldMouseX;
     private int oldMouseY;
@@ -116,7 +116,7 @@ public class PruebaMesh implements GLEventListener,
         
         
         try {
-            modelo = new Mesh ("./src/modelos/cat.obj");
+            modelo = new Mesh ("./src/modelos/ballet.obj");
             System.out.println("Modelo cargado con " + modelo.getSizeCaras() + "caras.");
             modelo.getAABB().out();
         
@@ -162,8 +162,8 @@ public class PruebaMesh implements GLEventListener,
         gl.glLoadIdentity();
         
         //alteramos la eye pos para ver la figura desde mas lejos.  HACE FALTA CAMBIAR EL TAMA?O DEL FRUSTUM MAS ARRIBA
-        glu.gluLookAt(-356,340,340,  // eye pos
-                     0,0,0,   // look at
+        glu.gluLookAt(300,300,300,  // eye pos
+                     0,150,0,   // look at
                      0,1,0);  // up
         
         //posicion para visualizar geometría sin mesh, cámara más cerca
@@ -189,21 +189,33 @@ public class PruebaMesh implements GLEventListener,
         gl.glEnable(GL.GL_LIGHT0);
         gl.glEnable(GL.GL_DEPTH_TEST);
         gl.glEnable(GL.GL_NORMALIZE);
-        DrawMesh dmodel = new DrawMesh(modelo);
-        dmodel.drawObject(gl);
+        //DrawMesh dmodel = new DrawMesh(modelo);
+        //dmodel.drawObject(gl);
         gl.glDisable(GL.GL_LIGHTING);
         gl.glDisable(GL.GL_LIGHT0);
         gl.glDisable(GL.GL_DEPTH_TEST);
         gl.glDisable(GL.GL_NORMALIZE);
         
-        Ray3d r = new Ray3d(new Vect3d(0,0,0), new Vect3d(1,1,1));
+        /*Ray3d r = new Ray3d(new Vect3d(10,10,10), new Vect3d(20,20,20));
         DrawRay3d ray = new DrawRay3d(r);
-        ray.drawObjectC(gl, 0,0,1);
+        ray.drawObjectC(gl, 0,0,1);*/
+        
+        Triangle3d t = new Triangle3d(new Vect3d(-30,0,19), new Vect3d(30,0,19), new Vect3d(15,30,9));
+        DrawTriangle3d triangle = new DrawTriangle3d(t);
+        triangle.drawObjectC(gl, 0,1,0);
+        
+        AABB b = new AABB(1,1,1,17,17,17);
+        DrawAABB box = new DrawAABB(b);
+        box.drawWireObjectC(gl, 1, 0, 0);
+        
+        System.out.println(b.aabbTri(t));
+
+        
         
         //RayBeam rb = new RayBeam(new Vect3d(10,200,200), new Vect3d(10,200,-100),150,15);
         //rb.DrawRayBeam(gl,0,0,1);
         
-        ArrayList<Triangle3d> tMalla = modelo.getTriangulos();
+        /*ArrayList<Triangle3d> tMalla = modelo.getTriangulos();
         
         Vect3d[] point = new Vect3d[1];
         
@@ -227,21 +239,18 @@ public class PruebaMesh implements GLEventListener,
                     DrawVect3d punto = new DrawVect3d(point[0]);
                     punto.drawObjectC(gl, 0,0,1);
 
-                    i=tMalla.size();
+                    break;
                 }
-            //}
-            
-        }
+            }
+        //}
         
-        
-        System.out.println("Operación realizada en "+ ( time_acum )/1000000.0f +" millisegundos");
+        System.out.println("Operación realizada en "+ ( time_acum )/1000000.0f +" millisegundos");*/
         
         //Dibujamos el octree. Hemos deshabilitado la luz para poder pintarlo del color que queramos
-        AABB modelBox = modelo.getAABB();
-        Octree om = new Octree(modelBox,5,modelo.getListaVertices());
+        /*AABB modelBox = modelo.getAABB();
+        Octree om = new Octree(modelBox,4,modelo.getListaVertices());
         DrawOctree octree2 = new DrawOctree(om);
-        //octree2.drawObjectC(gl,0.5f,0.5f,0);
-        om.RayOctree(r, gl);
+        octree2.drawObjectC(gl,0.5f,0.5f,0);*/
 
         //desactivar luces para obtener el color deseado con DrawObjectC
         /*gl.glDisable(GL.GL_LIGHTING);
@@ -345,4 +354,5 @@ public class PruebaMesh implements GLEventListener,
     }
     public void keyReleased(KeyEvent e){}
     public void keyTyped(KeyEvent e){}
+ 
 }
