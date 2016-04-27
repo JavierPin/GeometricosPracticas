@@ -31,9 +31,9 @@ public class Octree {
             vPuntos.add(p);
             raiz.insertaPunto(p);
         }
-        for (int i=0; i<triangles.size();i++){
+        /*for (int i=0; i<triangles.size();i++){
             raiz.insertaTriangulo(triangles.get(i));
-        }
+        }*/
     }
     
     public Octree(AABB bb, int tNivel, ArrayList<Vect3d> vertex, ArrayList<Triangle3d> t){
@@ -48,6 +48,11 @@ public class Octree {
             vPuntos.add(p);
             raiz.insertaPunto(p);
         }
+        
+        for (int i = 0; i<t.size(); i ++){
+            raiz.insertaTriangulo(t.get(i));
+        }
+        
     }
     
     
@@ -83,6 +88,16 @@ public class Octree {
         return false;
     }
     
+    public boolean RayOctree(Ray3d r ,Triangle3d[] t){
+        Vect3d[] pIntersecion= new Vect3d[1];
+        boolean [] buscando = new boolean[1];
+        buscando[0] = true;
+        if(box.RayAABB(r, pIntersecion)){
+            raiz.RayOctree(r,t,buscando); 
+            return true;
+        }
+        return false;
+    }
 
     
 }
