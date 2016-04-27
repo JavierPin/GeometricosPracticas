@@ -37,6 +37,7 @@ public class PruebaMesh implements GLEventListener,
     private float view_tray = 0.0f;
     private float view_traz = 0.0f;
     private boolean once = false;
+    private Octree om;
 
     public static void main(String[] args) {
     	Draw.ALTO = HEIGHT;
@@ -212,6 +213,7 @@ public class PruebaMesh implements GLEventListener,
         
         long time_start, time_end, time_acum=0;
         long time_start2, time_end2, time_acum2=0;
+        long time_start3, time_end3, time_acum3=0;
         
         time_start = System.nanoTime();
 
@@ -238,16 +240,22 @@ public class PruebaMesh implements GLEventListener,
         }
         
         
-        System.out.println("Operación realizada en "+ ( time_acum )/1000000.0f +" millisegundos");
+        System.out.println("Operación 1 realizada en "+ ( time_acum )/1000000.0f +" millisegundos");
         
+
+            //Dibujamos el octree. Hemos deshabilitado la luz para poder pintarlo del color que queramos
+            AABB modelBox = modelo.getAABB();
+
+            if(!once){
+                om = new Octree(modelBox,3,modelo.getListaVertices(), modelo.getTriangulos());
+                once=true;
+                System.out.println("--Octree Construido--");
+            }
+            DrawOctree octree2 = new DrawOctree(om);
+            //octree2.drawObjectC(gl,0.5f,0.5f,0);
+            Vector<Vect3d> pPuntos = new Vector<Vect3d>();
         
-        //Dibujamos el octree. Hemos deshabilitado la luz para poder pintarlo del color que queramos
-        AABB modelBox = modelo.getAABB();
-        Octree om = new Octree(modelBox,5,modelo.getListaVertices(), modelo.getTriangulos());
-        DrawOctree octree2 = new DrawOctree(om);
-        //octree2.drawObjectC(gl,0.5f,0.5f,0);
-        Vector<Vect3d> pPuntos = new Vector<Vect3d>();
-        
+        /*    
         time_start2 = System.nanoTime();
         for(int h = 0; h < rb.rays.size(); h++){// con el rayBeam
             r = rb.rays.get(h);
@@ -267,6 +275,8 @@ public class PruebaMesh implements GLEventListener,
                     }
                 }
             }
+        
+        
 
             //System.out.println("Triangulos candidatos: " + idTri.size() + "/" + modelo.getTriangulos().size());
             for(int i = 0; i<idTri.size(); i++){
@@ -285,6 +295,31 @@ public class PruebaMesh implements GLEventListener,
             }
         }
         System.out.println("Operación 2 realizada en "+ ( time_acum2 )/1000000.0f +" millisegundos");
+        */
+        
+
+        Triangle3d[] t = new Triangle3d[1];
+        
+        for (int j=0; j<rb.rays.size();j++){
+            
+            r = rb.rays.get(j);
+                        //boolean intersecta = tMalla.get(i).RayTriangle3d(r, point);
+            time_start3 = System.nanoTime();
+            boolean intersecta = om.RayOctree(r, t);
+            time_end3 = System.nanoTime();
+            time_acum3=time_acum3+time_end3-time_start3;
+            if(intersecta){
+                DrawTriangle3d triangle = new DrawTriangle3d(t[0]);
+                triangle.drawObjectC(gl, 0.3f,1,0.3f);
+                DrawVect3d punto = new DrawVect3d(point[0]);
+                punto.drawObjectC(gl, 0,0,1);
+
+            }
+            
+        }
+        
+        
+        System.out.println("Operación 3 realizada en "+ ( time_acum3 )/1000000.0f +" millisegundos");
         
         //desactivar luces para obtener el color deseado con DrawObjectC
         /*gl.glDisable(GL.GL_LIGHTING);

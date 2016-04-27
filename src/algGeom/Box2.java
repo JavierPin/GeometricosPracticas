@@ -228,13 +228,7 @@ public class Box2 implements GLEventListener,
         
         dab.drawWireObjectC(gl, 0,1,0);
         dt.drawObjectC(gl, 0.5f, 1, 1);
-        
-        if(ab.AABBTri(t)){
-            System.out.println("Me cagomen san blas");
-        }else{
-            System.out.println("No, pls, no");
-        }
-        
+
         gl.glFlush();
         
         

@@ -28,15 +28,18 @@ public class NodoOctree {
         minimo = min;
         maximo = max;
         pContenidos = new Vector<Vect3d>();
+        triangles = new ArrayList<Triangle3d>();
         box = new AABB(minimo, maximo);
     }
     public void insertaTriangulo(Triangle3d t){
         //triangles.add(t);
         if(nivel==oct.getLimite()){
+        //if(!hijosCreados){
             triangles.add(t);
+            //triangles.add(new Triangle3d());
         }else{
             for(int i=0; i<8; i++){
-                if(hijos[i].box.AABBTri(t)){
+                if(hijos[i].box.aabbTri(t)){
                     hijos[i].insertaTriangulo(t);
                 }
             }
@@ -208,8 +211,8 @@ public class NodoOctree {
                 //Triangle3d t = new Triangle3d (pContenidos.get(0),pContenidos.get(1),pContenidos.get(2));
                 //DrawTriangle3d dt = new DrawTriangle3d(t);
                 //dt.drawObject(g);
-                //DrawAABB dbox = new DrawAABB (this.box);
-                //dbox.drawWireObjectC(g, 1, 0.5f , 0);
+                DrawAABB dbox = new DrawAABB (this.box);
+                dbox.drawWireObjectC(g, 1, 0.5f , 0);
                 pPuntos.addAll(pContenidos);
             }
             //Aqui va el test de ray-triangle
@@ -217,6 +220,30 @@ public class NodoOctree {
         }
         //este nodo no tiene interseccion con el ray
         return false;
+    }
+    public boolean RayOctree(Ray3d r, Triangle3d[] t, boolean[] buscando){//El bueno, el de verdad
+        if(buscando[0]){
+            Vect3d[] point= new Vect3d[1];
+            if(box.RayAABB(r, point)){
+                if(hijosCreados){
+                   for (int i = 0; i<hijos.length;i++){
+                        hijos[i].RayOctree(r,t,buscando);
+                    } 
+                }
+
+                if(!hijosCreados && !triangles.isEmpty()){
+                    for(int i = 0 ; i<triangles.size();i++){
+                        if(triangles.get(i).RayTriangle3d(r, point)){
+                            buscando[0] = false;
+                            t[0] = triangles.get(i);
+                            return false;
+                        }
+                    }
+                }
+            }
+            return false;
+        }
+        return true;
     }
     
 }
