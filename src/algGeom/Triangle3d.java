@@ -578,6 +578,8 @@ public class Triangle3d {
             
         }
         
+        if (u+v>1.0) return false;
+        
         double t = tmp * (e2.dot(q));
         
         point.x=(r.getOrigen().x)+(direccion.prodEscalar(t).x);
@@ -588,54 +590,7 @@ public class Triangle3d {
     }
     
     /** Calcula la interseccion entre este triángulo y un rayo */
-    public boolean RayTriangle3d(Ray3d r, Vect3d point){
-        
-        /*Vect3d e1 = new Vect3d(b.resta(a));
-        Vect3d e2 = new Vect3d(c.resta(a));
-        Vect3d direccion = r.getDestino().resta(r.getOrigen());
-        
-        Vect3d p = new Vect3d(direccion.XProduct(e2));
-        
-        double tmp = p.dot(e1);
-        
-        if(tmp > -BasicGeom.CERO && tmp < BasicGeom.CERO ){
-            
-            return false;
-        }
-        
-        tmp = 1.0/tmp;
-        
-        Vect3d s = new Vect3d(r.getOrigen().resta(a));
-        double u = tmp * (s.dot(p));
-        
-        if (u<0.0 || u>1.0){
-            
-            return false;
-            
-        }
-        
-        Vect3d q = new Vect3d(s.XProduct(e1));
-        double v = tmp * (direccion.dot(q));
-        
-        if (v<0.0 || v>1.0){
-            
-            return false;
-            
-        }
-        
-        double t = tmp * (e2.dot(q));
-        
-        if (t<BasicGeom.CERO){
-            
-            return false;
-            
-        }
-        
-        point = r.getOrigen().suma(direccion.prodEscalar(t));
-
-
-        return true;*/
-
+    public boolean RayTriangle3d(Ray3d r, Vect3d[] point){
 
         float EPSILON = 0.000001f;
 
@@ -673,6 +628,12 @@ public class Triangle3d {
           
         }
         
+        if(u+v>1.0){
+            
+            return false;
+            
+        }
+        
         double t = (e2.dot(q))*tmp;
 
         if (t<0.0){
@@ -681,11 +642,25 @@ public class Triangle3d {
             
         }
         
-        point = r.getOrigen().suma(direccion.prodEscalar(t));
-
-
+        point[0] = r.getOrigen().suma(direccion.prodEscalar(t));
+        
         return true;
       }
+    
+    
+    public boolean isPointIn(Vect3d v){
+        
+        if(a.x == v.x && a.y == v.y && a.z == v.z){
+            return true;
+        }
+        if(b.x == v.x && b.y == v.y && b.z == v.z){
+            return true;
+        }
+        if(c.x == v.x && c.y == v.y && c.z == v.z){
+            return true;
+        }
+        return false;
+    }
     
       /**Muestra un punto 3d en pantalla*/
      public void out (){
