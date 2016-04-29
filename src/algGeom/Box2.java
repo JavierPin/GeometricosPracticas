@@ -202,6 +202,7 @@ public class Box2 implements GLEventListener,
             point.drawObjectC(gl, 1,1,1);
         }
         */
+        /*
         AABB ab = new AABB(-1,-1,-1,1,1,1);
         
         DrawAABB dab = new DrawAABB(ab);
@@ -218,9 +219,19 @@ public class Box2 implements GLEventListener,
         
         dr.drawObjectC(gl, 0,0,1);
         dab.drawObjectC(gl,0.6f,0,0);
+        */
         
+        AABB ab = new AABB(0,0,0,3,3,3);
+        Triangle3d t= new Triangle3d(new Vect3d(1,1,1),new Vect3d(2,2,2),new Vect3d(2,2,1));
+        DrawAABB dab = new DrawAABB(ab);
+        DrawTriangle3d dt = new DrawTriangle3d(t);
         
+        dab.drawWireObjectC(gl, 0,1,0);
+        dt.drawObjectC(gl, 0.5f, 1, 1);
+
         gl.glFlush();
+        
+        
         
     }
     

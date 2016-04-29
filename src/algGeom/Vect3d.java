@@ -98,6 +98,26 @@ public class Vect3d {
             return Math.sqrt(x*x+y*y+z*z);
         }
         
+        /** busca el maximo valor del vector*/
+        public double buscaMaximo(){
+            if(x >= y && x >= z){
+                return x;
+            }else if (y >= z){
+                return y;
+            }else{
+                return z;
+            }
+        }
+        /** busca el minimo valor del vector*/
+        public double buscaMinimo(){
+            if(x <= y && x <= z){
+                return x;
+            }else if (y <= z){
+                return y;
+            }else{
+                return z;
+            }
+        }
         public double findMin(){
             
             if(x<y && x<z){

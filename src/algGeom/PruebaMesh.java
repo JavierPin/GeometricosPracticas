@@ -20,6 +20,8 @@ import java.awt.event.KeyListener;
 import java.awt.event.MouseMotionListener;
 import java.awt.event.MouseWheelEvent;
 import java.util.ArrayList;
+import java.util.*;
+import java.util.Vector;
 
 
 
@@ -34,6 +36,8 @@ public class PruebaMesh implements GLEventListener,
     private float view_trax = 0.0f;
     private float view_tray = 0.0f;
     private float view_traz = 0.0f;
+    private boolean once = false;
+    private Octree om;
 
     public static void main(String[] args) {
     	Draw.ALTO = HEIGHT;
@@ -69,8 +73,8 @@ public class PruebaMesh implements GLEventListener,
     }
     
     // rotating the scene
-    private float view_rotx = 0.0f; //20
-    private float view_roty = 0.0f; //30
+    private float view_rotx = 20.0f; //20
+    private float view_roty = 30.0f; //30
     // remember last mouse position
     private int oldMouseX;
     private int oldMouseY;
@@ -162,8 +166,8 @@ public class PruebaMesh implements GLEventListener,
         gl.glLoadIdentity();
         
         //alteramos la eye pos para ver la figura desde mas lejos.  HACE FALTA CAMBIAR EL TAMA?O DEL FRUSTUM MAS ARRIBA
-        glu.gluLookAt(300,300,300,  // eye pos
-                     0,150,0,   // look at
+        glu.gluLookAt(-356,340,340,  // eye pos
+                     0,0,0,   // look at
                      0,1,0);  // up
         
         //posicion para visualizar geometría sin mesh, cámara más cerca
@@ -189,43 +193,33 @@ public class PruebaMesh implements GLEventListener,
         gl.glEnable(GL.GL_LIGHT0);
         gl.glEnable(GL.GL_DEPTH_TEST);
         gl.glEnable(GL.GL_NORMALIZE);
-        //DrawMesh dmodel = new DrawMesh(modelo);
-        //dmodel.drawObject(gl);
+        DrawMesh dmodel = new DrawMesh(modelo);
+        dmodel.drawObject(gl);
         gl.glDisable(GL.GL_LIGHTING);
         gl.glDisable(GL.GL_LIGHT0);
         gl.glDisable(GL.GL_DEPTH_TEST);
         gl.glDisable(GL.GL_NORMALIZE);
         
-        /*Ray3d r = new Ray3d(new Vect3d(10,10,10), new Vect3d(20,20,20));
+        Ray3d r = new Ray3d(new Vect3d(-80,150,-80), new Vect3d(-1,150,-1));
         DrawRay3d ray = new DrawRay3d(r);
-        ray.drawObjectC(gl, 0,0,1);*/
+        ray.drawObjectC(gl, 0,0,1);
         
-        Triangle3d t = new Triangle3d(new Vect3d(-30,0,19), new Vect3d(30,0,19), new Vect3d(15,30,9));
-        DrawTriangle3d triangle = new DrawTriangle3d(t);
-        triangle.drawObjectC(gl, 0,1,0);
+        RayBeam rb = new RayBeam(new Vect3d(10,200,200), new Vect3d(10,200,-100),150,15);
+        rb.DrawRayBeam(gl,0,0,1);
         
-        AABB b = new AABB(1,1,1,17,17,17);
-        DrawAABB box = new DrawAABB(b);
-        box.drawWireObjectC(gl, 1, 0, 0);
-        
-        System.out.println(b.aabbTri(t));
-
-        
-        
-        //RayBeam rb = new RayBeam(new Vect3d(10,200,200), new Vect3d(10,200,-100),150,15);
-        //rb.DrawRayBeam(gl,0,0,1);
-        
-        /*ArrayList<Triangle3d> tMalla = modelo.getTriangulos();
+        ArrayList<Triangle3d> tMalla = modelo.getTriangulos();
         
         Vect3d[] point = new Vect3d[1];
         
         long time_start, time_end, time_acum=0;
+        long time_start2, time_end2, time_acum2=0;
+        long time_start3, time_end3, time_acum3=0;
         
         time_start = System.nanoTime();
 
-        //for (int j=0; j<rb.rays.size();j++){
+        for (int j=0; j<rb.rays.size();j++){
             
-            //Ray3d r = rb.rays.get(j);
+            r = rb.rays.get(j);
             
             for (int i=0; i<tMalla.size();i++){
                 boolean intersecta = tMalla.get(i).RayTriangle3d(r, point);
@@ -239,19 +233,94 @@ public class PruebaMesh implements GLEventListener,
                     DrawVect3d punto = new DrawVect3d(point[0]);
                     punto.drawObjectC(gl, 0,0,1);
 
-                    break;
+                    i=tMalla.size();
                 }
             }
-        //}
+            
+        }
         
-        System.out.println("Operación realizada en "+ ( time_acum )/1000000.0f +" millisegundos");*/
         
-        //Dibujamos el octree. Hemos deshabilitado la luz para poder pintarlo del color que queramos
-        /*AABB modelBox = modelo.getAABB();
-        Octree om = new Octree(modelBox,4,modelo.getListaVertices());
-        DrawOctree octree2 = new DrawOctree(om);
-        octree2.drawObjectC(gl,0.5f,0.5f,0);*/
+        System.out.println("Operación 1 realizada en "+ ( time_acum )/1000000.0f +" millisegundos");
+        
 
+            //Dibujamos el octree. Hemos deshabilitado la luz para poder pintarlo del color que queramos
+            AABB modelBox = modelo.getAABB();
+
+            if(!once){
+                om = new Octree(modelBox,3,modelo.getListaVertices(), modelo.getTriangulos());
+                once=true;
+                System.out.println("--Octree Construido--");
+            }
+            DrawOctree octree2 = new DrawOctree(om);
+            //octree2.drawObjectC(gl,0.5f,0.5f,0);
+            Vector<Vect3d> pPuntos = new Vector<Vect3d>();
+        
+        /*    
+        time_start2 = System.nanoTime();
+        for(int h = 0; h < rb.rays.size(); h++){// con el rayBeam
+            r = rb.rays.get(h);
+            
+            pPuntos.clear();
+            om.RayOctree(r, pPuntos, gl);
+            
+            ArrayList<Triangle3d> idTri = new ArrayList<Triangle3d>();
+
+            //recorro la coleccion de puntos y los paso a mi nube de puntos
+            for(Iterator<Vect3d> j = pPuntos.iterator(); j.hasNext();){
+                Vect3d v = j.next();
+                for(Iterator<Triangle3d> i = modelo.getTriangulos().iterator(); i.hasNext();){
+                    Triangle3d t = i.next();
+                    if(t.isPointIn(v)){
+                        idTri.add(t);
+                    }
+                }
+            }
+        
+        
+
+            //System.out.println("Triangulos candidatos: " + idTri.size() + "/" + modelo.getTriangulos().size());
+            for(int i = 0; i<idTri.size(); i++){
+                boolean intersecta = idTri.get(i).RayTriangle3d(r, point);
+                    if(intersecta){
+                        time_end2 = System.nanoTime();
+                        time_acum2 = time_acum2 + time_end2 - time_start2;
+
+                        DrawTriangle3d triangle = new DrawTriangle3d(idTri.get(i));
+                        triangle.drawObjectC(gl, 0.3f,1,0.3f);
+                        DrawVect3d punto = new DrawVect3d(point[0]);
+                        punto.drawObjectC(gl, 0,0,1);
+
+                        i=tMalla.size();
+                    }
+            }
+        }
+        System.out.println("Operación 2 realizada en "+ ( time_acum2 )/1000000.0f +" millisegundos");
+        */
+        
+
+        Triangle3d[] t = new Triangle3d[1];
+        
+        for (int j=0; j<rb.rays.size();j++){
+            
+            r = rb.rays.get(j);
+                        //boolean intersecta = tMalla.get(i).RayTriangle3d(r, point);
+            time_start3 = System.nanoTime();
+            boolean intersecta = om.RayOctree(r, t);
+            time_end3 = System.nanoTime();
+            time_acum3=time_acum3+time_end3-time_start3;
+            if(intersecta){
+                DrawTriangle3d triangle = new DrawTriangle3d(t[0]);
+                triangle.drawObjectC(gl, 0.3f,1,0.3f);
+                DrawVect3d punto = new DrawVect3d(point[0]);
+                punto.drawObjectC(gl, 0,0,1);
+
+            }
+            
+        }
+        
+        
+        System.out.println("Operación 3 realizada en "+ ( time_acum3 )/1000000.0f +" millisegundos");
+        
         //desactivar luces para obtener el color deseado con DrawObjectC
         /*gl.glDisable(GL.GL_LIGHTING);
         gl.glDisable(GL.GL_LIGHT0);
@@ -354,5 +423,4 @@ public class PruebaMesh implements GLEventListener,
     }
     public void keyReleased(KeyEvent e){}
     public void keyTyped(KeyEvent e){}
- 
 }
