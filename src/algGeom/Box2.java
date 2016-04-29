@@ -13,6 +13,7 @@ import java.awt.event.MouseWheelEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.Random;
 import javax.media.opengl.GL;
 import javax.media.opengl.GLAutoDrawable;
@@ -181,53 +182,35 @@ public class Box2 implements GLEventListener,
         dpEje= new DrawPlane(pEje);
         dpEje.drawObjectC(gl ,0.0f, 0.0f, 1.0f, 0.3f);
         
-        //^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-        /*
-        Triangle3d t = new Triangle3d(new Vect3d(0,0,0),new Vect3d(3,0,0),new Vect3d(1.5,3,0));
-        DrawTriangle3d triangle = new DrawTriangle3d(t);
-        triangle.drawObjectC(gl, 1, 0, 0);
+        //Practica 5:
+        Delaunay_Triangulation dt = new Delaunay_Triangulation();
+        Point_dt pointA = new Point_dt(0, 1);
+        Point_dt pointB = new Point_dt(2, 0);
+        Point_dt pointC = new Point_dt(2, 2);
+        Point_dt pointD = new Point_dt(4, 1);
+
+
+        dt.insertPoint(pointA);
+        dt.insertPoint(pointB);
+        dt.insertPoint(pointC);
+        dt.insertPoint(pointD);
+
+        Iterator<Triangle_dt> iterator = dt.trianglesIterator();
+
         
-        Ray3d r = new Ray3d (new Vect3d(1.5,1.5,-0.5), new Vect3d(1.5,1.5,10));
-        DrawRay3d ray = new DrawRay3d(r);
-        ray.drawObjectC(gl,0,1,0);
-        
-        Vect3d[] p = new Vect3d[1];
-        boolean intersecta = t.RayTriangle3d(r, p);
-        
-        if (intersecta){
-            System.out.println(intersecta+" en el punto:");
-            p[0].out();
-            gl.glPointSize(7);
-            DrawVect3d point = new DrawVect3d(p[0]);
-            point.drawObjectC(gl, 1,1,1);
-        }
-        */
-        /*
-        AABB ab = new AABB(-1,-1,-1,1,1,1);
-        
-        DrawAABB dab = new DrawAABB(ab);
-        Ray3d r = new Ray3d( new Vect3d (-2,-2,1),new Vect3d(9,9,9));
-        DrawRay3d dr = new DrawRay3d(r);
-        Vect3d[] punto = new Vect3d[1];
-        
-        if (ab.RayAABB(r, punto)){
-            System.out.println("SI!");
-            //punto[0].out();
-        }else{
-            System.out.println("NO!");
+        while (iterator.hasNext()) {
+                Triangle_dt curr = iterator.next();
+                if (!curr.isHalfplane()) {
+                        System.out.println(curr.p1() + ", " + curr.p2() + ", "
+                                        + curr.p3());
+                        
+                        Triangle3d t1 = new Triangle3d(curr);
+                        DrawTriangle3d triangle = new DrawTriangle3d(t1);
+                        triangle.drawObjectC(gl, 1,0,0);
+                }
         }
         
-        dr.drawObjectC(gl, 0,0,1);
-        dab.drawObjectC(gl,0.6f,0,0);
-        */
         
-        AABB ab = new AABB(0,0,0,3,3,3);
-        Triangle3d t= new Triangle3d(new Vect3d(1,1,1),new Vect3d(2,2,2),new Vect3d(2,2,1));
-        DrawAABB dab = new DrawAABB(ab);
-        DrawTriangle3d dt = new DrawTriangle3d(t);
-        
-        dab.drawWireObjectC(gl, 0,1,0);
-        dt.drawObjectC(gl, 0.5f, 1, 1);
 
         gl.glFlush();
         
