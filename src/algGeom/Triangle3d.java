@@ -21,6 +21,14 @@ public class Triangle3d {
         b = new Vect3d ();
         c = new Vect3d ();
     }
+    
+    public Triangle3d(Triangle_dt t){
+        
+        a = new Vect3d(t.a.x, t.a.y, t.a.z);
+        b = new Vect3d(t.b.x, t.b.y, t.b.z);
+        c = new Vect3d(t.c.x, t.c.y, t.c.z);
+
+    }
 
     /** Constructor a partir de coordenadas de los tres puntos*/
     public Triangle3d(double ax, double ay, double az,
