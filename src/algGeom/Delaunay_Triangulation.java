@@ -80,6 +80,13 @@ public class Delaunay_Triangulation {
 	 * Index for faster point location searches
 	 */
 	private GridIndex gridIndex = null;
+        
+        static double xmax = -BasicGeom.INFINITO ;
+        static double ymax = -BasicGeom.INFINITO ;
+        static double zmax = -BasicGeom.INFINITO ;
+        static double xmin = BasicGeom.INFINITO ;
+        static double ymin = BasicGeom.INFINITO ;
+        static double zmin = BasicGeom.INFINITO ;
 
 	/**
 	 * creates an empty Delaunay Triangulation.
@@ -1150,6 +1157,7 @@ public class Delaunay_Triangulation {
 	}
 
 	private static Point_dt[] read_tsin(String tsinFile) throws Exception {
+                
 		FileReader fr = new FileReader(tsinFile);
 		BufferedReader is = new BufferedReader(fr);
 		String s = is.readLine();
@@ -1165,12 +1173,54 @@ public class Delaunay_Triangulation {
 		for (int i = 0; i < numOfVer; i++) {
 			st = new StringTokenizer(is.readLine());
 			double d1 = new Double(st.nextToken()).doubleValue();
+                        
+                        if(d1>xmax) xmax=d1;
+                        if(d1<xmin) xmin=d1;
+                        
 			double d2 = new Double(st.nextToken()).doubleValue();
+                        
+                        if(d2>ymax) ymax=d2;
+                        if(d2<ymin) ymin=d2;
+                        
 			double d3 = new Double(st.nextToken()).doubleValue();
+                        
+                        if(d3>zmax) zmax=d3;
+                        if(d3<zmin) zmin=d3;
+                        
 			ans[i] = new Point_dt((int) d1, (int) d2, d3);
 		}
 		return ans;
 	}
+        
+        public double delaunayXMax(){
+            
+            return xmax;
+        }
+        
+        public double delaunayXMin(){
+            
+            return xmin;
+        }
+        
+        public double delaunayYMax(){
+            
+            return ymax;
+        }
+        
+        public double delaunayYMin(){
+            
+            return ymin;
+        }
+        
+        public double delaunayZMax(){
+            
+            return zmax;
+        }
+        
+        public double delaunayZMin(){
+            
+            return zmin;
+        }
 
 	/*
 	 * SMF file has an OFF like format (a face (f) is presented by the indexes
