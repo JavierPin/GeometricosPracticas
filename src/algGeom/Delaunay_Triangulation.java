@@ -1454,7 +1454,18 @@ public class Delaunay_Triangulation {
 		}
 		
 		return triangles;
-	}	
+	}
+        
+        public Vector<Triangle_dt> findTriangleNeighborhood(Triangle_dt firstTriangle) {
+            Vector<Triangle_dt> triangles = null;
+            Vector<Triangle_dt> currentTriangles = null;
+            
+            triangles = findTriangleNeighborhood(firstTriangle, firstTriangle.a);
+            triangles.addAll(findTriangleNeighborhood(firstTriangle, firstTriangle.b));
+            triangles.addAll(findTriangleNeighborhood(firstTriangle, firstTriangle.c));
+            
+            return triangles;
+        }
 	
 	/*
 	 * find triangle to be added to the triangulation
@@ -1709,4 +1720,21 @@ public class Delaunay_Triangulation {
 	{
 		gridIndex = null;
 	}
+        
+        
+        public Triangle_dt getTriangleAt(int i){
+            
+            if (i>_triangles.size()){
+                
+                return _triangles.get(_triangles.size()-1);
+                
+            }
+            else{
+                
+                return _triangles.get(i);
+            }
+            
+        }
+        
+        
 }

@@ -22,6 +22,7 @@ import javax.media.opengl.GLAutoDrawable;
 import javax.media.opengl.GLCanvas;
 import javax.media.opengl.GLEventListener;
 import javax.media.opengl.glu.GLU;
+import java.util.Vector;
 
 
 public class Box2 implements GLEventListener, 
@@ -219,33 +220,43 @@ public class Box2 implements GLEventListener,
         while (iterator.hasNext()) {
                 Triangle_dt curr = iterator.next();
                 if (!curr.isHalfplane()) {
-                        //System.out.println(curr.p1() + ", " + curr.p2() + ", "
-			//			+ curr.p3());
-                        Triangle3d t1 = new Triangle3d(new Vect3d(curr.a),new Vect3d(curr.b),new Vect3d(curr.c));
-                        
-                        t1.a.x=(t1.a.x-Xmin-(Xmax-Xmin)/2);
-                        t1.a.y=(t1.a.y-Ymin-(Ymax-Ymin)/2);
-                        //System.out.println(t1.a.x+", "+t1.a.y);
-                        
-                        t1.b.x=(t1.b.x-Xmin-(Xmax-Xmin)/2);
-                        t1.b.y=(t1.b.y-Ymin-(Ymax-Ymin)/2);
-                        
-                        t1.c.x=(t1.c.x-Xmin-(Xmax-Xmin)/2);
-                        t1.c.y=(t1.c.y-Ymin-(Ymax-Ymin)/2);
+                    
+                    Triangle3d t1 = new Triangle3d(curr);
+                    t1.toOrigin(Xmin, Xmax, Ymin, Ymax);
 
-                        DrawTriangle3d triangle = new DrawTriangle3d(t1);
-                        triangle.drawObjectC(gl, 1,0,0);
+                    DrawTriangle3d triangle = new DrawTriangle3d(t1);
+                    triangle.drawWireObjectC(gl, 0,0,0);
                 }
         }
 
         gl.glFlush();
+
         
+        Triangle_dt tri = dt.getTriangleAt(600);
+        Triangle3d tritri = new Triangle3d(tri);
         
+        tritri.toOrigin(Xmin,Xmax,Ymin,Ymax);
+
+        
+        //Vector<Triangle_dt> vecinos = dt.findTriangleNeighborhood(tri, tri.a);
+        Vector<Triangle_dt> vecinos = dt.findTriangleNeighborhood(tri);
+        
+        for (int i=0;i<vecinos.size();i++){
+            
+            Triangle3d taux = new Triangle3d(vecinos.get(i));
+            taux.toOrigin(Xmin, Xmax, Ymin, Ymax);
+
+            DrawTriangle3d triangleaux = new DrawTriangle3d(taux);
+            triangleaux.drawObjectC(gl, 1,1,0);
+        
+        }
+        
+        DrawTriangle3d triangleRandom = new DrawTriangle3d(tritri);
+        triangleRandom.drawObjectC(gl, 1,0,0);
         
     }
     
     public void displayChanged(GLAutoDrawable drawable, boolean modeChanged, boolean deviceChanged) {}
-
     public void mouseClicked(MouseEvent e) {}
     public void mouseEntered(MouseEvent e) {}
     public void mouseExited(MouseEvent e) {}
@@ -279,26 +290,25 @@ public class Box2 implements GLEventListener,
         }
     
     }
-    
     public void keyPressed(KeyEvent e){
         
         if(e.getKeyChar()=='a'){
-            view_trax++;
+            view_trax+=100;
         }
         if (e.getKeyChar()=='d'){
-            view_trax--;
+            view_trax-=100;
         }
         if(e.getKeyChar()=='z'){
-            view_tray++;
+            view_tray+=100;
         }
         if (e.getKeyChar()=='q'){
-            view_tray--;
+            view_tray-=100;
         }
         if(e.getKeyChar()=='w'){
-            view_traz++;
+            view_traz+=100;
         }
         if (e.getKeyChar()=='s'){
-            view_traz--;
+            view_traz-=100;
         }
         
         if (e.getKeyChar()=='r'){
