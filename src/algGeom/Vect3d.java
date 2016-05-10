@@ -15,6 +15,12 @@ public class Vect3d {
             y = v.y;
             z = v.z;
         }
+       
+       public Vect3d(Point_dt p){
+           x = p.x;
+           y = p.y;
+           z = p.z;  
+       }
 
 
         public Vect3d(){

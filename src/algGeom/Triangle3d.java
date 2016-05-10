@@ -670,6 +670,19 @@ public class Triangle3d {
         return false;
     }
     
+    public void toOrigin(double Xmin, double Xmax, double Ymin, double Ymax){
+        
+        a.x=(a.x-Xmin-(Xmax-Xmin)/2);
+        a.y=(a.y-Ymin-(Ymax-Ymin)/2);
+
+        b.x=(b.x-Xmin-(Xmax-Xmin)/2);
+        b.y=(b.y-Ymin-(Ymax-Ymin)/2);
+
+        c.x=(c.x-Xmin-(Xmax-Xmin)/2);
+        c.y=(c.y-Ymin-(Ymax-Ymin)/2);
+
+    }
+    
       /**Muestra un punto 3d en pantalla*/
      public void out (){
          System.out.println("Triangle3d: ("+ a +"-"+ b + "-"+ c +")");

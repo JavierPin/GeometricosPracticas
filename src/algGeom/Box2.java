@@ -15,11 +15,14 @@ import java.awt.event.WindowEvent;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Random;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.media.opengl.GL;
 import javax.media.opengl.GLAutoDrawable;
 import javax.media.opengl.GLCanvas;
 import javax.media.opengl.GLEventListener;
 import javax.media.opengl.glu.GLU;
+import java.util.Vector;
 
 
 public class Box2 implements GLEventListener, 
@@ -43,7 +46,7 @@ public class Box2 implements GLEventListener,
     private int oldMouseX;
     private int oldMouseY;
     //static int HEIGHT = 800, WIDTH = 800;
-    static int HEIGHT = 10, WIDTH = 10;
+    static int HEIGHT = 100000, WIDTH = 100000;
     static Animator animator;
     
     //Problema de refresco infinito
@@ -54,8 +57,11 @@ public class Box2 implements GLEventListener,
     DrawRay3d rayo;
     Cloud3d c;
     Triangle3d t1;
+    double Xmax, Xmin, Ymax, Ymin;
     
     public static void main(String[] args) {
+        
+        
     	Draw.ALTO = HEIGHT;
     	Draw.ANCHO = WIDTH;
     	Draw.FONDO = 100;
@@ -89,6 +95,11 @@ public class Box2 implements GLEventListener,
     
     public void init(GLAutoDrawable drawable)
     {
+        Xmax=0;
+        Xmin=0;
+        Ymax=0;
+        Ymin=0;
+        
         GL gl = drawable.getGL();
         glu = new GLU();
         
@@ -107,6 +118,7 @@ public class Box2 implements GLEventListener,
         drawable.addKeyListener(this);
         
         drawable.addMouseWheelListener(this);
+
     }
     
     public void reshape(GLAutoDrawable drawable, 
@@ -124,7 +136,7 @@ public class Box2 implements GLEventListener,
         gl.glViewport(0, 0, width, height);
         gl.glMatrixMode(GL.GL_PROJECTION);
         gl.glLoadIdentity();
-        glu.gluPerspective(45.0f, h, 1.0, 20.0);
+        glu.gluPerspective(45.0f, h, 0.1, BasicGeom.INFINITO);
         gl.glMatrixMode(GL.GL_MODELVIEW);
         gl.glLoadIdentity();
         
@@ -140,9 +152,13 @@ public class Box2 implements GLEventListener,
 
 
         gl.glLoadIdentity();
-        glu.gluLookAt(6,10,10,  // eye pos
+        /*glu.gluLookAt(4012470,601230,10,  // eye pos
+                     4012470,601230,0,   // look at
+                     0,1,0);  // up*/
+        
+        glu.gluLookAt(2000,2000,1000,  // eye pos
                      0,0,0,   // look at
-                     0,1,0);  // up
+                     0,1,0);  // up*/
 
         gl.glScalef(view_scale,view_scale,view_scale);
         gl.glTranslatef(view_trax, view_tray, view_traz);       
@@ -183,43 +199,64 @@ public class Box2 implements GLEventListener,
         dpEje.drawObjectC(gl ,0.0f, 0.0f, 1.0f, 0.3f);
         
         //Practica 5:
-        Delaunay_Triangulation dt = new Delaunay_Triangulation();
-        Point_dt pointA = new Point_dt(0, 1);
-        Point_dt pointB = new Point_dt(2, 0);
-        Point_dt pointC = new Point_dt(2, 2);
-        Point_dt pointD = new Point_dt(4, 1);
+        Delaunay_Triangulation dt = null;
 
+        try {
+            dt = new Delaunay_Triangulation("./src/algGeom/t1-1000.tsin");
 
-        dt.insertPoint(pointA);
-        dt.insertPoint(pointB);
-        dt.insertPoint(pointC);
-        dt.insertPoint(pointD);
+        } catch (Exception ex) {
+            Logger.getLogger(Box2.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        Xmax=dt.delaunayXMax();
+        Xmin=dt.delaunayXMin();
+        Ymax=dt.delaunayYMax();
+        Ymin=dt.delaunayYMin();
+        
+        //view_trax = (float)((Xmax+Xmin)/2.0);
 
         Iterator<Triangle_dt> iterator = dt.trianglesIterator();
-
         
         while (iterator.hasNext()) {
                 Triangle_dt curr = iterator.next();
                 if (!curr.isHalfplane()) {
-                        System.out.println(curr.p1() + ", " + curr.p2() + ", "
-                                        + curr.p3());
-                        
-                        Triangle3d t1 = new Triangle3d(curr);
-                        DrawTriangle3d triangle = new DrawTriangle3d(t1);
-                        triangle.drawObjectC(gl, 1,0,0);
+                    
+                    Triangle3d t1 = new Triangle3d(curr);
+                    t1.toOrigin(Xmin, Xmax, Ymin, Ymax);
+
+                    DrawTriangle3d triangle = new DrawTriangle3d(t1);
+                    triangle.drawWireObjectC(gl, 0,0,0);
                 }
         }
-        
-        
 
         gl.glFlush();
+
         
+        Triangle_dt tri = dt.getTriangleAt(600);
+        Triangle3d tritri = new Triangle3d(tri);
         
+        tritri.toOrigin(Xmin,Xmax,Ymin,Ymax);
+
+        
+        //Vector<Triangle_dt> vecinos = dt.findTriangleNeighborhood(tri, tri.a);
+        Vector<Triangle_dt> vecinos = dt.findTriangleNeighborhood(tri);
+        
+        for (int i=0;i<vecinos.size();i++){
+            
+            Triangle3d taux = new Triangle3d(vecinos.get(i));
+            taux.toOrigin(Xmin, Xmax, Ymin, Ymax);
+
+            DrawTriangle3d triangleaux = new DrawTriangle3d(taux);
+            triangleaux.drawObjectC(gl, 1,1,0);
+        
+        }
+        
+        DrawTriangle3d triangleRandom = new DrawTriangle3d(tritri);
+        triangleRandom.drawObjectC(gl, 1,0,0);
         
     }
     
     public void displayChanged(GLAutoDrawable drawable, boolean modeChanged, boolean deviceChanged) {}
-
     public void mouseClicked(MouseEvent e) {}
     public void mouseEntered(MouseEvent e) {}
     public void mouseExited(MouseEvent e) {}
@@ -253,26 +290,25 @@ public class Box2 implements GLEventListener,
         }
     
     }
-    
     public void keyPressed(KeyEvent e){
         
         if(e.getKeyChar()=='a'){
-            view_trax++;
+            view_trax+=100;
         }
         if (e.getKeyChar()=='d'){
-            view_trax--;
+            view_trax-=100;
         }
         if(e.getKeyChar()=='z'){
-            view_tray++;
+            view_tray+=100;
         }
         if (e.getKeyChar()=='q'){
-            view_tray--;
+            view_tray-=100;
         }
         if(e.getKeyChar()=='w'){
-            view_traz++;
+            view_traz+=100;
         }
         if (e.getKeyChar()=='s'){
-            view_traz--;
+            view_traz-=100;
         }
         
         if (e.getKeyChar()=='r'){
