@@ -21,6 +21,14 @@ public class Triangle3d {
         b = new Vect3d ();
         c = new Vect3d ();
     }
+    
+    public Triangle3d(Triangle_dt t){
+        
+        a = new Vect3d(t.a.x, t.a.y, t.a.z);
+        b = new Vect3d(t.b.x, t.b.y, t.b.z);
+        c = new Vect3d(t.c.x, t.c.y, t.c.z);
+
+    }
 
     /** Constructor a partir de coordenadas de los tres puntos*/
     public Triangle3d(double ax, double ay, double az,
@@ -660,6 +668,19 @@ public class Triangle3d {
             return true;
         }
         return false;
+    }
+    
+    public void toOrigin(double Xmin, double Xmax, double Ymin, double Ymax){
+        
+        a.x=(a.x-Xmin-(Xmax-Xmin)/2);
+        a.y=(a.y-Ymin-(Ymax-Ymin)/2);
+
+        b.x=(b.x-Xmin-(Xmax-Xmin)/2);
+        b.y=(b.y-Ymin-(Ymax-Ymin)/2);
+
+        c.x=(c.x-Xmin-(Xmax-Xmin)/2);
+        c.y=(c.y-Ymin-(Ymax-Ymin)/2);
+
     }
     
       /**Muestra un punto 3d en pantalla*/
