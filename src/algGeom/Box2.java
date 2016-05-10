@@ -226,13 +226,18 @@ public class Box2 implements GLEventListener,
 
                     DrawTriangle3d triangle = new DrawTriangle3d(t1);
                     triangle.drawWireObjectC(gl, 0,0,0);
+                    
+                    Vect3d color = colorAltura(t1,dt.delaunayZMin(),dt.delaunayZMax());
+                    triangle.drawObjectC(gl, (int)color.getX() , (int)color.getY(), (int)color.getZ());
+                    //System.out.println("triangulo: ");
+                    //color.out();
                 }
         }
 
         gl.glFlush();
 
         
-        Triangle_dt tri = dt.getTriangleAt(600);
+        Triangle_dt tri = dt.getTriangleAt(200);
         Triangle3d tritri = new Triangle3d(tri);
         
         tritri.toOrigin(Xmin,Xmax,Ymin,Ymax);
@@ -253,7 +258,31 @@ public class Box2 implements GLEventListener,
         
         DrawTriangle3d triangleRandom = new DrawTriangle3d(tritri);
         triangleRandom.drawObjectC(gl, 1,0,0);
+        Vect3d color = colorAltura(tritri,dt.delaunayZMin(),dt.delaunayZMax());
+        //System.out.println("triangulo Tritri: ");
+        //color.out();
         
+        
+    }
+    
+    private Vect3d colorAltura(Triangle3d t, double min, double max){
+        double media,porcentaje,r,g,b;
+
+        //media = (t.a.getZ() + t.b.getZ() + t.c.getZ())/3;
+        media =Math.sqrt(Math.pow(t.a.getZ(), 2) + Math.pow(t.b.getZ(), 2) +Math.pow(t.c.getZ(), 2));
+        porcentaje = (media-min)/(max-min);
+
+        g = porcentaje*2*255;
+        if(g<=255){
+            b = 255 - g;
+            r = 0;
+        }else{
+            r = g -255;
+            g = 255 - r;
+            b = 0;
+        }
+        
+        return new Vect3d(r,g,b);
     }
     
     public void displayChanged(GLAutoDrawable drawable, boolean modeChanged, boolean deviceChanged) {}
@@ -317,6 +346,7 @@ public class Box2 implements GLEventListener,
             view_traz=0.0f;
             
         }
+        
         
         if (e.getKeyChar()=='+'){
             
