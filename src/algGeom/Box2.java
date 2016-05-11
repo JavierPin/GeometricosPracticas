@@ -252,15 +252,12 @@ public class Box2 implements GLEventListener,
             taux.toOrigin(Xmin, Xmax, Ymin, Ymax);
 
             DrawTriangle3d triangleaux = new DrawTriangle3d(taux);
-            triangleaux.drawObjectC(gl, 1,1,0);
+            triangleaux.drawObjectC(gl, 1,1,1);
         
         }
         
         DrawTriangle3d triangleRandom = new DrawTriangle3d(tritri);
-        triangleRandom.drawObjectC(gl, 1,0,0);
-        Vect3d color = colorAltura(tritri,dt.delaunayZMin(),dt.delaunayZMax());
-        //System.out.println("triangulo Tritri: ");
-        //color.out();
+        triangleRandom.drawObjectC(gl, 0,0,0);
         
         
     }
@@ -268,8 +265,9 @@ public class Box2 implements GLEventListener,
     private Vect3d colorAltura(Triangle3d t, double min, double max){
         double media,porcentaje,r,g,b;
 
-        //media = (t.a.getZ() + t.b.getZ() + t.c.getZ())/3;
-        media =Math.sqrt(Math.pow(t.a.getZ(), 2) + Math.pow(t.b.getZ(), 2) +Math.pow(t.c.getZ(), 2));
+        //media = (t.a.getZ() + t.b.getZ() + t.c.getZ())/3; //Aritmetica
+        //media = 3/(1/t.a.getZ() + 1/t.b.getZ() + 1/t.c.getZ()); //Armonica
+        media =Math.sqrt(Math.pow(t.a.getZ(), 2) + Math.pow(t.b.getZ(), 2) +Math.pow(t.c.getZ(), 2)); //Geometrica
         porcentaje = (media-min)/(max-min);
 
         g = porcentaje*2*255;
