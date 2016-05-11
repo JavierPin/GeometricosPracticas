@@ -49,6 +49,7 @@ public class Box2 implements GLEventListener,
     static int HEIGHT = 100000, WIDTH = 100000;
     static Animator animator;
     
+    
     //Problema de refresco infinito
     boolean once = true;
     Vect3d v1, v2, v3;
@@ -164,6 +165,7 @@ public class Box2 implements GLEventListener,
         gl.glTranslatef(view_trax, view_tray, view_traz);       
         gl.glRotatef(view_rotx, 1.0f, 0.0f, 0.0f);
         gl.glRotatef(view_roty, 0.0f, 1.0f, 0.0f);
+        
 
 
         //Dibujar los ejes y los planos de cada eje
@@ -233,7 +235,26 @@ public class Box2 implements GLEventListener,
                     //color.out();
                 }
         }
+        
+            Ray3d r = new Ray3d(new Vect3d(0,0,0), new Vect3d(300,300,300));
+            DrawRay3d dr = new DrawRay3d(r);
+            dr.drawObjectC(gl,0,1,1);
 
+            /*Codigo posicon camara*/
+            double[] mdl = getM(gl);
+            double[] camera_org = new double[3];
+            camera_org[0] = -(mdl[0] * mdl[12] + mdl[1] * mdl[13] + mdl[2] * mdl[14]);
+            camera_org[1] = -(mdl[4] * mdl[12] + mdl[5] * mdl[13] + mdl[6] * mdl[14]);
+            camera_org[2] = -(mdl[8] * mdl[12] + mdl[9] * mdl[13] + mdl[10] * mdl[14]);
+            
+            Vect3d position = new Vect3d(camera_org[0], camera_org[1], camera_org[2]);
+            position.out();
+            Ray3d r2d2 = new Ray3d (position, new Vect3d(1,1,1));
+            DrawRay3d dr2d2 = new DrawRay3d(r2d2);
+            dr2d2.drawObjectC(gl, 1,1,1);
+            
+            
+            
         gl.glFlush();
 
         
@@ -260,6 +281,7 @@ public class Box2 implements GLEventListener,
         triangleRandom.drawObjectC(gl, 0,0,0);
         
         
+        
     }
     
     private Vect3d colorAltura(Triangle3d t, double min, double max){
@@ -281,6 +303,12 @@ public class Box2 implements GLEventListener,
         }
         
         return new Vect3d(r,g,b);
+    }
+    
+    private static double[] getM(GL g){
+        double mvmatrix[] = new double[16];
+        g.glGetDoublev(GL.GL_MODELVIEW_MATRIX, mvmatrix,0);
+        return mvmatrix;
     }
     
     public void displayChanged(GLAutoDrawable drawable, boolean modeChanged, boolean deviceChanged) {}
@@ -318,6 +346,16 @@ public class Box2 implements GLEventListener,
     
     }
     public void keyPressed(KeyEvent e){
+        
+        if(e.getKeyChar()=='i'){
+            System.out.println();
+            Ray3d r = new Ray3d(new Vect3d(2000,2000,1000), new Vect3d(0,0,0));
+            DrawRay3d dr = new DrawRay3d(r);
+            dr.drawObjectC(gl,1,1,1);
+            //view_trax+=100;
+            //glu.gluPickMatrix(Xmax, Ymax, Xmax, Xmax, viewport);
+            System.out.println("done");
+        }
         
         if(e.getKeyChar()=='a'){
             view_trax+=100;
