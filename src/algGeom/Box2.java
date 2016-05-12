@@ -24,6 +24,8 @@ import javax.media.opengl.GLEventListener;
 import javax.media.opengl.glu.GLU;
 import java.util.Vector;
 
+import javax.media.opengl.glu.*;
+
 
 public class Box2 implements GLEventListener, 
                              MouseListener, 
@@ -254,6 +256,41 @@ public class Box2 implements GLEventListener,
         DrawTriangle3d triangleRandom = new DrawTriangle3d(tritri);
         triangleRandom.drawObjectC(gl, 1,0,0);
         
+
+        
+        
+        double[] mdl = getM(gl);
+        double[] camera_org = new double[3];
+        
+        camera_org[0] = -(mdl[0] * mdl[12] + mdl[1] * mdl[13] + mdl[2] * mdl[14]);
+        camera_org[1] = -(mdl[4] * mdl[12] + mdl[5] * mdl[13] + mdl[6] * mdl[14]);
+        camera_org[2] = -(mdl[8] * mdl[12] + mdl[9] * mdl[13] + mdl[10] * mdl[14]);
+        
+        Vect3d position = new Vect3d(camera_org[0], camera_org[1], camera_org[2]);
+        Vect3d orig = new Vect3d(0,0,0);
+        
+        Ray3d r = new Ray3d(orig,position);
+        
+        r.out();
+        System.out.println("----------------------------------------");
+        
+        DrawRay3d ray = new DrawRay3d(r);
+        
+        ray.drawObject(gl);
+        
+        //position.out();
+        
+        
+    }
+    
+    public static double[] getM(GL g){
+        
+        double mvmatrix[] = new double[16];
+        
+        g.glGetDoublev(GL.GL_MODELVIEW_MATRIX, mvmatrix, 0);
+        
+        
+        return mvmatrix;
     }
     
     public void displayChanged(GLAutoDrawable drawable, boolean modeChanged, boolean deviceChanged) {}
@@ -284,9 +321,10 @@ public class Box2 implements GLEventListener,
             view_scale=view_scale+0.1f;
             
         }
-        if (e.getWheelRotation()>0){
+        if (e.getWheelRotation()>0 && view_scale >0.1f){
             
             view_scale=view_scale-0.1f;
+           
         }
     
     }

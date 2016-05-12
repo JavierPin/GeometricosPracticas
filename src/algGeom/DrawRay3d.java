@@ -23,6 +23,7 @@ public class DrawRay3d extends Draw{
                 l.orig.y - (l.orig.y - l.dest.y)* 100,
                 l.orig.z - (l.orig.z - l.dest.z)* 100);
 
+        g.glLineWidth(20);
         g.glBegin(GL.GL_LINES);
         g.glVertex3f((float) p1.getX(),(float) p1.getY(),(float) p1.getZ());
         g.glVertex3f((float) p2.getX(),(float) p2.getY(),(float) p2.getZ());
