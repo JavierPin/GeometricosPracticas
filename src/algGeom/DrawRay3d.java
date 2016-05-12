@@ -42,9 +42,9 @@ public class DrawRay3d extends Draw{
                 l.dest.y + (l.orig.y - l.dest.y),
                 l.dest.z + (l.orig.z - l.dest.z));
         p2 = new Vect3d(
-                l.orig.x - (l.orig.x - l.dest.x)* BasicGeom.INFINITO,
-                l.orig.y - (l.orig.y - l.dest.y)* BasicGeom.INFINITO,
-                l.orig.z - (l.orig.z - l.dest.z)* BasicGeom.INFINITO);
+                l.orig.x - (l.orig.x - l.dest.x)* 2000,
+                l.orig.y - (l.orig.y - l.dest.y)* 2000,
+                l.orig.z - (l.orig.z - l.dest.z)* 2000);
 
         g.glColor3f(R, G, B);
         g.glBegin(GL.GL_LINES);
