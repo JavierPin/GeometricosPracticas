@@ -59,6 +59,7 @@ public class Box2 implements GLEventListener,
     Cloud3d c;
     Triangle3d t1;
     double Xmax, Xmin, Ymax, Ymin;
+    Octree oct;
     
     public static void main(String[] args) {
         
@@ -230,15 +231,17 @@ public class Box2 implements GLEventListener,
                     triangle.drawWireObjectC(gl, 0,0,0);
                     
                     Vect3d color = colorAltura(t1,dt.delaunayZMin(),dt.delaunayZMax());
-                    triangle.drawObjectC(gl, (int)color.getX() , (int)color.getY(), (int)color.getZ());
+                    triangle.drawObjectC(gl, (float)color.getX() , (float)color.getY(), (float)color.getZ());
                     //System.out.println("triangulo: ");
                     //color.out();
                 }
         }
+
         
-            Ray3d r = new Ray3d(new Vect3d(0,0,0), new Vect3d(300,300,300));
-            DrawRay3d dr = new DrawRay3d(r);
-            dr.drawObjectC(gl,0,1,1);
+        if(once){
+            //oct = new Octree(dt.getTriangles(),5);
+        }
+        
 
             /*Codigo posicon camara*/
             double[] mdl = getM(gl);
@@ -254,10 +257,6 @@ public class Box2 implements GLEventListener,
             dr2d2.drawObjectC(gl, 1,1,1);
             
             
-            
-        gl.glFlush();
-
-        
         Triangle_dt tri = dt.getTriangleAt(200);
         Triangle3d tritri = new Triangle3d(tri);
         
@@ -281,27 +280,20 @@ public class Box2 implements GLEventListener,
         triangleRandom.drawObjectC(gl, 0,0,0);
         
         
-        
+        gl.glFlush();
     }
     
     private Vect3d colorAltura(Triangle3d t, double min, double max){
         double media,porcentaje,r,g,b;
-
         //media = (t.a.getZ() + t.b.getZ() + t.c.getZ())/3; //Aritmetica
         //media = 3/(1/t.a.getZ() + 1/t.b.getZ() + 1/t.c.getZ()); //Armonica
         media =Math.sqrt(Math.pow(t.a.getZ(), 2) + Math.pow(t.b.getZ(), 2) +Math.pow(t.c.getZ(), 2)); //Geometrica
-        porcentaje = (media-min)/(max-min);
 
-        g = porcentaje*2*255;
-        if(g<=255){
-            b = 255 - g;
-            r = 0;
-        }else{
-            r = g -255;
-            g = 255 - r;
-            b = 0;
-        }
-        
+        porcentaje = media/(max-min);
+        g = (1 - porcentaje);
+        r = (porcentaje);
+        b = 0;
+
         return new Vect3d(r,g,b);
     }
     

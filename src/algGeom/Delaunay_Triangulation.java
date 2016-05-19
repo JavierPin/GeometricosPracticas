@@ -1736,5 +1736,17 @@ public class Delaunay_Triangulation {
             
         }
         
+        public Vector<Triangle3d> getTriangles(){
+                Vector<Triangle3d> ts = new Vector<Triangle3d>();
         
+            Iterator<Triangle_dt> iterator = trianglesIterator();
+        
+            while (iterator.hasNext()) {
+                Triangle_dt curr = iterator.next();
+                Triangle3d t1 = new Triangle3d(curr);
+                ts.add(t1);
+            }
+                
+            return ts;
+        }
 }

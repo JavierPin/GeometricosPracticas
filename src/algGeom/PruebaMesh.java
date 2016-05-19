@@ -1,9 +1,11 @@
 package algGeom;
 
+import com.sun.glass.ui.Window;
 import com.sun.opengl.util.Animator;
 
 import java.awt.Dimension;
 import java.awt.Frame;
+import java.awt.MouseInfo;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseWheelListener;
@@ -24,7 +26,6 @@ import java.util.*;
 import java.util.Vector;
 
 
-
 public class PruebaMesh implements GLEventListener, 
                              MouseListener, 
                              MouseMotionListener,
@@ -38,6 +39,9 @@ public class PruebaMesh implements GLEventListener,
     private float view_traz = 0.0f;
     private boolean once = false;
     private Octree om;
+    private Ray3d rayo;
+    double[] camera_org = new double[3];
+    boolean selectMode=false;
 
     public static void main(String[] args) {
     	Draw.ALTO = HEIGHT;
@@ -73,8 +77,10 @@ public class PruebaMesh implements GLEventListener,
     }
     
     // rotating the scene
-    private float view_rotx = 20.0f; //20
-    private float view_roty = 30.0f; //30
+    //private float view_rotx = 20.0f; //20
+    //private float view_roty = 30.0f; //30
+    private float view_rotx = 0; //20
+    private float view_roty = 0; //30
     // remember last mouse position
     private int oldMouseX;
     private int oldMouseY;
@@ -89,6 +95,7 @@ public class PruebaMesh implements GLEventListener,
         GL gl = drawable.getGL();
         // Set backgroundcolor and shading mode
         gl.glClearColor(1.0f, 1.0f, 1.0f, 0.0f);
+        gl.glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
         gl.glShadeModel(GL.GL_FLAT);
         // give me some light
         float ambient[] = {1.0f,1.0f,1.0f,1.0f };
@@ -217,7 +224,14 @@ public class PruebaMesh implements GLEventListener,
         
         /*
         time_start = System.nanoTime();
+        try {
+            modelo = new Mesh ("./src/modelos/ballet.obj");
+            System.out.println("Modelo cargado con " + modelo.getSizeCaras() + "caras.");
+            modelo.getAABB().out();
         
+        }  catch (Exception e) {
+	  System.out.println("Error en la lectura del fichero");
+	}
         for (int j=0; j<rb.rays.size();j++){
             
             r = rb.rays.get(j);
@@ -243,26 +257,26 @@ public class PruebaMesh implements GLEventListener,
         
         System.out.println("Operación 1 realizada en "+ ( time_acum )/1000000.0f +" millisegundos");
         */
-        /*
+        
             //Dibujamos el octree. Hemos deshabilitado la luz para poder pintarlo del color que queramos
             AABB modelBox = modelo.getAABB();
 
             if(!once){
                 om = new Octree(modelBox,3,modelo.getListaVertices(), modelo.getTriangulos());
                 once=true;
+                rayo = new Ray3d (new Vect3d(0,0,0), new Vect3d(1,1,1));
                 System.out.println("--Octree Construido--");
             }
             DrawOctree octree2 = new DrawOctree(om);
             //octree2.drawObjectC(gl,0.5f,0.5f,0);
             Vector<Vect3d> pPuntos = new Vector<Vect3d>();
-        */
+        
         /*    
         time_start2 = System.nanoTime();
         for(int h = 0; h < rb.rays.size(); h++){// con el rayBeam
-            r = rb.rays.get(h);
             
             pPuntos.clear();
-            om.RayOctree(r, pPuntos, gl);
+            om.RayOctree(rayo, pPuntos, gl);
             
             ArrayList<Triangle3d> idTri = new ArrayList<Triangle3d>();
 
@@ -281,7 +295,7 @@ public class PruebaMesh implements GLEventListener,
 
             //System.out.println("Triangulos candidatos: " + idTri.size() + "/" + modelo.getTriangulos().size());
             for(int i = 0; i<idTri.size(); i++){
-                boolean intersecta = idTri.get(i).RayTriangle3d(r, point);
+                boolean intersecta = idTri.get(i).RayTriangle3d(rayo, point);
                     if(intersecta){
                         time_end2 = System.nanoTime();
                         time_acum2 = time_acum2 + time_end2 - time_start2;
@@ -298,31 +312,56 @@ public class PruebaMesh implements GLEventListener,
         System.out.println("Operación 2 realizada en "+ ( time_acum2 )/1000000.0f +" millisegundos");
         */
         
-        /*
-        Triangle3d[] t = new Triangle3d[1];
         
-        for (int j=0; j<rb.rays.size();j++){
+        /*Codigo posicon camara*/
+        double[] mdl = getM(gl);
+       // double[] camera_org = new double[3];
+        camera_org[0] = -(mdl[0] * mdl[12] + mdl[1] * mdl[13] + mdl[2] * mdl[14]);
+        camera_org[1] = -(mdl[4] * mdl[12] + mdl[5] * mdl[13] + mdl[6] * mdl[14]);
+        camera_org[2] = -(mdl[8] * mdl[12] + mdl[9] * mdl[13] + mdl[10] * mdl[14]);
+
+        if(!selectMode){
+            Vect3d positionI = new Vect3d(camera_org[0], camera_org[1], camera_org[2]);
+            Vect3d positionF;
+            //position.out();
+            double mx,my;
+            my = (MouseInfo.getPointerInfo().getLocation().getY()-(HEIGHT/2));
+            mx = (MouseInfo.getPointerInfo().getLocation().getX()-(WIDTH/2));
+            positionF = new Vect3d(mx,-my,0);
             
-            r = rb.rays.get(j);
-                        //boolean intersecta = tMalla.get(i).RayTriangle3d(r, point);
+            
+
+            rayo = new Ray3d (positionI,positionF);
+        }
+        
+        
+        DrawRay3d dr2d2 = new DrawRay3d(rayo);
+        dr2d2.drawObjectC(gl, 0,1,1);
+        
+        
+        Triangle3d[] t = new Triangle3d[1];
+        try{
+        //for (int j=0; j<rb.rays.size();j++){
+            //boolean intersecta = tMalla.get(i).RayTriangle3d(r, point);
             time_start3 = System.nanoTime();
-            boolean intersecta = om.RayOctree(r, t);
+            boolean intersecta = om.RayOctree(rayo, t);
             time_end3 = System.nanoTime();
             time_acum3=time_acum3+time_end3-time_start3;
             if(intersecta){
                 DrawTriangle3d triangle = new DrawTriangle3d(t[0]);
                 triangle.drawObjectC(gl, 0.3f,1,0.3f);
-                DrawVect3d punto = new DrawVect3d(point[0]);
-                punto.drawObjectC(gl, 0,0,1);
-
+                //DrawVect3d punto = new DrawVect3d(point[0]);
+                //punto.drawObjectC(gl, 0,0,1);
             }
-            
+        }  catch (Exception e) {
         }
+             
+        //}
         
         
         
         System.out.println("Operación 3 realizada en "+ ( time_acum3 )/1000000.0f +" millisegundos");
-        */
+        
         
         //desactivar luces para obtener el color deseado con DrawObjectC
         /*gl.glDisable(GL.GL_LIGHTING);
@@ -338,26 +377,8 @@ public class PruebaMesh implements GLEventListener,
         DrawOctree octree = new DrawOctree(o);
         octree.drawObjectC(gl, 0.1f,0.2f,0.1f);
         DrawCloud3d nube = new DrawCloud3d(n);
-        nube.drawObjectC(gl,0.9f,0,0.9f);*/
-        
-         /*Codigo posicon camara*/
-         double[] mdl = getM(gl);
-            //double[] mdl = new double[16];
-            //gl.glGetDoublev(GL.GL_MODELVIEW_MATRIX, mdl,0);
-            double[] camera_org = new double[3];
-            camera_org[0] = -(mdl[0] * mdl[12] + mdl[1] * mdl[13] + mdl[2] * mdl[14]);
-            camera_org[1] = -(mdl[4] * mdl[12] + mdl[5] * mdl[13] + mdl[6] * mdl[14]);
-            camera_org[2] = -(mdl[8] * mdl[12] + mdl[9] * mdl[13] + mdl[10] * mdl[14]);
-            
-            
-            Vect3d position = new Vect3d(camera_org[0], camera_org[1], camera_org[2]);
-            position.out();
-            Ray3d r2d2 = new Ray3d (position, new Vect3d(1,1,1));
-            DrawRay3d dr2d2 = new DrawRay3d(r2d2);
-            dr2d2.drawObjectC(gl, 255,0,255);
-        
-        
-         gl.glFlush();
+        nube.drawObjectC(gl,0.9f,0,0.9f);*/         
+        gl.glFlush();
     }
     
     private static double[] getM(GL g){
@@ -370,7 +391,21 @@ public class PruebaMesh implements GLEventListener,
                               boolean modeChanged, boolean deviceChanged)
     { }
 
-    public void mouseClicked(MouseEvent e) {}
+    public void mouseClicked(MouseEvent e) {
+        if(selectMode){
+            Vect3d positionI = new Vect3d(camera_org[0], camera_org[1], camera_org[2]);
+            Vect3d positionF;
+            //position.out();
+            double x,y;
+            y = e.getY()-(HEIGHT/2);
+            x = e.getX()-(WIDTH/2);
+            positionF = new Vect3d(x,-y,0);
+
+            rayo = new Ray3d (positionI,positionF);
+            positionI.out();
+            positionF.out();
+        }
+    }
     public void mouseEntered(MouseEvent e) {}
     public void mouseExited(MouseEvent e) {}
     public void mouseReleased(MouseEvent e) { }
@@ -434,6 +469,10 @@ public class PruebaMesh implements GLEventListener,
             
         }
         
+        if (e.getKeyChar()=='c'){
+            selectMode = !selectMode;
+            
+        }
         if (e.getKeyChar()=='+'){
             
             view_scale=view_scale+0.1f;
