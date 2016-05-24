@@ -6,6 +6,8 @@ import java.nio.IntBuffer;
 import javax.media.opengl.GL;
 
 import com.sun.opengl.util.BufferUtil;
+import java.util.ArrayList;
+import java.util.Iterator;
 
 
 
@@ -31,11 +33,43 @@ public class DrawMesh extends Draw{
      	 
 		 
          
-	 }
+}
 	 
-	 @Override public void drawObjectC (GL g, float R, float G, float B){
+@Override public void drawObjectC (GL g, float R, float G, float B){
 	
 	//XXX
 	
-	 }
 }
+
+
+
+    public void drawObject (GL g, ArrayList<Triangle3d> ts){
+        
+        boolean selected = false;
+         for (int i = 0; i<m.getSizeCaras(); i++)
+            {    
+                Triangle3d t = new Triangle3d (m.getTriangulo(i));
+                DrawTriangle3d dt = new DrawTriangle3d(t);
+                
+                if(ts.size()>0){
+                    Iterator<Triangle3d> iterator = ts.iterator();
+                    while (iterator.hasNext()) {
+                        Triangle3d curr = iterator.next();
+                        if(t == curr){
+                            selected = true;
+                            
+                        }else{
+                            selected = false;
+                        }
+                    }
+                }
+                
+                if(selected){
+                    dt.drawObjectC(g, 0, 1, 1);
+                }else{
+                    dt.drawObject(g);
+                }
+            }          	 		 
+    }
+}
+	 
