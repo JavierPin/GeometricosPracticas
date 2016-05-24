@@ -200,12 +200,12 @@ public class PruebaMesh implements GLEventListener,
         gl.glDisable(GL.GL_DEPTH_TEST);
         gl.glDisable(GL.GL_NORMALIZE);
         
-        Ray3d r = new Ray3d(new Vect3d(-80,150,-80), new Vect3d(-1,150,-1));
+        /*Ray3d r = new Ray3d(new Vect3d(-80,150,-80), new Vect3d(-1,150,-1));
         DrawRay3d ray = new DrawRay3d(r);
-        ray.drawObjectC(gl, 0,0,1);
+        ray.drawObjectC(gl, 0,0,1);*/
         
         RayBeam rb = new RayBeam(new Vect3d(10,200,200), new Vect3d(10,200,-100),150,15);
-        rb.DrawRayBeam(gl,0,0,1);
+        //rb.DrawRayBeam(gl,0,0,1);
         
         ArrayList<Triangle3d> tMalla = modelo.getTriangulos();
         
@@ -215,8 +215,9 @@ public class PruebaMesh implements GLEventListener,
         long time_start2, time_end2, time_acum2=0;
         long time_start3, time_end3, time_acum3=0;
         
+        /*
         time_start = System.nanoTime();
-
+        
         for (int j=0; j<rb.rays.size();j++){
             
             r = rb.rays.get(j);
@@ -241,8 +242,8 @@ public class PruebaMesh implements GLEventListener,
         
         
         System.out.println("Operación 1 realizada en "+ ( time_acum )/1000000.0f +" millisegundos");
-        
-
+        */
+        /*
             //Dibujamos el octree. Hemos deshabilitado la luz para poder pintarlo del color que queramos
             AABB modelBox = modelo.getAABB();
 
@@ -254,7 +255,7 @@ public class PruebaMesh implements GLEventListener,
             DrawOctree octree2 = new DrawOctree(om);
             //octree2.drawObjectC(gl,0.5f,0.5f,0);
             Vector<Vect3d> pPuntos = new Vector<Vect3d>();
-        
+        */
         /*    
         time_start2 = System.nanoTime();
         for(int h = 0; h < rb.rays.size(); h++){// con el rayBeam
@@ -297,7 +298,7 @@ public class PruebaMesh implements GLEventListener,
         System.out.println("Operación 2 realizada en "+ ( time_acum2 )/1000000.0f +" millisegundos");
         */
         
-
+        /*
         Triangle3d[] t = new Triangle3d[1];
         
         for (int j=0; j<rb.rays.size();j++){
@@ -319,7 +320,9 @@ public class PruebaMesh implements GLEventListener,
         }
         
         
+        
         System.out.println("Operación 3 realizada en "+ ( time_acum3 )/1000000.0f +" millisegundos");
+        */
         
         //desactivar luces para obtener el color deseado con DrawObjectC
         /*gl.glDisable(GL.GL_LIGHTING);
@@ -337,7 +340,29 @@ public class PruebaMesh implements GLEventListener,
         DrawCloud3d nube = new DrawCloud3d(n);
         nube.drawObjectC(gl,0.9f,0,0.9f);*/
         
+         /*Codigo posicon camara*/
+         double[] mdl = getM(gl);
+            double[] camera_org = new double[3];
+            camera_org[0] = -(mdl[0] * mdl[12] + mdl[1] * mdl[13] + mdl[2] * mdl[14]);
+            camera_org[1] = -(mdl[4] * mdl[12] + mdl[5] * mdl[13] + mdl[6] * mdl[14]);
+            camera_org[2] = -(mdl[8] * mdl[12] + mdl[9] * mdl[13] + mdl[10] * mdl[14]);
+            
+            
+            Vect3d position = new Vect3d(camera_org[0], camera_org[1], camera_org[2]);
+            Vect3d orig = new Vect3d(0,0,0);
+            
+            Ray3d r2d2 = new Ray3d (position, orig);
+            DrawRay3d dr2d2 = new DrawRay3d(r2d2);
+            dr2d2.drawObject(gl);
+        
+        
          gl.glFlush();
+    }
+    
+    private static double[] getM(GL g){
+        double mvmatrix[] = new double[16];
+        g.glGetDoublev(GL.GL_MODELVIEW_MATRIX, mvmatrix,0);
+        return mvmatrix;
     }
     
     public void displayChanged(GLAutoDrawable drawable, 

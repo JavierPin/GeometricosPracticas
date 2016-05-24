@@ -24,8 +24,6 @@ import javax.media.opengl.GLEventListener;
 import javax.media.opengl.glu.GLU;
 import java.util.Vector;
 
-import javax.media.opengl.glu.*;
-
 
 public class Box2 implements GLEventListener, 
                              MouseListener, 
@@ -50,6 +48,7 @@ public class Box2 implements GLEventListener,
     //static int HEIGHT = 800, WIDTH = 800;
     static int HEIGHT = 100000, WIDTH = 100000;
     static Animator animator;
+    
     
     //Problema de refresco infinito
     boolean once = true;
@@ -166,6 +165,7 @@ public class Box2 implements GLEventListener,
         gl.glTranslatef(view_trax, view_tray, view_traz);       
         gl.glRotatef(view_rotx, 1.0f, 0.0f, 0.0f);
         gl.glRotatef(view_roty, 0.0f, 1.0f, 0.0f);
+        
 
 
         //Dibujar los ejes y los planos de cada eje
@@ -204,7 +204,7 @@ public class Box2 implements GLEventListener,
         Delaunay_Triangulation dt = null;
 
         try {
-            dt = new Delaunay_Triangulation("./src/algGeom/t1-1000.tsin");
+            dt = new Delaunay_Triangulation("./src/algGeom/t1-5000.tsin");
 
         } catch (Exception ex) {
             Logger.getLogger(Box2.class.getName()).log(Level.SEVERE, null, ex);
@@ -228,13 +228,20 @@ public class Box2 implements GLEventListener,
 
                     DrawTriangle3d triangle = new DrawTriangle3d(t1);
                     triangle.drawWireObjectC(gl, 0,0,0);
+                    
+                    Vect3d color = colorAltura(t1,dt.delaunayZMin(),dt.delaunayZMax());
+                    triangle.drawObjectC(gl, (float)color.getX(), (float)color.getY(), (float)color.getZ());
+                    //System.out.println("triangulo: ");
+                    //color.out();
                 }
         }
-
-        gl.glFlush();
+        
+            Ray3d r = new Ray3d(new Vect3d(0,0,0), new Vect3d(300,300,300));
+            DrawRay3d dr = new DrawRay3d(r);
+            //dr.drawObjectC(gl,0,1,1);
 
         
-        Triangle_dt tri = dt.getTriangleAt(600);
+        Triangle_dt tri = dt.getTriangleAt(200);
         Triangle3d tritri = new Triangle3d(tri);
         
         tritri.toOrigin(Xmin,Xmax,Ymin,Ymax);
@@ -249,47 +256,51 @@ public class Box2 implements GLEventListener,
             taux.toOrigin(Xmin, Xmax, Ymin, Ymax);
 
             DrawTriangle3d triangleaux = new DrawTriangle3d(taux);
-            triangleaux.drawObjectC(gl, 1,1,0);
+            triangleaux.drawObjectC(gl, 1,1,1);
         
         }
         
         DrawTriangle3d triangleRandom = new DrawTriangle3d(tritri);
-        triangleRandom.drawObjectC(gl, 1,0,0);
+        triangleRandom.drawObjectC(gl, 0,0,0);
         
-
+//        double[] mdl = getM(gl);
+//            double[] camera_org = new double[3];
+//            camera_org[0] = -(mdl[0] * mdl[12] + mdl[1] * mdl[13] + mdl[2] * mdl[14]);
+//            camera_org[1] = -(mdl[4] * mdl[12] + mdl[5] * mdl[13] + mdl[6] * mdl[14]);
+//            camera_org[2] = -(mdl[8] * mdl[12] + mdl[9] * mdl[13] + mdl[10] * mdl[14]);
+//            
+//            
+//            Vect3d position = new Vect3d(camera_org[0], camera_org[1], camera_org[2]);
+//            Vect3d orig = new Vect3d(100,100,100);
+//            
+//            Ray3d r2d2 = new Ray3d (position,orig);
+//            DrawRay3d dr2d2 = new DrawRay3d(r2d2);
+//            dr2d2.drawObjectC(gl,255,250,255);
         
-        
-        double[] mdl = getM(gl);
-        double[] camera_org = new double[3];
-        
-        camera_org[0] = -(mdl[0] * mdl[12] + mdl[1] * mdl[13] + mdl[2] * mdl[14]);
-        camera_org[1] = -(mdl[4] * mdl[12] + mdl[5] * mdl[13] + mdl[6] * mdl[14]);
-        camera_org[2] = -(mdl[8] * mdl[12] + mdl[9] * mdl[13] + mdl[10] * mdl[14]);
-        
-        Vect3d position = new Vect3d(camera_org[0], camera_org[1], camera_org[2]);
-        Vect3d orig = new Vect3d(0,0,0);
-        
-        Ray3d r = new Ray3d(orig,position);
-        
-        r.out();
-        System.out.println("----------------------------------------");
-        
-        DrawRay3d ray = new DrawRay3d(r);
-        
-        ray.drawObject(gl);
-        
-        //position.out();
-        
+        gl.glFlush();
         
     }
     
-    public static double[] getM(GL g){
+    private Vect3d colorAltura(Triangle3d t, double min, double max){
+        double media, porcentaje, r, g, b;
+
+        //media = (t.a.getZ() + t.b.getZ() + t.c.getZ())/3; //Aritmetica
+        media = 3/(1/t.a.getZ() + 1/t.b.getZ() + 1/t.c.getZ()); //Armonica
+        //media =Math.sqrt(Math.pow(t.a.getZ(), 2) + Math.pow(t.b.getZ(), 2) +Math.pow(t.c.getZ(), 2)); //Geometrica
+
         
+        porcentaje = media/(max-min);
+        g = (1 - porcentaje);
+        r = (porcentaje);
+        b = 0;
+        
+        
+        return new Vect3d(r,g,b);
+    }
+    
+    private static double[] getM(GL g){
         double mvmatrix[] = new double[16];
-        
-        g.glGetDoublev(GL.GL_MODELVIEW_MATRIX, mvmatrix, 0);
-        
-        
+        g.glGetDoublev(GL.GL_MODELVIEW_MATRIX, mvmatrix,0);
         return mvmatrix;
     }
     
@@ -321,14 +332,16 @@ public class Box2 implements GLEventListener,
             view_scale=view_scale+0.1f;
             
         }
-        if (e.getWheelRotation()>0 && view_scale >0.1f){
+        if (e.getWheelRotation()>0 && view_scale>0.1f){
             
             view_scale=view_scale-0.1f;
-           
         }
     
     }
     public void keyPressed(KeyEvent e){
+        
+        if(e.getKeyChar()=='i'){
+        }
         
         if(e.getKeyChar()=='a'){
             view_trax+=100;
@@ -355,6 +368,7 @@ public class Box2 implements GLEventListener,
             view_traz=0.0f;
             
         }
+        
         
         if (e.getKeyChar()=='+'){
             
