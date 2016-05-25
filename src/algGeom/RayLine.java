@@ -62,7 +62,7 @@ public class RayLine extends SegmentLine{
         }
     }
     
-        @Override
+    @Override
     public boolean intersecta (SegmentLine r, Vector interseccion){
         double[] t = new double[1];
         double[] s = new double[1];

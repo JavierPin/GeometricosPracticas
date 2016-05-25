@@ -6,6 +6,7 @@ public class TriangleTin {
 
     /** un triangulo viene definido por tres puntos en el espacio*/
     protected Segment3d a1, a2, a3;
+    private boolean displaced=false;
 
     /** Constructor por defecto a valor (0,0) */
     public TriangleTin() {
@@ -715,6 +716,8 @@ public class TriangleTin {
         a3.orig.x=(a3.orig.x-Xmin-(Xmax-Xmin)/2);
         a3.orig.y=(a3.orig.y-Ymin-(Ymax-Ymin)/2);
 
+        displaced=true;
+        
     }
     
     public void undoToOrigin(double Xmin, double Xmax, double Ymin, double Ymax){
@@ -731,6 +734,12 @@ public class TriangleTin {
     public Vect3d centroide(){
         
         return new Vect3d((a1.orig.x+a2.orig.x+a3.orig.x)/3,(a1.orig.y+a2.orig.y+a3.orig.y)/3,(a1.orig.z+a2.orig.z+a3.orig.z)/3);
+        
+    }
+    
+    public boolean isDisplaced(){
+        
+        return displaced;
         
     }
     

@@ -51,8 +51,8 @@ public class DrawTin {
 
         
         porcentaje = media/(max-min);
-        g = (1 - porcentaje);
-        r = (porcentaje);
+        g = ((1 - porcentaje)*7/10);
+        r = (porcentaje/2);
         b = 0;
         
         

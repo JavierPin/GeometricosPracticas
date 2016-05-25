@@ -212,28 +212,29 @@ public class BoxSky implements GLEventListener,
         DrawRay3d dr = new DrawRay3d(r);
         
         selected=null;
-        
+        int i=0;
         while (iterator.hasNext()) {
-                Triangle_dt curr = iterator.next();
-                if (!curr.isHalfplane()) {
-                    
-                    Triangle3d t1 = new Triangle3d(curr);
-                    t1.toOrigin(Xmin, Xmax, Ymin, Ymax);
+            Triangle_dt curr = iterator.next();
+            if (!curr.isHalfplane()) {
 
-                    DrawTriangle3d triangle = new DrawTriangle3d(t1);
-                    triangle.drawWireObjectC(gl, 0,0,0);
-                    
-                    Vect3d color = colorAltura(t1,dt.delaunayZMin(),dt.delaunayZMax());
-                    triangle.drawObjectC(gl, (float)color.getX(), (float)color.getY(), (float)color.getZ());
-                    
-                    Vect3d[] point = new Vect3d[1];
-                    if (t1.RayTriangle3d(r, point) && selected==null){
+                Triangle3d t1 = new Triangle3d(curr);
+                t1.toOrigin(Xmin, Xmax, Ymin, Ymax);
 
-                        selected = t1;
-                        selected_dt = curr;
+                DrawTriangle3d triangle = new DrawTriangle3d(t1);
+                triangle.drawWireObjectC(gl, 0,0,0);
 
-                    }
+                Vect3d color = colorAltura(t1,dt.delaunayZMin(),dt.delaunayZMax());
+                triangle.drawObjectC(gl, (float)color.getX(), (float)color.getY(), (float)color.getZ());
+
+                Vect3d[] point = new Vect3d[1];
+                if (t1.RayTriangle3d(r, point) && selected==null){
+
+                    selected = t1;
+                    selected_dt = curr;
+                    System.out.println(i);
                 }
+            }
+            i++;
         }
         
         if(selected!=null){

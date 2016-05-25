@@ -147,6 +147,12 @@ public class Vect3d {
             
         }
         
+        public double distancia(Vect3d p){
+            
+            return Math.sqrt((x-p.x)*(x-p.x)+(y-p.y)*(y-p.y)+(z-p.z)*(z-p.z));
+            
+        }
+        
         /** Muestra en pantalla los valores de las coordenadas del Point. */
         public void out () {
             System.out.print ("Coordenada x: ");

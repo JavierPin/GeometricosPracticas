@@ -1814,11 +1814,9 @@ public class Delaunay_Triangulation {
         Point_dt p1 = new Point_dt(s.orig.x,s.orig.y,s.orig.z);
         Point_dt p2 = new Point_dt(s.dest.x,s.dest.y,s.dest.z);
         
-        Vector<Triangle_dt> v1 = new Vector<Triangle_dt>(0);
-        v1 = findTriangleNeighborhood(t, p1);
-
-        Vector<Triangle_dt> v2 = new Vector<Triangle_dt>(0);
-        v2 = findTriangleNeighborhood(t, p2);
+        Vector<Triangle_dt> v1 = findTriangleNeighborhood(t, p1);
+        Vector<Triangle_dt> v2 = findTriangleNeighborhood(t, p2);
+        
         if (v1!=null && v2!=null){
             for (int i=0; i<v1.size();i++){
 

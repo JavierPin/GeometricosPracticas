@@ -338,28 +338,45 @@ public class Box2 implements GLEventListener,
         DrawTin tin = new DrawTin(t);
         tin.drawObjectMap(gl);
         
-        selected = boxsky.getSelectedTriangle();
-        if(selected!=null){
-            
-            DrawTriangle3d selTriangle = new DrawTriangle3d(selected);
-            selTriangle.drawObjectC(gl,0,1,1);
-        }
+        //Seleccionamos triangulo inicio y triangulo final. De momento a fuego
+        TriangleTin tTin1 = new TriangleTin(t.getTriangle(7400));
+        DrawTriangle3d prueba = new DrawTriangle3d(tTin1);
+        prueba.drawObjectC(gl, 0,0,1);
         
-        inicio = boxsky.getInicio();
-        if(inicio!=null){
-            
-            DrawTriangle3d selTriangle = new DrawTriangle3d(inicio);
-            selTriangle.drawObjectC(gl,1,1,0);
-        }
+        TriangleTin tTin2 = new TriangleTin(t.getTriangle(6300));
+        prueba = new DrawTriangle3d(tTin2);
+        prueba.drawObjectC(gl, 0,0,1);
         
-        fin = boxsky.getFin();
-        if(fin!=null){
+        Ray3d rr = new Ray3d(tTin1.centroide(),tTin2.centroide());
+        DrawRay3d rayo = new DrawRay3d (rr);
+        rayo.drawObjectC(gl, 0,1,1);
+
+        
+        TriangleTin tTinTin = new TriangleTin(t.getTriangle(7722));
+        prueba = new DrawTriangle3d(tTinTin);
+        prueba.drawObjectC(gl, 1,0,1);
+
+        //comprobacion de triangulo nulo
+        /*for (int i=0;i<t.triangulos.size();i++){
             
-            TriangleTin finTin = new TriangleTin(fin);
+            if (t.triangulos.get(i) == null ||
+                    t.triangulos.get(i).a1.tDer == null ||
+                    t.triangulos.get(i).a1.tIzq == null ||
+                    t.triangulos.get(i).a2.tDer == null ||
+                    t.triangulos.get(i).a2.tIzq == null ||
+                    t.triangulos.get(i).a3.tDer == null ||
+                    t.triangulos.get(i).a3.tIzq == null ) System.out.println("error");
+        }*/
+        
+        /*Vector<TriangleTin> ruta = t.route(gl, tTin1, tTin2, rr);
+        
+        for (int i=0;i<ruta.size();i++){
             
-            DrawTriangle3d selTriangle = new DrawTriangle3d(finTin);
-            selTriangle.drawObjectC(gl,1,1,0);
-        }
+            if(ruta.get(i)!=null){
+                DrawTriangle3d dT = new DrawTriangle3d(ruta.get(i));
+                dT.drawObjectC(gl, 1,0,1);
+            }
+        }*/
         
         
         gl.glFlush();
