@@ -683,6 +683,23 @@ public class Triangle3d {
 
     }
     
+    public void undoToOrigin(double Xmin, double Xmax, double Ymin, double Ymax){
+        a.x=(a.x+Xmin+(Xmax-Xmin)/2);
+        a.y=(a.y+Ymin+(Ymax-Ymin)/2);
+
+        b.x=(b.x-Xmin+(Xmax-Xmin)/2);
+        b.y=(b.y+Ymin+(Ymax-Ymin)/2);
+
+        c.x=(c.x+Xmin+(Xmax-Xmin)/2);
+        c.y=(c.y+Ymin+(Ymax-Ymin)/2);
+    }
+    
+    public Vect3d centroide(){
+        
+        return new Vect3d((a.x+b.x+c.x)/3,(a.y+b.y+c.y)/3,(a.z+b.z+c.z)/3);
+        
+    }
+    
       /**Muestra un punto 3d en pantalla*/
      public void out (){
          System.out.println("Triangle3d: ("+ a +"-"+ b + "-"+ c +")");

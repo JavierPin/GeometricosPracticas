@@ -1,25 +1,20 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
 package algGeom;
 
+import static algGeom.Box2.HEIGHT;
+import static algGeom.Box2.WIDTH;
 import com.sun.opengl.util.Animator;
-import java.awt.BorderLayout;
-import java.awt.Dimension;
-import java.awt.Frame;
-import java.awt.FlowLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
-import java.awt.GridLayout;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.awt.event.MouseWheelListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
-import java.awt.event.MouseMotionListener;
-import java.awt.event.MouseWheelEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.media.opengl.GL;
@@ -27,27 +22,24 @@ import javax.media.opengl.GLAutoDrawable;
 import javax.media.opengl.GLCanvas;
 import javax.media.opengl.GLEventListener;
 import javax.media.opengl.glu.GLU;
-import java.util.Vector;
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import java.util.Vector;
 
 
-public class Box2 implements GLEventListener, 
-                             MouseListener, 
-                             MouseMotionListener,
-                             KeyListener,
-                             MouseWheelListener
+public class BoxSky implements GLEventListener,
+                             KeyListener
 {
     GLU glu;
     GL gl;
     //scaling the scene
-    private float view_scale = 0.7f;
+    private float view_scale = 1.0f;
     // translate the scene
     private float view_trax = 0.0f;
     private float view_tray = 0.0f;
     private float view_traz = 0.0f;
     // rotating the scene
-    private float view_rotx = -50.0f; //20
+    private float view_rotx = 0.0f; //20
     private float view_roty = 0.0f; //30
     
     private float view_scale_old = 1.0f;
@@ -64,9 +56,9 @@ public class Box2 implements GLEventListener,
     private int oldMouseY;
     //static int HEIGHT = 800, WIDTH = 800;
     static int HEIGHT = 100000, WIDTH = 100000;
-    static Animator animator1;
+    static Animator animator;
     static Animator animator2;
-    static Animator animator3;
+    
     
     //Problema de refresco infinito
     boolean once = true;
@@ -78,11 +70,13 @@ public class Box2 implements GLEventListener,
     Triangle3d inicio;
     Triangle3d fin;
     Triangle3d selected;
+    
+    Triangle_dt inicio_dt;
+    Triangle_dt fin_dt;
+    Triangle_dt selected_dt;
+    
     double Xmax, Xmin, Ymax, Ymin;
     Ray3d r;
-    boolean selecting;
-    static BoxSky boxsky;
-  
     
     public static void main(String[] args) {
         
@@ -91,95 +85,6 @@ public class Box2 implements GLEventListener,
     	Draw.ANCHO = WIDTH;
     	Draw.FONDO = 100;
 
-        boxsky=new BoxSky();
-        
-        GLCanvas canvas = new GLCanvas();
-        canvas.addGLEventListener(new Box2());
-        canvas.setSize(700,540);
-        
-        GLCanvas aereo = new GLCanvas();
-        aereo.addGLEventListener(boxsky);
-        aereo.setSize(350,270);
-        
-        GLCanvas perfil = new GLCanvas();
-        //perfil.addEventListener();
-        perfil.setSize(350,170);
-    			
-        JFrame frame = new JFrame("Libreria 3D");
-        //FlowLayout layout = new FlowLayout();      
-        GridBagLayout layout = new GridBagLayout();
-        frame.setLayout(layout);
-        
-        GridBagConstraints constraints = new GridBagConstraints();
-        
-        constraints.gridx = 0;
-        constraints.gridy = 0;
-        constraints.gridwidth = 4;
-        constraints.gridheight = 4;
-        constraints.weightx = 1.0;
-        constraints.weighty = 1.0;
-        constraints.anchor = GridBagConstraints.CENTER;
-        constraints.fill = GridBagConstraints.BOTH;
-        frame.add(canvas,constraints);
-      
-        constraints.gridx = 4;
-        constraints.gridy = 0;
-        constraints.gridwidth = 2;
-        constraints.gridheight = 1;
-        constraints.weightx = 1.0;
-        constraints.weighty = 1.0;
-        constraints.anchor = GridBagConstraints.CENTER;
-        constraints.fill = GridBagConstraints.HORIZONTAL;
-        frame.add(aereo, constraints);
-        
-        constraints.gridx = 4;
-        constraints.gridy = 1;
-        constraints.gridwidth = 1;
-        constraints.gridheight = 1;
-        constraints.weightx = 0.0;
-        constraints.weighty = 0.0;
-        constraints.anchor = GridBagConstraints.CENTER;
-        constraints.fill = GridBagConstraints.BOTH;
-        frame.add(perfil, constraints);
-        
-        /*constraints.gridx = 4;
-        constraints.gridy = 3;
-        constraints.gridwidth = 1;
-        constraints.gridheight = 1;
-        constraints.weightx = 0.0;
-        constraints.weighty = 0.0;
-        constraints.anchor = GridBagConstraints.CENTER;
-        constraints.fill = GridBagConstraints.BOTH;
-        frame.add(new JButton("Modo seleccion"), constraints);*/
-        
-        animator1 = new Animator(canvas);
-        animator2 = new Animator(aereo);
-        animator3 = new Animator(perfil);
-        
-        frame.addWindowListener(new WindowAdapter() {
-            @Override
-            public void windowClosing(WindowEvent e) {
-                // Run this on another thread than the AWT event queue to
-                // make sure the call to Animator.stop() completes before
-                // exiting
-                new Thread(new Runnable() {
-                    public void run() {
-                        animator1.stop();
-                        animator2.stop();
-                        animator3.stop();
-                        System.exit(0);
-                    }
-                }).start();
-            }
-        });
-        // Center frame
-        
-        frame.pack();
-        frame.setLocation(0,0);
-        frame.setSize(1100, 540);
-        frame.setVisible(true);
-        animator1.start();
-        animator2.start();
         
     }
     
@@ -202,14 +107,8 @@ public class Box2 implements GLEventListener,
         gl.glEnable(GL.GL_LINE_SMOOTH);
         gl.glEnable(GL.GL_POLYGON_SMOOTH);
         
-        
-        drawable.addMouseListener(this);
-        drawable.addMouseMotionListener(this);
         drawable.addKeyListener(this);
         
-        drawable.addMouseWheelListener(this);
-        
-        selecting=false;
         inicio=null;
         fin=null;
         selected=null;
@@ -246,7 +145,7 @@ public class Box2 implements GLEventListener,
         gl.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT);
         gl.glLoadIdentity();
         
-        glu.gluLookAt(0,0,10000,  // eye pos
+        glu.gluLookAt(0,0,6000,  // eye pos
                      0,0,0,   // look at
                      0,1,0);  // up*/
 
@@ -308,13 +207,11 @@ public class Box2 implements GLEventListener,
         Vect3d cPos = new Vect3d(findCameraPosition());
         Vect3d look = new Vect3d(findLookat());
         look.z = look.z-100;
+
+        r = new Ray3d(cPos, look);
+        DrawRay3d dr = new DrawRay3d(r);
         
-        if(selecting){
-            
-            r = new Ray3d(cPos, look);
-            DrawRay3d dr = new DrawRay3d(r);
-            
-        }
+        selected=null;
         
         while (iterator.hasNext()) {
                 Triangle_dt curr = iterator.next();
@@ -324,37 +221,61 @@ public class Box2 implements GLEventListener,
                     t1.toOrigin(Xmin, Xmax, Ymin, Ymax);
 
                     DrawTriangle3d triangle = new DrawTriangle3d(t1);
-                   
-                    //triangle.drawObjectC(gl, 0,0,0);
+                    triangle.drawWireObjectC(gl, 0,0,0);
                     
                     Vect3d color = colorAltura(t1,dt.delaunayZMin(),dt.delaunayZMax());
                     triangle.drawObjectC(gl, (float)color.getX(), (float)color.getY(), (float)color.getZ());
                     
+                    Vect3d[] point = new Vect3d[1];
+                    if (t1.RayTriangle3d(r, point) && selected==null){
+
+                        selected = t1;
+                        selected_dt = curr;
+
+                    }
                 }
         }
         
-        selected = boxsky.getSelectedTriangle();
         if(selected!=null){
             
             DrawTriangle3d selTriangle = new DrawTriangle3d(selected);
             selTriangle.drawObjectC(gl,0,1,1);
         }
         
-        inicio = boxsky.getInicio();
-        if(inicio!=null){
+        
+        
+        if(inicio_dt!=null && fin_dt!=null){
             
-            DrawTriangle3d selTriangle = new DrawTriangle3d(inicio);
-            selTriangle.drawObjectC(gl,1,1,0);
-        }
-        
-        fin = boxsky.getFin();
-        if(fin!=null){
+            Ray3d route = new Ray3d(inicio.centroide(),fin.centroide());
+            DrawRay3d rou = new DrawRay3d(route);
+            rou.drawObjectC(gl,0,0,1);
             
-            DrawTriangle3d selTriangle = new DrawTriangle3d(fin);
-            selTriangle.drawObjectC(gl,1,1,0);
+            Vector<Triangle_dt> v1 = new Vector<Triangle_dt>();
+            v1 = dt.findTriangleNeighborhood(fin_dt, fin_dt.b);
+
+            
+            for (int i=0;i<v1.size();i++){
+                
+                Triangle3d t = new Triangle3d(v1.get(i));
+                t.toOrigin(Xmin, Xmax, Ymin, Ymax);
+                
+                Vect3d[] point = new Vect3d[1];
+                t.RayTriangle3d(route, point);
+                
+                if(point[0]!=null){
+                    
+                    point[0].out();
+                    DrawVect3d punto = new DrawVect3d(point[0]);
+                    punto.drawObjectC(gl, 1,1,1,3);
+                    break;
+                    
+                }
+                
+                DrawTriangle3d tri = new DrawTriangle3d(t);
+                tri.drawWireObjectC(gl, 0,0,1);
+            }
         }
-        
-        
+
         gl.glFlush();
         
     }
@@ -374,7 +295,6 @@ public class Box2 implements GLEventListener,
     private Vect3d findLookat(){
         
         double[] mdl = getM(gl);
-        double[] camera_org = new double[3];
         
         return new Vect3d(-mdl[12],-mdl[13],-mdl[14]);
     }
@@ -403,84 +323,29 @@ public class Box2 implements GLEventListener,
         return new Vect3d(r,g,b);
     }
     
-    private void prepareCameraForSelection(){
-        
-        view_scale=1;
-        view_trax=0;
-        view_tray=0;
-        view_traz=0;
-        view_rotx=0;
-        view_roty=0;
-
-        
-    }
-    
     public void displayChanged(GLAutoDrawable drawable, boolean modeChanged, boolean deviceChanged) {}
-    public void mouseClicked(MouseEvent e) {}
-    public void mouseEntered(MouseEvent e) {}
-    public void mouseExited(MouseEvent e) {}
-    public void mouseReleased(MouseEvent e) {
-  
-        
-    }
-    public void mousePressed(MouseEvent e) {
-        
-        oldMouseX = e.getX();
-        oldMouseY = e.getY();
-        
-    }
-    public void mouseDragged(MouseEvent e) {
-        if(!selecting){
-            int x = e.getX();
-            int y = e.getY();
-            Dimension size = e.getComponent().getSize();
-            float thetaY = 360.0f * ( (float)(x-oldMouseX)/(float)size.width);
-            float thetaX = 360.0f * ( (float)(y-oldMouseY)/(float)size.height);
-            oldMouseX = x;
-            oldMouseY = y;
-            view_rotx += thetaX;
-            view_roty += thetaY;
-        }
-    }
-    public void mouseMoved(MouseEvent e) {}
-    public void mouseWheelMoved(MouseWheelEvent e) {
-        
-        if(!selecting){
-            if (e.getWheelRotation()<0){
-
-                view_scale=view_scale+0.1f;
-
-            }
-            if (e.getWheelRotation()>0 && view_scale>0.1f){
-
-                view_scale=view_scale-0.1f;
-            }
-        }
-    }
     public void keyPressed(KeyEvent e){
         
         if(e.getKeyChar()=='i'){
         }
         
         if(e.getKeyChar()=='a'){
-            view_trax+=10;
-            //b2.setView_trax(view_trax);
-            //aereo.update(null);
+            view_trax+=20;
         }
         if (e.getKeyChar()=='d'){
-            view_trax-=10;
+            view_trax-=20;
         }
-        if(e.getKeyChar()=='z'){
-            view_tray+=10;
+        if(e.getKeyChar()=='s'){
+            view_tray+=20;
         }
-        if (e.getKeyChar()=='q'){
-            view_tray-=10;
+        if (e.getKeyChar()=='w'){
+            view_tray-=20;
         }
-        if(e.getKeyChar()=='w'){
-            view_traz+=10;
+        if(e.getKeyChar()=='q'){
+            view_traz+=20;
         }
-        if (e.getKeyChar()=='s'){
-            view_traz-=10;
+        if (e.getKeyChar()=='z'){
+            view_traz-=20;
         }
         
         if (e.getKeyChar()=='r'){
@@ -490,59 +355,47 @@ public class Box2 implements GLEventListener,
             
         }
         
-        
-        if (e.getKeyChar()=='+'){
-            
-            view_scale=view_scale+0.1f;
-            
-        }
-        
-        if (e.getKeyChar()=='-'){
-            
-            view_scale=view_scale-0.1f;
-            
-        }
-        
         if(e.getKeyChar()=='1'){
             
-            selecting=!selecting;
-            if(selecting){
-                
-                view_scale_old=view_scale;
-                view_trax_old=view_trax;
-                view_tray_old=view_tray;
-                view_traz_old=view_traz;
-                view_rotx_old=view_rotx;
-                view_roty_old=view_roty;
-                
-                prepareCameraForSelection();
+            inicio = selected;
+            inicio_dt = selected_dt;
             
-            }
-            else{
-                
-                view_scale=view_scale_old;
-                view_trax=view_trax_old;
-                view_tray=view_tray_old;
-                view_traz=view_traz_old;
-                view_rotx=view_rotx_old;
-                view_roty=view_roty_old;
-                
-            }
+        }
+        
+        if(e.getKeyChar()=='2'){
+            
+            fin_dt = selected_dt;
+            fin = selected;
+            
+        }
+        
+        if(e.getKeyChar()=='3'){
+            
+            inicio = null;
+            inicio_dt = null;
+            fin = null;
+            fin_dt = null;
         }
         
     }
     public void keyReleased(KeyEvent e){}
     public void keyTyped(KeyEvent e){}
-
-
-    public void setView_trax(float i){
+    
+    
+    public Triangle3d getSelectedTriangle(){
         
-        
-        view_trax = i;
+        return selected;
         
     }
-
-
-
-
+    
+    public Triangle3d getInicio(){
+        
+        return inicio;
+        
+    }
+    
+    public Triangle3d getFin(){
+        
+        return fin;
+    }
 }
