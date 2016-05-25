@@ -316,8 +316,9 @@ public class Box2 implements GLEventListener,
             
         }
         
-        while (iterator.hasNext()) {
+        /*while (iterator.hasNext()) {
                 Triangle_dt curr = iterator.next();
+                
                 if (!curr.isHalfplane()) {
                     
                     Triangle3d t1 = new Triangle3d(curr);
@@ -331,7 +332,11 @@ public class Box2 implements GLEventListener,
                     triangle.drawObjectC(gl, (float)color.getX(), (float)color.getY(), (float)color.getZ());
                     
                 }
-        }
+        }*/
+        
+        Tin t = new Tin(dt);
+        DrawTin tin = new DrawTin(t);
+        tin.drawObjectMap(gl);
         
         selected = boxsky.getSelectedTriangle();
         if(selected!=null){
@@ -350,7 +355,9 @@ public class Box2 implements GLEventListener,
         fin = boxsky.getFin();
         if(fin!=null){
             
-            DrawTriangle3d selTriangle = new DrawTriangle3d(fin);
+            TriangleTin finTin = new TriangleTin(fin);
+            
+            DrawTriangle3d selTriangle = new DrawTriangle3d(finTin);
             selTriangle.drawObjectC(gl,1,1,0);
         }
         

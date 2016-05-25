@@ -250,11 +250,46 @@ public class BoxSky implements GLEventListener,
             DrawRay3d rou = new DrawRay3d(route);
             rou.drawObjectC(gl,0,0,1);
             
-            Vector<Triangle_dt> v1 = new Vector<Triangle_dt>();
-            v1 = dt.findTriangleNeighborhood(fin_dt, fin_dt.b);
-
+            /*Triangle_dt lado1 = dt.compartidoA1(fin_dt);
+            Triangle3d t = new Triangle3d(lado1);
+            t.toOrigin(Xmin, Xmax, Ymin, Ymax);
+            DrawTriangle3d tri = new DrawTriangle3d(t);
+            tri.drawWireObjectC(gl, 0,0,1);
             
-            for (int i=0;i<v1.size();i++){
+            Triangle_dt lado2 = dt.compartidoA2(fin_dt);
+            t = new Triangle3d(lado2);
+            t.toOrigin(Xmin, Xmax, Ymin, Ymax);
+            tri = new DrawTriangle3d(t);
+            tri.drawWireObjectC(gl, 0,0,1);
+            
+            Triangle_dt lado3 = dt.compartidoA3(fin_dt);
+            t = new Triangle3d(lado3);
+            t.toOrigin(Xmin, Xmax, Ymin, Ymax);
+            tri = new DrawTriangle3d(t);
+            tri.drawWireObjectC(gl, 0,0,1);*/
+            
+            /*Vector<Triangle_dt> v1 = new Vector<Triangle_dt>();
+            v1 = dt.findTriangleNeighborhood(fin_dt, fin_dt.b);
+            
+            Vector<Triangle_dt> v2 = new Vector<Triangle_dt>();
+            v2 = dt.findTriangleNeighborhood(fin_dt, fin_dt.a);
+
+            for (int i=0; i<v1.size();i++){
+                
+                for (int j=0; j<v2.size();j++){
+                    
+                    if (v1.get(i)==v2.get(j)){
+                        Triangle3d t = new Triangle3d(v1.get(i));
+                        t.toOrigin(Xmin, Xmax, Ymin, Ymax);
+                        DrawTriangle3d tri = new DrawTriangle3d(t);
+                        tri.drawWireObjectC(gl, 0,0,1);
+                        
+                    }
+                }
+                
+            }*/
+            
+            /*for (int i=0;i<v1.size();i++){
                 
                 Triangle3d t = new Triangle3d(v1.get(i));
                 t.toOrigin(Xmin, Xmax, Ymin, Ymax);
@@ -264,7 +299,7 @@ public class BoxSky implements GLEventListener,
                 
                 if(point[0]!=null){
                     
-                    point[0].out();
+                    
                     DrawVect3d punto = new DrawVect3d(point[0]);
                     punto.drawObjectC(gl, 1,1,1,3);
                     break;
@@ -273,7 +308,7 @@ public class BoxSky implements GLEventListener,
                 
                 DrawTriangle3d tri = new DrawTriangle3d(t);
                 tri.drawWireObjectC(gl, 0,0,1);
-            }
+            }*/
         }
 
         gl.glFlush();
