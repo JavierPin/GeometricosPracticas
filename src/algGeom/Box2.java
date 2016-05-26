@@ -75,9 +75,9 @@ public class Box2 implements GLEventListener,
     DrawTriangle3d triangle;
     DrawRay3d rayo;
     Cloud3d c;
-    Triangle3d inicio;
-    Triangle3d fin;
-    Triangle3d selected;
+    TriangleTin inicio;
+    TriangleTin fin;
+    TriangleTin selected;
     double Xmax, Xmin, Ymax, Ymin;
     Ray3d r;
     boolean selecting;
@@ -304,18 +304,6 @@ public class Box2 implements GLEventListener,
         Ymax=dt.delaunayYMax();
         Ymin=dt.delaunayYMin();
 
-        Iterator<Triangle_dt> iterator = dt.trianglesIterator();
-        
-        Vect3d cPos = new Vect3d(findCameraPosition());
-        Vect3d look = new Vect3d(findLookat());
-        look.z = look.z-100;
-        
-        if(selecting){
-            
-            r = new Ray3d(cPos, look);
-            DrawRay3d dr = new DrawRay3d(r);
-            
-        }
         
         TNetwork tin = new TNetwork(dt);
         DrawTin tintin = new DrawTin(tin);
@@ -323,33 +311,59 @@ public class Box2 implements GLEventListener,
         
         //dibujaVecinos(tin);
         
-        TriangleTin tOrig = tin.getTriangle(7800);
-        DrawTriangle3d triOrig = new DrawTriangle3d(tOrig);
+        //TriangleTin tOrig = tin.getTriangle(7800);
+        //DrawTriangle3d triOrig = new DrawTriangle3d(tOrig);
         //triOrig.drawObjectC(gl,1,0,1);
-        TriangleTin tDest = tin.getTriangle(7960);
+        //TriangleTin tDest = tin.getTriangle(7960);
         //dibuja(tDest);
         
+        try{
+            selected = new TriangleTin(boxsky.selected_dt);
+            selected.toOrigin(Xmin, Xmax, Ymin, Ymax);
+            selected = tin.busca(selected);
+            DrawTriangle3d select = new DrawTriangle3d(selected);
+            select.drawObjectC(gl, 0,1,1);
+        }catch(Exception e){
+            
+        }
+        try{
+            //Obtiene el triangulo desde el delaunay del canvas 2
+            //Lo traslada a coordenadas de la camara
+            //busca en el tin el triangulo equivalente
+            inicio = new TriangleTin(boxsky.inicio_dt);
+            inicio.toOrigin(Xmin, Xmax, Ymin, Ymax);
+            inicio = tin.busca(inicio);
+            
+            DrawTriangle3d select = new DrawTriangle3d(inicio);
+            select.drawObjectC(gl, 1,1,0);
+        }catch(Exception e){
+            
+        }
+        try{
+            fin = new TriangleTin(boxsky.fin_dt);
+            fin.toOrigin(Xmin, Xmax, Ymin, Ymax);
+            fin = tin.busca(fin);
+            
+            DrawTriangle3d select = new DrawTriangle3d(fin);
+            select.drawObjectC(gl, 1,1,0);
+            dibujaRuta(tin, inicio, fin);
+            
+        }catch(Exception e){
+            
+        }
+
+        gl.glFlush();
+        
+    }
+    
+    private void dibujaRuta(TNetwork tin, TriangleTin tOrig, TriangleTin tDest){
+        
         Ray3d rr = new Ray3d(tOrig.centroide(),tDest.centroide());
-        DrawRay3d rayo = new DrawRay3d(rr);
-        rayo.drawObjectC(gl, 1,0.5f,0);
         
-        /*TriangleTin t1 = tin.nextTriangleInRoute(gl, tOrig, rr);
-        dibuja(t1);
-        
-        
-        rr = new Ray3d(t1.centroide(),tDest.centroide());
-        TriangleTin t2 = tin.nextTriangleInRoute(gl, t1, rr);
-        dibuja(t2);
-        
-        rr = new Ray3d(t2.centroide(),tDest.centroide());
-        TriangleTin t3 = tin.nextTriangleInRoute(gl, t2, rr);
-        dibuja(t3);
-        
-        rr = new Ray3d(t3.centroide(),tDest.centroide());
-        TriangleTin t4 = tin.nextTriangleInRoute(gl, t3, rr);
-        dibuja(t4);*/
         
         Vector<TriangleTin> ruta = tin.route(tOrig, tDest, rr);
+        ruta.add(0, tOrig);
+        ruta.add(tDest);
         
         for (int i=0;i<ruta.size();i++){
             
@@ -358,8 +372,8 @@ public class Box2 implements GLEventListener,
             
         }
         
-        
-        gl.glFlush();
+        DrawSegment3d rayo = new DrawSegment3d(new Segment3d(rr.orig,rr.dest));
+        rayo.drawObjectC(gl, 1,0.5f,0);
         
     }
     
@@ -555,8 +569,6 @@ public class Box2 implements GLEventListener,
         
         if(e.getKeyChar()=='a'){
             view_trax+=10;
-            //b2.setView_trax(view_trax);
-            //aereo.update(null);
         }
         if (e.getKeyChar()=='d'){
             view_trax-=10;
@@ -598,34 +610,6 @@ public class Box2 implements GLEventListener,
             
             uuu++;
         }
-        
-        if(e.getKeyChar()=='1'){
-            
-            selecting=!selecting;
-            if(selecting){
-                
-                view_scale_old=view_scale;
-                view_trax_old=view_trax;
-                view_tray_old=view_tray;
-                view_traz_old=view_traz;
-                view_rotx_old=view_rotx;
-                view_roty_old=view_roty;
-                
-                prepareCameraForSelection();
-            
-            }
-            else{
-                
-                view_scale=view_scale_old;
-                view_trax=view_trax_old;
-                view_tray=view_tray_old;
-                view_traz=view_traz_old;
-                view_rotx=view_rotx_old;
-                view_roty=view_roty_old;
-                
-            }
-        }
-        
     }
     public void keyReleased(KeyEvent e){}
     public void keyTyped(KeyEvent e){}

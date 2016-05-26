@@ -33,27 +33,24 @@ public class BoxSky implements GLEventListener,
     GLU glu;
     GL gl;
     //scaling the scene
-    private float view_scale = 1.0f;
+    private final float view_scale = 1.0f;
     // translate the scene
     private float view_trax = 0.0f;
     private float view_tray = 0.0f;
     private float view_traz = 0.0f;
     // rotating the scene
-    private float view_rotx = 0.0f; //20
-    private float view_roty = 0.0f; //30
+    private final float view_rotx = 0.0f; //20
+    private final float view_roty = 0.0f; //30
     
-    private float view_scale_old = 1.0f;
+    private final float view_scale_old = 1.0f;
     // translate the scene
-    private float view_trax_old = 0.0f;
-    private float view_tray_old = 0.0f;
-    private float view_traz_old = 0.0f;
+    private final float view_trax_old = 0.0f;
+    private final float view_tray_old = 0.0f;
+    private final float view_traz_old = 0.0f;
     // rotating the scene
-    private float view_rotx_old = 0.0f; //20
-    private float view_roty_old = 0.0f; //30
+    private final float view_rotx_old = 0.0f; //20
+    private final float view_roty_old = 0.0f; //30
     
-    // remember last mouse position
-    private int oldMouseX;
-    private int oldMouseY;
     //static int HEIGHT = 800, WIDTH = 800;
     static int HEIGHT = 100000, WIDTH = 100000;
     static Animator animator;
@@ -88,6 +85,7 @@ public class BoxSky implements GLEventListener,
         
     }
     
+    @Override
     public void init(GLAutoDrawable drawable)
     {
         Xmax=0;
@@ -95,17 +93,17 @@ public class BoxSky implements GLEventListener,
         Ymax=0;
         Ymin=0;
         
-        GL gl = drawable.getGL();
+        GL gg = drawable.getGL();
         glu = new GLU();
         
         // Set backgroundcolor and shading mode
-        gl.glClearColor(1.0f, 1.0f, 1.0f, 0.0f); //Como que duele un poco en blanco
+        gg.glClearColor(1.0f, 1.0f, 1.0f, 0.0f); //Como que duele un poco en blanco
         //gl.glClearColor(0.0f, 0.0f, 0.0f, 0.0f); //En negro no duele tanto
-        gl.glShadeModel(GL.GL_FLAT);
+        gg.glShadeModel(GL.GL_FLAT);
         
-        gl.glEnable(GL.GL_POINT_SMOOTH );
-        gl.glEnable(GL.GL_LINE_SMOOTH);
-        gl.glEnable(GL.GL_POLYGON_SMOOTH);
+        gg.glEnable(GL.GL_POINT_SMOOTH );
+        gg.glEnable(GL.GL_LINE_SMOOTH);
+        gg.glEnable(GL.GL_POLYGON_SMOOTH);
         
         drawable.addKeyListener(this);
         
@@ -115,24 +113,25 @@ public class BoxSky implements GLEventListener,
 
     }
     
+    @Override
     public void reshape(GLAutoDrawable drawable, 
                         int x, int y, int width, int height)
     {
 	WIDTH = width; // new width and height saved
         HEIGHT = height;
 
-        GL gl = drawable.getGL();
-        GLU glu = new GLU();
+        GL gg = drawable.getGL();
+        GLU gglu = new GLU();
         if (height <= 0) // no divide by zero
             height = 1;
         // keep ratio
         final float h = (float) width / (float) height;
-        gl.glViewport(0, 0, width, height);
-        gl.glMatrixMode(GL.GL_PROJECTION);
-        gl.glLoadIdentity();
-        glu.gluPerspective(45.0f, h, 0.1, BasicGeom.INFINITO);
-        gl.glMatrixMode(GL.GL_MODELVIEW);
-        gl.glLoadIdentity();
+        gg.glViewport(0, 0, width, height);
+        gg.glMatrixMode(GL.GL_PROJECTION);
+        gg.glLoadIdentity();
+        gglu.gluPerspective(45.0f, h, 0.1, BasicGeom.INFINITO);
+        gg.glMatrixMode(GL.GL_MODELVIEW);
+        gg.glLoadIdentity();
         
         
     }
@@ -237,79 +236,31 @@ public class BoxSky implements GLEventListener,
             i++;
         }
         
-        if(selected!=null){
-            
+        try{
             DrawTriangle3d selTriangle = new DrawTriangle3d(selected);
             selTriangle.drawObjectC(gl,0,1,1);
         }
+        catch(Exception e){}
         
+        try{
+            DrawTriangle3d init = new DrawTriangle3d(inicio);
+            init.drawObjectC(gl, 1,1,0); 
+        }
+        catch(Exception e){}
         
-        
+        try{
+            DrawTriangle3d init = new DrawTriangle3d(fin);
+            init.drawObjectC(gl, 1,1,0);
+        }
+        catch(Exception e){}
+
         if(inicio_dt!=null && fin_dt!=null){
             
             Ray3d route = new Ray3d(inicio.centroide(),fin.centroide());
-            DrawRay3d rou = new DrawRay3d(route);
+            DrawSegment3d rou = new DrawSegment3d(new Segment3d(route.orig,route.dest));
             rou.drawObjectC(gl,0,0,1);
             
-            /*Triangle_dt lado1 = dt.compartidoA1(fin_dt);
-            Triangle3d t = new Triangle3d(lado1);
-            t.toOrigin(Xmin, Xmax, Ymin, Ymax);
-            DrawTriangle3d tri = new DrawTriangle3d(t);
-            tri.drawWireObjectC(gl, 0,0,1);
-            
-            Triangle_dt lado2 = dt.compartidoA2(fin_dt);
-            t = new Triangle3d(lado2);
-            t.toOrigin(Xmin, Xmax, Ymin, Ymax);
-            tri = new DrawTriangle3d(t);
-            tri.drawWireObjectC(gl, 0,0,1);
-            
-            Triangle_dt lado3 = dt.compartidoA3(fin_dt);
-            t = new Triangle3d(lado3);
-            t.toOrigin(Xmin, Xmax, Ymin, Ymax);
-            tri = new DrawTriangle3d(t);
-            tri.drawWireObjectC(gl, 0,0,1);*/
-            
-            /*Vector<Triangle_dt> v1 = new Vector<Triangle_dt>();
-            v1 = dt.findTriangleNeighborhood(fin_dt, fin_dt.b);
-            
-            Vector<Triangle_dt> v2 = new Vector<Triangle_dt>();
-            v2 = dt.findTriangleNeighborhood(fin_dt, fin_dt.a);
 
-            for (int i=0; i<v1.size();i++){
-                
-                for (int j=0; j<v2.size();j++){
-                    
-                    if (v1.get(i)==v2.get(j)){
-                        Triangle3d t = new Triangle3d(v1.get(i));
-                        t.toOrigin(Xmin, Xmax, Ymin, Ymax);
-                        DrawTriangle3d tri = new DrawTriangle3d(t);
-                        tri.drawWireObjectC(gl, 0,0,1);
-                        
-                    }
-                }
-                
-            }*/
-            
-            /*for (int i=0;i<v1.size();i++){
-                
-                Triangle3d t = new Triangle3d(v1.get(i));
-                t.toOrigin(Xmin, Xmax, Ymin, Ymax);
-                
-                Vect3d[] point = new Vect3d[1];
-                t.RayTriangle3d(route, point);
-                
-                if(point[0]!=null){
-                    
-                    
-                    DrawVect3d punto = new DrawVect3d(point[0]);
-                    punto.drawObjectC(gl, 1,1,1,3);
-                    break;
-                    
-                }
-                
-                DrawTriangle3d tri = new DrawTriangle3d(t);
-                tri.drawWireObjectC(gl, 0,0,1);
-            }*/
         }
 
         gl.glFlush();
@@ -395,6 +346,7 @@ public class BoxSky implements GLEventListener,
             
             inicio = selected;
             inicio_dt = selected_dt;
+            
             
         }
         

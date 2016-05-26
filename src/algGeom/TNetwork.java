@@ -159,6 +159,7 @@ public class TNetwork {
         return ttt;
     }
     
+    /**Devuelve verdadero si los dos triangulos son iguales*/
     private boolean isEqual(TriangleTin m, TriangleTin n){
         
         if(n.a1.orig.x==m.a1.orig.x){
@@ -191,7 +192,8 @@ public class TNetwork {
         return false;
     }
     
-    private TriangleTin busca(TriangleTin n){
+    /**Devuelve el triangulo del tin equivalente al triangulo n*/
+    public TriangleTin busca(TriangleTin n){
         
         
         for (int i=0;i<triangulos.size();i++){
