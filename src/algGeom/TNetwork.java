@@ -15,7 +15,7 @@ public class TNetwork {
     public double ZMin;
     public double ZMax;
     
-    Delaunay_Triangulation triangulation;
+    Delaunay_Triangulation triangulation = new Delaunay_Triangulation();
     
     public TNetwork(Delaunay_Triangulation dtri){
         
@@ -40,47 +40,71 @@ public class TNetwork {
             Triangle_dt tri = triangulation.getTriangleAt(i);
 
             if(!tri.isHalfplane() && tri!=null){
-
-                //System.out.println(tri.c.z);
                 
                 TriangleTin p = new TriangleTin(dtri.getTriangleAt(i));
+                
                 aristas.add(p.a1);
                 p.a1.tIzq=p;
-
+                try{
+                    p.a1.tDer=new TriangleTin(tri.next_12());
+                    p.a1.tDer.toOrigin(XMin, XMax, YMin, YMax);
+                } catch (Exception e) {
+                    p.a1.tDer=p;
+                }
+                
                 aristas.add(p.a2);
                 p.a2.tIzq=p;
+                try{
+                    p.a2.tDer=new TriangleTin(tri.next_23());
+                    p.a2.tDer.toOrigin(XMin, XMax, YMin, YMax);
+                } catch (Exception e) {
+                    p.a2.tDer=p;
+                }
 
                 aristas.add(p.a3);
                 p.a3.tIzq=p;
-                
+                try{
+                    p.a3.tDer=new TriangleTin(tri.next_31());
+                    p.a3.tDer.toOrigin(XMin, XMax, YMin, YMax);
+                } catch (Exception e) {
+                    p.a3.tDer=p;
+                }
+
                 p.toOrigin(XMin, XMax, YMin, YMax);
-                
+
                 triangulos.add(p);
-                
-                //contador++;
+ 
             }
-        }
-        
-        //System.out.println("Contador = "+contador);
-          
-        asignaTrianguloDerecha();
-        
+        }        
         
     }
     
     public void asignaTrianguloDerecha(){
+        int contador = 0;
         
         for(int i=0; i<aristas.size();i++){
             
             Segment3d arista = aristas.get(i);
+            
+            
+            
             try{
-                arista.tDer = new TriangleTin(triangulation.compartido(new Triangle_dt(arista.tIzq), arista));
+                Triangle_dt dtTri = new Triangle_dt(arista.tIzq);
+                arista.tDer = new TriangleTin(dtTri.next_12());
             } catch (Exception e) {
                 //System.out.println("ta ta taaa, ta taaaa");
+                contador++;
             }
             
         }
-
+        
+        System.out.println("Aristas no tomadas: "+contador+"/"+aristas.size());
+    }
+    
+    public TriangleTin getTriangle(int i){
+        
+        return triangulos.get(i);
+        
     }
     
 }

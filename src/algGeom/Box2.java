@@ -82,6 +82,7 @@ public class Box2 implements GLEventListener,
     Ray3d r;
     boolean selecting;
     static BoxSky boxsky;
+    int uuu=0;
   
     
     public static void main(String[] args) {
@@ -316,77 +317,52 @@ public class Box2 implements GLEventListener,
             
         }
         
-        /*while (iterator.hasNext()) {
-                Triangle_dt curr = iterator.next();
-                
-                if (!curr.isHalfplane()) {
-                    
-                    Triangle3d t1 = new Triangle3d(curr);
-                    t1.toOrigin(Xmin, Xmax, Ymin, Ymax);
-
-                    DrawTriangle3d triangle = new DrawTriangle3d(t1);
-                   
-                    //triangle.drawObjectC(gl, 0,0,0);
-                    
-                    Vect3d color = colorAltura(t1,dt.delaunayZMin(),dt.delaunayZMax());
-                    triangle.drawObjectC(gl, (float)color.getX(), (float)color.getY(), (float)color.getZ());
-                    
-                }
-        }*/
-        
-        //System.out.println(dt._triangles.size());
-        
         TNetwork tin = new TNetwork(dt);
         DrawTin tintin = new DrawTin(tin);
         tintin.drawObjectMap(gl);
         
-        //Tin t = new Tin(dt);
-        //DrawTin tin = new DrawTin(t);
-        //tin.drawObjectMap(gl);
-        
-        //Seleccionamos triangulo inicio y triangulo final. De momento a fuego
-        /*TriangleTin tTin1 = new TriangleTin(t.getTriangle(7400));
-        DrawTriangle3d prueba = new DrawTriangle3d(tTin1);
-        prueba.drawObjectC(gl, 0,0,1);
-        
-        TriangleTin tTin2 = new TriangleTin(t.getTriangle(3300));
-        prueba = new DrawTriangle3d(tTin2);
-        prueba.drawObjectC(gl, 0,0,1);
-        
-        Ray3d rr = new Ray3d(tTin1.centroide(),tTin2.centroide());
-        DrawRay3d rayo = new DrawRay3d (rr);
-        rayo.drawObjectC(gl, 0,1,1);*/
-
-        
-        /*TriangleTin tTinTin = new TriangleTin(t.getTriangle(7722));
-        prueba = new DrawTriangle3d(tTinTin);
-        prueba.drawObjectC(gl, 1,0,1);*/
-
-        //comprobacion de triangulo nulo
-        /*for (int i=0;i<t.triangulos.size();i++){
-            
-            if (t.triangulos.get(i) == null ||
-                    t.triangulos.get(i).a1.tDer == null ||
-                    t.triangulos.get(i).a1.tIzq == null ||
-                    t.triangulos.get(i).a2.tDer == null ||
-                    t.triangulos.get(i).a2.tIzq == null ||
-                    t.triangulos.get(i).a3.tDer == null ||
-                    t.triangulos.get(i).a3.tIzq == null ) System.out.println("error");
-        }*/
-        
-        /*Vector<TriangleTin> ruta = t.route(gl, tTin1, tTin2, rr);
-        
-        for (int i=0;i<ruta.size();i++){
-            
-            if(ruta.get(i)!=null){
-                DrawTriangle3d dT = new DrawTriangle3d(ruta.get(i));
-                dT.drawObjectC(gl, 1,0,1);
-            }
-        }*/
-        
+        dibujaVecinos(tin);
         
         gl.glFlush();
         
+    }
+    
+    private void dibujaVecinos(TNetwork tin){
+        
+        TriangleTin selec = null;
+        try{
+            selec = new TriangleTin(tin.getTriangle(uuu));
+            DrawTriangle3d azul = new DrawTriangle3d(selec);
+            azul.drawObjectC(gl, 1,1,1);
+        }
+        catch(Exception e){
+            System.out.println("el triangulo no existe");
+        }
+        try{
+            TriangleTin a1der = selec.a1.tDer;
+            DrawTriangle3d yellow = new DrawTriangle3d(a1der);
+            yellow.drawObjectC(gl, 1,1,0);
+            
+        }
+        catch(Exception e){
+            System.out.println("el triangulo derecha de a1 no existe");
+        }
+        try{
+            TriangleTin a2der = selec.a2.tDer;
+            DrawTriangle3d pink = new DrawTriangle3d(a2der);
+            pink.drawObjectC(gl, 1,0,1);
+        }
+        catch(Exception e){
+            System.out.println("el triangulo derecha de a2 no existe");
+        }
+        try{
+            TriangleTin a3der = selec.a3.tDer;
+            DrawTriangle3d miniblue = new DrawTriangle3d(a3der);
+            miniblue.drawObjectC(gl, 0,1,1);
+        }
+        catch(Exception e){
+            System.out.println("el triangulo derecha de a3 no existe");
+        }
     }
     
     private Vect3d findCameraPosition(){
@@ -531,6 +507,11 @@ public class Box2 implements GLEventListener,
             
             view_scale=view_scale-0.1f;
             
+        }
+        
+        if(e.getKeyChar()=='0'){
+            
+            uuu++;
         }
         
         if(e.getKeyChar()=='1'){
