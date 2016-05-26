@@ -1,11 +1,14 @@
 package algGeom;
+import java.util.ArrayList;
 import java.util.Vector;
 import javax.media.opengl.GL;
 
 public class DrawTin {
     
     Tin tin;
+    TNetwork tnet;
     Vector<TriangleTin> triangulos;
+    ArrayList<TriangleTin> arraytriangulos = new ArrayList<TriangleTin>();
     
     public DrawTin(Tin t){
         
@@ -13,30 +16,36 @@ public class DrawTin {
         triangulos = tin.triangulos;
         
     }
+    
+    public DrawTin(TNetwork t){
+        
+        tnet=t;
+        arraytriangulos = tnet.triangulos;
+    }
 
     public void drawObject(GL g){
-        for (int i=0;i<triangulos.size();i++){
+        for (int i=0;i<arraytriangulos.size();i++){
             
-            DrawTriangle3d tri = new DrawTriangle3d(triangulos.get(i));
+            DrawTriangle3d tri = new DrawTriangle3d(arraytriangulos.get(i));
             tri.drawObject(g);
         }
     }
     
     public void drawObjectC(GL g, float R, float G, float B){
-        for (int i=0;i<triangulos.size();i++){
+        for (int i=0;i<arraytriangulos.size();i++){
             
-            DrawTriangle3d tri = new DrawTriangle3d(triangulos.get(i));
+            DrawTriangle3d tri = new DrawTriangle3d(arraytriangulos.get(i));
             tri.drawObjectC(g,R,G,B);
         }
     }
     
     public void drawObjectMap(GL g){
         
-        for (int i=0;i<triangulos.size();i++){
+        for (int i=0;i<arraytriangulos.size();i++){
             
-            Vect3d color = colorAltura(triangulos.get(i),tin.ZMin, tin.ZMax);
+            Vect3d color = colorAltura(arraytriangulos.get(i),tnet.ZMin, tnet.ZMax);
             
-            DrawTriangle3d tri = new DrawTriangle3d(triangulos.get(i));
+            DrawTriangle3d tri = new DrawTriangle3d(arraytriangulos.get(i));
             tri.drawObjectC(g,(float)color.getX(), (float)color.getY(), (float)color.getZ());
         }
         

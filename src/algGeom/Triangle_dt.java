@@ -52,6 +52,14 @@ public class Triangle_dt {
 		halfplane=true;
 //		_id = _counter++;
 	}
+        
+        public Triangle_dt(TriangleTin t){
+            
+            a=new Point_dt(t.a1.orig);
+            b=new Point_dt(t.a2.orig);
+            c=new Point_dt(t.a3.orig);
+        }
+        
 /*	protected void finalize() throws Throwable{
 		super.finalize();
 		_counter--;

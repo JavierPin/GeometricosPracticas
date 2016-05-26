@@ -334,12 +334,18 @@ public class Box2 implements GLEventListener,
                 }
         }*/
         
-        Tin t = new Tin(dt);
-        DrawTin tin = new DrawTin(t);
-        tin.drawObjectMap(gl);
+        //System.out.println(dt._triangles.size());
+        
+        TNetwork tin = new TNetwork(dt);
+        DrawTin tintin = new DrawTin(tin);
+        tintin.drawObjectMap(gl);
+        
+        //Tin t = new Tin(dt);
+        //DrawTin tin = new DrawTin(t);
+        //tin.drawObjectMap(gl);
         
         //Seleccionamos triangulo inicio y triangulo final. De momento a fuego
-        TriangleTin tTin1 = new TriangleTin(t.getTriangle(7400));
+        /*TriangleTin tTin1 = new TriangleTin(t.getTriangle(7400));
         DrawTriangle3d prueba = new DrawTriangle3d(tTin1);
         prueba.drawObjectC(gl, 0,0,1);
         
@@ -349,7 +355,7 @@ public class Box2 implements GLEventListener,
         
         Ray3d rr = new Ray3d(tTin1.centroide(),tTin2.centroide());
         DrawRay3d rayo = new DrawRay3d (rr);
-        rayo.drawObjectC(gl, 0,1,1);
+        rayo.drawObjectC(gl, 0,1,1);*/
 
         
         /*TriangleTin tTinTin = new TriangleTin(t.getTriangle(7722));
@@ -368,7 +374,7 @@ public class Box2 implements GLEventListener,
                     t.triangulos.get(i).a3.tIzq == null ) System.out.println("error");
         }*/
         
-        Vector<TriangleTin> ruta = t.route(gl, tTin1, tTin2, rr);
+        /*Vector<TriangleTin> ruta = t.route(gl, tTin1, tTin2, rr);
         
         for (int i=0;i<ruta.size();i++){
             
@@ -376,7 +382,7 @@ public class Box2 implements GLEventListener,
                 DrawTriangle3d dT = new DrawTriangle3d(ruta.get(i));
                 dT.drawObjectC(gl, 1,0,1);
             }
-        }
+        }*/
         
         
         gl.glFlush();

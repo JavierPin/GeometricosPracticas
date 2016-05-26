@@ -16,6 +16,14 @@ public class Point_dt {
 	public Point_dt() {
 		this (0,0);
 	}
+        
+        public Point_dt(Vect3d v){
+            
+            x=v.x;
+            y=v.y;
+            z=v.z;
+            
+        }
 
 	/** 
 	 * constructs a 3D point 

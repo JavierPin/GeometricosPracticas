@@ -64,7 +64,7 @@ public class Delaunay_Triangulation {
 	private int nPoints = 0; // number of points
 	// additional data 4/8/05 used by the iterators
 	private Set<Point_dt> _vertices;
-	private Vector<Triangle_dt> _triangles;
+	public Vector<Triangle_dt> _triangles;
 	
 	// The triangles that were deleted in the last deletePoint iteration.
 	private Vector<Triangle_dt> deletedTriangles;

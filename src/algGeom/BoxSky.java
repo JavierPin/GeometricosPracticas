@@ -231,7 +231,7 @@ public class BoxSky implements GLEventListener,
 
                     selected = t1;
                     selected_dt = curr;
-                    System.out.println(i);
+                    //System.out.println(i);
                 }
             }
             i++;
