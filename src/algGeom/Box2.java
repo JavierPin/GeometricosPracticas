@@ -308,7 +308,9 @@ public class Box2 implements GLEventListener,
             
             //profile.addLine(new Segment3d(ruta.get(i).centroideAltura(),ruta.get(i+1).centroideAltura()));
             
-            alturas.add(new Vect3d(i*500,ruta.get(i).centroideAltura().y,0));
+            alturas.add(new Vect3d(ruta.get(i).centroide().x,ruta.get(i).centroide().z,ruta.get(i).centroide().y));
+            DrawVect3d v = new DrawVect3d(new Vect3d(ruta.get(i).centroide().x, 0,ruta.get(i).centroide().z));
+            v.drawObjectC(gl, 1,0,0,2);
             
         }
         

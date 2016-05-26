@@ -62,7 +62,7 @@ public class TerrainProfile implements GLEventListener,
         glu = new GLU();
         
         // Set backgroundcolor and shading mode
-        gg.glClearColor(0.0f, 0.0f, 0.0f, 0.0f); //Como que duele un poco en blanco
+        gg.glClearColor(0.3f, 0.0f, 0.0f, 0.0f); //Como que duele un poco en blanco
         //gl.glClearColor(0.0f, 0.0f, 0.0f, 0.0f); //En negro no duele tanto
         gg.glShadeModel(GL.GL_FLAT);
         
