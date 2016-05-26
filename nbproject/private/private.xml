@@ -5,8 +5,7 @@
         <group>
             <file>file:/C:/Git/src/algGeom/Box2.java</file>
             <file>file:/C:/Git/src/algGeom/Tin.java</file>
-            <file>file:/C:/Git/src/algGeom/BasicGeom.java</file>
-            <file>file:/C:/Git/src/algGeom/BoxSky.java</file>
+            <file>file:/C:/Git/src/algGeom/Delaunay_Triangulation.java</file>
         </group>
     </open-files>
 </project-private>

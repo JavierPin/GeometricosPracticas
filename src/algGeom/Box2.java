@@ -343,7 +343,7 @@ public class Box2 implements GLEventListener,
         DrawTriangle3d prueba = new DrawTriangle3d(tTin1);
         prueba.drawObjectC(gl, 0,0,1);
         
-        TriangleTin tTin2 = new TriangleTin(t.getTriangle(6300));
+        TriangleTin tTin2 = new TriangleTin(t.getTriangle(3300));
         prueba = new DrawTriangle3d(tTin2);
         prueba.drawObjectC(gl, 0,0,1);
         
@@ -352,9 +352,9 @@ public class Box2 implements GLEventListener,
         rayo.drawObjectC(gl, 0,1,1);
 
         
-        TriangleTin tTinTin = new TriangleTin(t.getTriangle(7722));
+        /*TriangleTin tTinTin = new TriangleTin(t.getTriangle(7722));
         prueba = new DrawTriangle3d(tTinTin);
-        prueba.drawObjectC(gl, 1,0,1);
+        prueba.drawObjectC(gl, 1,0,1);*/
 
         //comprobacion de triangulo nulo
         /*for (int i=0;i<t.triangulos.size();i++){
@@ -368,7 +368,7 @@ public class Box2 implements GLEventListener,
                     t.triangulos.get(i).a3.tIzq == null ) System.out.println("error");
         }*/
         
-        /*Vector<TriangleTin> ruta = t.route(gl, tTin1, tTin2, rr);
+        Vector<TriangleTin> ruta = t.route(gl, tTin1, tTin2, rr);
         
         for (int i=0;i<ruta.size();i++){
             
@@ -376,7 +376,7 @@ public class Box2 implements GLEventListener,
                 DrawTriangle3d dT = new DrawTriangle3d(ruta.get(i));
                 dT.drawObjectC(gl, 1,0,1);
             }
-        }*/
+        }
         
         
         gl.glFlush();

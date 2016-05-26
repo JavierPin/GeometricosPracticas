@@ -141,47 +141,47 @@ public class Tin {
         
         
         algGeom.Vector punto = new algGeom.Vector();
-        Vector<algGeom.Vector> puntos = new Vector<algGeom.Vector>(0);
+//        Vector<algGeom.Vector> puntos = new Vector<algGeom.Vector>(0);
+//        
+//        if (rayo.intersecta(s1, punto)){
+//            puntos.add(punto);
+//        }
+//        else{
+//            puntos.add(new algGeom.Vector(-BasicGeom.INFINITO,-BasicGeom.INFINITO));
+//        }
+//        
+//        if (rayo.intersecta(s2, punto)){
+//            puntos.add(punto);
+//        }
+//        else{
+//            puntos.add(new algGeom.Vector(-BasicGeom.INFINITO,-BasicGeom.INFINITO));
+//        }
+//        
+//        if (rayo.intersecta(s3, punto)){
+//            puntos.add(punto);
+//        }
+//        else{
+//            puntos.add(new algGeom.Vector(-BasicGeom.INFINITO,-BasicGeom.INFINITO));
+//        }
+//        
+//        if(puntos.get(0).distancia(rayo.b) > puntos.get(1).distancia(rayo.b) && puntos.get(0).distancia(rayo.b) > puntos.get(2).distancia(rayo.b)){
+//            
+//            return ttt.a1.tDer;
+//            
+//        }
+//        else{
+//            
+//            if(puntos.get(1).distancia(rayo.b)>puntos.get(2).distancia(rayo.b)){
+//                
+//                return ttt.a2.tDer;
+//                
+//            }
+//            
+//            return ttt.a3.tDer;
+//            
+//        }
         
-        if (rayo.intersecta(s1, punto)){
-            puntos.add(punto);
-        }
-        else{
-            puntos.add(new algGeom.Vector(-BasicGeom.INFINITO,-BasicGeom.INFINITO));
-        }
-        
-        if (rayo.intersecta(s2, punto)){
-            puntos.add(punto);
-        }
-        else{
-            puntos.add(new algGeom.Vector(-BasicGeom.INFINITO,-BasicGeom.INFINITO));
-        }
-        
-        if (rayo.intersecta(s3, punto)){
-            puntos.add(punto);
-        }
-        else{
-            puntos.add(new algGeom.Vector(-BasicGeom.INFINITO,-BasicGeom.INFINITO));
-        }
-        
-        if(puntos.get(0).distancia(rayo.b) > puntos.get(1).distancia(rayo.b) && puntos.get(0).distancia(rayo.b) > puntos.get(2).distancia(rayo.b)){
-            
-            return ttt.a1.tDer;
-            
-        }
-        else{
-            
-            if(puntos.get(1).distancia(rayo.b)>puntos.get(2).distancia(rayo.b)){
-                
-                return ttt.a2.tDer;
-                
-            }
-            
-            return ttt.a3.tDer;
-            
-        }
-        
-        /*if (rayo.intersecta(s1, punto) && ttt.a1.tDer!=ttt){
+        if (rayo.intersecta(s1, punto) && ttt.a1.tDer!=ttt){
             if(first){
                 DrawSegment3d s = new DrawSegment3d(new Segment3d(new Vect3d(v1.x,v1.y,0),new Vect3d(v2.x,v2.y,0)));
                 s.drawObjectC(g, 1,1,0);
@@ -216,7 +216,7 @@ public class Tin {
         }
 
         
-        return ttt;*/
+        return ttt;
     }
     
     public TriangleTin getTriangle(int i){
