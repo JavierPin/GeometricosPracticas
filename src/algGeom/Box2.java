@@ -1,13 +1,9 @@
 package algGeom;
 
 import com.sun.opengl.util.Animator;
-import java.awt.BorderLayout;
 import java.awt.Dimension;
-import java.awt.Frame;
-import java.awt.FlowLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
-import java.awt.GridLayout;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseWheelListener;
@@ -17,9 +13,6 @@ import java.awt.event.MouseMotionListener;
 import java.awt.event.MouseWheelEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.media.opengl.GL;
@@ -28,7 +21,6 @@ import javax.media.opengl.GLCanvas;
 import javax.media.opengl.GLEventListener;
 import javax.media.opengl.glu.GLU;
 import java.util.Vector;
-import javax.swing.JButton;
 import javax.swing.JFrame;
 
 
@@ -82,6 +74,7 @@ public class Box2 implements GLEventListener,
     Ray3d r;
     boolean selecting;
     static BoxSky boxsky;
+    static TerrainProfile profile;
     int uuu=0;
   
     
@@ -93,6 +86,7 @@ public class Box2 implements GLEventListener,
     	Draw.FONDO = 100;
 
         boxsky=new BoxSky();
+        profile=new TerrainProfile();
         
         GLCanvas canvas = new GLCanvas();
         canvas.addGLEventListener(new Box2());
@@ -103,11 +97,11 @@ public class Box2 implements GLEventListener,
         aereo.setSize(350,270);
         
         GLCanvas perfil = new GLCanvas();
-        //perfil.addEventListener();
-        perfil.setSize(350,170);
+        perfil.addGLEventListener(profile);
+        perfil.setSize(390,270);
     			
         JFrame frame = new JFrame("Libreria 3D");
-        //FlowLayout layout = new FlowLayout();      
+ 
         GridBagLayout layout = new GridBagLayout();
         frame.setLayout(layout);
         
@@ -143,16 +137,6 @@ public class Box2 implements GLEventListener,
         constraints.fill = GridBagConstraints.BOTH;
         frame.add(perfil, constraints);
         
-        /*constraints.gridx = 4;
-        constraints.gridy = 3;
-        constraints.gridwidth = 1;
-        constraints.gridheight = 1;
-        constraints.weightx = 0.0;
-        constraints.weighty = 0.0;
-        constraints.anchor = GridBagConstraints.CENTER;
-        constraints.fill = GridBagConstraints.BOTH;
-        frame.add(new JButton("Modo seleccion"), constraints);*/
-        
         animator1 = new Animator(canvas);
         animator2 = new Animator(aereo);
         animator3 = new Animator(perfil);
@@ -181,7 +165,7 @@ public class Box2 implements GLEventListener,
         frame.setVisible(true);
         animator1.start();
         animator2.start();
-        
+        animator3.start();
     }
     
     public void init(GLAutoDrawable drawable)
@@ -193,21 +177,19 @@ public class Box2 implements GLEventListener,
         
         GL gl = drawable.getGL();
         glu = new GLU();
-        
-        // Set backgroundcolor and shading mode
-        gl.glClearColor(1.0f, 1.0f, 1.0f, 0.0f); //Como que duele un poco en blanco
-        //gl.glClearColor(0.0f, 0.0f, 0.0f, 0.0f); //En negro no duele tanto
+
+        gl.glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
         gl.glShadeModel(GL.GL_FLAT);
         
         gl.glEnable(GL.GL_POINT_SMOOTH );
         gl.glEnable(GL.GL_LINE_SMOOTH);
         gl.glEnable(GL.GL_POLYGON_SMOOTH);
-        
+        gl.glEnable(GL.GL_BLEND);
+        gl.glBlendFunc(GL.GL_SRC_ALPHA, GL.GL_ONE_MINUS_SRC_ALPHA);
         
         drawable.addMouseListener(this);
         drawable.addMouseMotionListener(this);
         drawable.addKeyListener(this);
-        
         drawable.addMouseWheelListener(this);
         
         selecting=false;
@@ -256,40 +238,7 @@ public class Box2 implements GLEventListener,
         gl.glRotatef(view_rotx, 1.0f, 0.0f, 0.0f);
         gl.glRotatef(view_roty, 0.0f, 1.0f, 0.0f);
 
-
-        //Dibujar los ejes y los planos de cada eje
-        //Ejes
-        DrawAxis3d axis = new DrawAxis3d();
-        axis.drawColoredObject(gl);
         
-        
-        //Planos
-        Vect3d xInf,yInf,zInf;
-        xInf= new Vect3d(100,0,0);
-        yInf= new Vect3d(0,100,0);
-        zInf= new Vect3d(0,0,0);
-         
-        Plane pEje = new Plane(xInf,yInf,zInf,true);
-        DrawPlane dpEje= new DrawPlane(pEje);
-        dpEje.drawObjectC(gl ,0.0f, 1.0f, 0.0f, 0.3f);
-         
-        xInf= new Vect3d(100,0,0);
-        yInf= new Vect3d(0,0,0);
-        zInf= new Vect3d(0,0,100);
-         
-        pEje = new Plane(xInf,yInf,zInf,true);
-        dpEje= new DrawPlane(pEje);
-        dpEje.drawObjectC(gl ,1.0f, 0.0f, 0.0f, 0.3f);
-        
-        xInf= new Vect3d(0,0,0);
-        yInf= new Vect3d(0,100,0);
-        zInf= new Vect3d(0,0,100);
-        
-        pEje = new Plane(xInf,yInf,zInf,true);
-        dpEje= new DrawPlane(pEje);
-        dpEje.drawObjectC(gl ,0.0f, 0.0f, 1.0f, 0.3f);
-        
-        //Practica 5:
         Delaunay_Triangulation dt = null;
 
         try {
@@ -309,13 +258,6 @@ public class Box2 implements GLEventListener,
         DrawTin tintin = new DrawTin(tin);
         tintin.drawObjectMap(gl);
         
-        //dibujaVecinos(tin);
-        
-        //TriangleTin tOrig = tin.getTriangle(7800);
-        //DrawTriangle3d triOrig = new DrawTriangle3d(tOrig);
-        //triOrig.drawObjectC(gl,1,0,1);
-        //TriangleTin tDest = tin.getTriangle(7960);
-        //dibuja(tDest);
         
         try{
             selected = new TriangleTin(boxsky.selected_dt);
@@ -323,9 +265,8 @@ public class Box2 implements GLEventListener,
             selected = tin.busca(selected);
             DrawTriangle3d select = new DrawTriangle3d(selected);
             select.drawObjectC(gl, 0,1,1);
-        }catch(Exception e){
-            
-        }
+        }catch(Exception e){}
+        
         try{
             //Obtiene el triangulo desde el delaunay del canvas 2
             //Lo traslada a coordenadas de la camara
@@ -336,9 +277,8 @@ public class Box2 implements GLEventListener,
             
             DrawTriangle3d select = new DrawTriangle3d(inicio);
             select.drawObjectC(gl, 1,1,0);
-        }catch(Exception e){
-            
-        }
+        }catch(Exception e){}
+        
         try{
             fin = new TriangleTin(boxsky.fin_dt);
             fin.toOrigin(Xmin, Xmax, Ymin, Ymax);
@@ -347,10 +287,8 @@ public class Box2 implements GLEventListener,
             DrawTriangle3d select = new DrawTriangle3d(fin);
             select.drawObjectC(gl, 1,1,0);
             dibujaRuta(tin, inicio, fin);
-            
-        }catch(Exception e){
-            
-        }
+
+        }catch(Exception e){}
 
         gl.glFlush();
         
@@ -362,164 +300,28 @@ public class Box2 implements GLEventListener,
         
         
         Vector<TriangleTin> ruta = tin.route(tOrig, tDest, rr);
+        Vector<Vect3d> alturas = new Vector<Vect3d>();
         ruta.add(0, tOrig);
         ruta.add(tDest);
         
         for (int i=0;i<ruta.size();i++){
             
-            DrawTriangle3d tRuta = new DrawTriangle3d(ruta.get(i));
-            tRuta.drawObjectC(gl, 0,0,0);
+            //profile.addLine(new Segment3d(ruta.get(i).centroideAltura(),ruta.get(i+1).centroideAltura()));
             
+            alturas.add(new Vect3d(i*500,ruta.get(i).centroideAltura().y,0));
+            
+        }
+        
+        for (int i=0; i<alturas.size()-1;i++){
+            
+            profile.addLine(new Segment3d(alturas.get(i),alturas.get(i+1)));
         }
         
         DrawSegment3d rayo = new DrawSegment3d(new Segment3d(rr.orig,rr.dest));
         rayo.drawObjectC(gl, 1,0.5f,0);
         
     }
-    
-    private void dibuja(TriangleTin selec){
-        
-        try{
-            DrawTriangle3d azul = new DrawTriangle3d(selec);
-            azul.drawObjectC(gl, 1,1,1);
-        }
-        catch(Exception e){
-            System.out.println("el triangulo no existe");
-        }
-    }
-    
-    private void dibujaVecinos(TriangleTin selec){
-        
-        try{
-            DrawTriangle3d azul = new DrawTriangle3d(selec);
-            azul.drawObjectC(gl, 1,1,1);
-        }
-        catch(Exception e){
-            System.out.println("el triangulo no existe");
-        }
-        try{
-            TriangleTin a1der = selec.a1.tDer;
-            DrawTriangle3d yellow = new DrawTriangle3d(a1der);
-            yellow.drawObjectC(gl, 1,1,0);
-            
-        }
-        catch(Exception e){
-            System.out.println("el triangulo derecha de a1 no existe");
-        }
-        try{
-            TriangleTin a2der = selec.a2.tDer;
-            DrawTriangle3d pink = new DrawTriangle3d(a2der);
-            pink.drawObjectC(gl, 1,0,1);
-        }
-        catch(Exception e){
-            System.out.println("el triangulo derecha de a2 no existe");
-        }
-        try{
-            TriangleTin a3der = selec.a3.tDer;
-            DrawTriangle3d miniblue = new DrawTriangle3d(a3der);
-            miniblue.drawObjectC(gl, 0,1,1);
-        }
-        catch(Exception e){
-            System.out.println("el triangulo derecha de a3 no existe");
-        }
-  
-        
-    }
-    
-    private void dibujaVecinos(TNetwork tin){
-        
-        TriangleTin selec = null;
-        try{
-            selec = new TriangleTin(tin.getTriangle(uuu));
-            DrawTriangle3d azul = new DrawTriangle3d(selec);
-            azul.drawObjectC(gl, 1,1,1);
-        }
-        catch(Exception e){
-            System.out.println("el triangulo no existe");
-        }
-        try{
-            TriangleTin a1der = selec.a1.tDer;
-            DrawTriangle3d yellow = new DrawTriangle3d(a1der);
-            yellow.drawObjectC(gl, 1,1,0);
-            
-        }
-        catch(Exception e){
-            System.out.println("el triangulo derecha de a1 no existe");
-        }
-        try{
-            TriangleTin a2der = selec.a2.tDer;
-            DrawTriangle3d pink = new DrawTriangle3d(a2der);
-            pink.drawObjectC(gl, 1,0,1);
-        }
-        catch(Exception e){
-            System.out.println("el triangulo derecha de a2 no existe");
-        }
-        try{
-            TriangleTin a3der = selec.a3.tDer;
-            DrawTriangle3d miniblue = new DrawTriangle3d(a3der);
-            miniblue.drawObjectC(gl, 0,1,1);
-        }
-        catch(Exception e){
-            System.out.println("el triangulo derecha de a3 no existe");
-        }
-    }
-    
-    private Vect3d findCameraPosition(){
-        
-        double[] mdl = getM(gl);
-        double[] camera_org = new double[3];
-        camera_org[0] = -(mdl[0] * mdl[12] + mdl[1] * mdl[13] + mdl[2] * mdl[14]);
-        camera_org[1] = -(mdl[4] * mdl[12] + mdl[5] * mdl[13] + mdl[6] * mdl[14]);
-        camera_org[2] = -(mdl[8] * mdl[12] + mdl[9] * mdl[13] + mdl[10] * mdl[14]);
-        
-        return new Vect3d(camera_org[0], camera_org[1], camera_org[2]);
-        
-    }
-    
-    private Vect3d findLookat(){
-        
-        double[] mdl = getM(gl);
-        double[] camera_org = new double[3];
-        
-        return new Vect3d(-mdl[12],-mdl[13],-mdl[14]);
-    }
-    
-    private static double[] getM(GL g){
-        double mvmatrix[] = new double[16];
-        g.glGetDoublev(GL.GL_MODELVIEW_MATRIX, mvmatrix,0);
-        
-        return mvmatrix;
-    }
-    
-    private Vect3d colorAltura(Triangle3d t, double min, double max){
-        double media, porcentaje, r, g, b;
 
-        //media = (t.a.getZ() + t.b.getZ() + t.c.getZ())/3; //Aritmetica
-        media = 3/(1/t.a.getZ() + 1/t.b.getZ() + 1/t.c.getZ()); //Armonica
-        //media =Math.sqrt(Math.pow(t.a.getZ(), 2) + Math.pow(t.b.getZ(), 2) +Math.pow(t.c.getZ(), 2)); //Geometrica
-
-        
-        porcentaje = media/(max-min);
-        g = (1 - porcentaje);
-        r = (porcentaje);
-        b = 0;
-        
-        
-        return new Vect3d(r,g,b);
-    }
-    
-    private void prepareCameraForSelection(){
-        
-        view_scale=1;
-        view_trax=0;
-        view_tray=0;
-        view_traz=0;
-        view_rotx=0;
-        view_roty=0;
-
-        
-    }
-    
     public void displayChanged(GLAutoDrawable drawable, boolean modeChanged, boolean deviceChanged) {}
     public void mouseClicked(MouseEvent e) {}
     public void mouseEntered(MouseEvent e) {}
@@ -564,9 +366,6 @@ public class Box2 implements GLEventListener,
     }
     public void keyPressed(KeyEvent e){
         
-        if(e.getKeyChar()=='i'){
-        }
-        
         if(e.getKeyChar()=='a'){
             view_trax+=10;
         }
@@ -604,11 +403,6 @@ public class Box2 implements GLEventListener,
             
             view_scale=view_scale-0.1f;
             
-        }
-        
-        if(e.getKeyChar()=='0'){
-            
-            uuu++;
         }
     }
     public void keyReleased(KeyEvent e){}

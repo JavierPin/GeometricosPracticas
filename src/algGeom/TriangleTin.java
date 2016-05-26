@@ -737,6 +737,12 @@ public class TriangleTin {
         
     }
     
+    public Vect3d centroideAltura(){
+        
+        return new Vect3d((a1.orig.x+a2.orig.x+a3.orig.x)/3,Math.abs((a1.orig.y+a2.orig.y+a3.orig.y)/3),(a1.orig.z+a2.orig.z+a3.orig.z)/3);
+        
+    }
+    
     public boolean isDisplaced(){
         
         return displaced;

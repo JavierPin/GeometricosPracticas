@@ -1,30 +1,14 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package algGeom;
 
-import static algGeom.Box2.HEIGHT;
-import static algGeom.Box2.WIDTH;
-import com.sun.opengl.util.Animator;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
 import java.util.Iterator;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.media.opengl.GL;
 import javax.media.opengl.GLAutoDrawable;
-import javax.media.opengl.GLCanvas;
 import javax.media.opengl.GLEventListener;
 import javax.media.opengl.glu.GLU;
-import javax.swing.JButton;
-import javax.swing.JFrame;
-import java.util.Vector;
 
 
 public class BoxSky implements GLEventListener,
@@ -32,8 +16,7 @@ public class BoxSky implements GLEventListener,
 {
     GLU glu;
     GL gl;
-    //scaling the scene
-    private final float view_scale = 1.0f;
+
     // translate the scene
     private float view_trax = 0.0f;
     private float view_tray = 0.0f;
@@ -41,29 +24,11 @@ public class BoxSky implements GLEventListener,
     // rotating the scene
     private final float view_rotx = 0.0f; //20
     private final float view_roty = 0.0f; //30
-    
-    private final float view_scale_old = 1.0f;
-    // translate the scene
-    private final float view_trax_old = 0.0f;
-    private final float view_tray_old = 0.0f;
-    private final float view_traz_old = 0.0f;
-    // rotating the scene
-    private final float view_rotx_old = 0.0f; //20
-    private final float view_roty_old = 0.0f; //30
+
     
     //static int HEIGHT = 800, WIDTH = 800;
     static int HEIGHT = 100000, WIDTH = 100000;
-    static Animator animator;
-    static Animator animator2;
-    
-    
-    //Problema de refresco infinito
-    boolean once = true;
-    Vect3d v1, v2, v3;
-    DrawCloud3d cloud;
-    DrawTriangle3d triangle;
-    DrawRay3d rayo;
-    Cloud3d c;
+
     Triangle3d inicio;
     Triangle3d fin;
     Triangle3d selected;
@@ -96,9 +61,7 @@ public class BoxSky implements GLEventListener,
         GL gg = drawable.getGL();
         glu = new GLU();
         
-        // Set backgroundcolor and shading mode
-        gg.glClearColor(1.0f, 1.0f, 1.0f, 0.0f); //Como que duele un poco en blanco
-        //gl.glClearColor(0.0f, 0.0f, 0.0f, 0.0f); //En negro no duele tanto
+        gg.glClearColor(1.0f, 1.0f, 1.0f, 0.0f);
         gg.glShadeModel(GL.GL_FLAT);
         
         gg.glEnable(GL.GL_POINT_SMOOTH );
@@ -148,7 +111,7 @@ public class BoxSky implements GLEventListener,
                      0,0,0,   // look at
                      0,1,0);  // up*/
 
-        gl.glScalef(view_scale,view_scale,view_scale);
+
         gl.glTranslatef(view_trax, view_tray, view_traz);
         gl.glRotatef(view_rotx, 1.0f, 0.0f, 0.0f);
         gl.glRotatef(view_roty, 0.0f, 1.0f, 0.0f);
