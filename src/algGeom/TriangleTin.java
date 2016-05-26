@@ -5,7 +5,7 @@ public class TriangleTin {
 
 
     /** un triangulo viene definido por tres puntos en el espacio*/
-    protected Segment3d a1, a2, a3;
+    public Segment3d a1, a2, a3;
     private boolean displaced=false;
 
     /** Constructor por defecto a valor (0,0) */

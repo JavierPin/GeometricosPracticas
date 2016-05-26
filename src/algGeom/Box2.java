@@ -321,9 +321,94 @@ public class Box2 implements GLEventListener,
         DrawTin tintin = new DrawTin(tin);
         tintin.drawObjectMap(gl);
         
-        dibujaVecinos(tin);
+        //dibujaVecinos(tin);
+        
+        TriangleTin tOrig = tin.getTriangle(7800);
+        DrawTriangle3d triOrig = new DrawTriangle3d(tOrig);
+        //triOrig.drawObjectC(gl,1,0,1);
+        TriangleTin tDest = tin.getTriangle(7960);
+        //dibuja(tDest);
+        
+        Ray3d rr = new Ray3d(tOrig.centroide(),tDest.centroide());
+        DrawRay3d rayo = new DrawRay3d(rr);
+        rayo.drawObjectC(gl, 1,0.5f,0);
+        
+        /*TriangleTin t1 = tin.nextTriangleInRoute(gl, tOrig, rr);
+        dibuja(t1);
+        
+        
+        rr = new Ray3d(t1.centroide(),tDest.centroide());
+        TriangleTin t2 = tin.nextTriangleInRoute(gl, t1, rr);
+        dibuja(t2);
+        
+        rr = new Ray3d(t2.centroide(),tDest.centroide());
+        TriangleTin t3 = tin.nextTriangleInRoute(gl, t2, rr);
+        dibuja(t3);
+        
+        rr = new Ray3d(t3.centroide(),tDest.centroide());
+        TriangleTin t4 = tin.nextTriangleInRoute(gl, t3, rr);
+        dibuja(t4);*/
+        
+        Vector<TriangleTin> ruta = tin.route(tOrig, tDest, rr);
+        
+        for (int i=0;i<ruta.size();i++){
+            
+            DrawTriangle3d tRuta = new DrawTriangle3d(ruta.get(i));
+            tRuta.drawObjectC(gl, 0,0,0);
+            
+        }
+        
         
         gl.glFlush();
+        
+    }
+    
+    private void dibuja(TriangleTin selec){
+        
+        try{
+            DrawTriangle3d azul = new DrawTriangle3d(selec);
+            azul.drawObjectC(gl, 1,1,1);
+        }
+        catch(Exception e){
+            System.out.println("el triangulo no existe");
+        }
+    }
+    
+    private void dibujaVecinos(TriangleTin selec){
+        
+        try{
+            DrawTriangle3d azul = new DrawTriangle3d(selec);
+            azul.drawObjectC(gl, 1,1,1);
+        }
+        catch(Exception e){
+            System.out.println("el triangulo no existe");
+        }
+        try{
+            TriangleTin a1der = selec.a1.tDer;
+            DrawTriangle3d yellow = new DrawTriangle3d(a1der);
+            yellow.drawObjectC(gl, 1,1,0);
+            
+        }
+        catch(Exception e){
+            System.out.println("el triangulo derecha de a1 no existe");
+        }
+        try{
+            TriangleTin a2der = selec.a2.tDer;
+            DrawTriangle3d pink = new DrawTriangle3d(a2der);
+            pink.drawObjectC(gl, 1,0,1);
+        }
+        catch(Exception e){
+            System.out.println("el triangulo derecha de a2 no existe");
+        }
+        try{
+            TriangleTin a3der = selec.a3.tDer;
+            DrawTriangle3d miniblue = new DrawTriangle3d(a3der);
+            miniblue.drawObjectC(gl, 0,1,1);
+        }
+        catch(Exception e){
+            System.out.println("el triangulo derecha de a3 no existe");
+        }
+  
         
     }
     
