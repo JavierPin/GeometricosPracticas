@@ -32,8 +32,7 @@ public class TNetwork {
         YMax = triangulation.delaunayYMax();
         ZMin = triangulation.delaunayZMin();
         ZMax = triangulation.delaunayZMax();
-        
-        //int contador=0;
+
         
         for (int i=0; i<triangulation.trianglesSize();i++){
             
@@ -79,35 +78,24 @@ public class TNetwork {
         
     }
     
-    public void asignaTrianguloDerecha(){
-        int contador = 0;
-        
-        for(int i=0; i<aristas.size();i++){
-            
-            Segment3d arista = aristas.get(i);
-            
-            
-            
-            try{
-                Triangle_dt dtTri = new Triangle_dt(arista.tIzq);
-                arista.tDer = new TriangleTin(dtTri.next_12());
-            } catch (Exception e) {
-                //System.out.println("ta ta taaa, ta taaaa");
-                contador++;
-            }
-            
-        }
-        
-        System.out.println("Aristas no tomadas: "+contador+"/"+aristas.size());
-    }
-    
+    /**Devuelve un triangulo en una posición
+     * 
+     * @param i
+     * @return 
+     */
     public TriangleTin getTriangle(int i){
         
         return triangulos.get(i);
         
     }
     
-        
+    /**Traza la ruta desde un punto a otro
+     * 
+     * @param tInicio
+     * @param tFinal
+     * @param r
+     * @return 
+     */
     public java.util.Vector<TriangleTin> route(TriangleTin tInicio, TriangleTin tFinal, Ray3d r){
         
         java.util.Vector<TriangleTin> ruta = new java.util.Vector<TriangleTin>();
@@ -131,6 +119,12 @@ public class TNetwork {
         return ruta;
     }
     
+    /**Encuentra el siguiente triángulo en la ruta.
+     * Problemas de puntero nullo!! ->Método busca para prevenir errores de construccion del TIN
+     * @param ttt
+     * @param rrr
+     * @return 
+     */
     public TriangleTin nextTriangleInRoute(TriangleTin ttt, Ray3d rrr){
         
         algGeom.Vector v1 = new algGeom.Vector(ttt.getA().x,ttt.getA().y);
@@ -192,7 +186,9 @@ public class TNetwork {
         return false;
     }
     
-    /**Devuelve el triangulo del tin equivalente al triangulo n*/
+    /**Devuelve el triangulo del tin equivalente al triangulo n
+     * Previene errores en la construccion del tin
+     */
     public TriangleTin busca(TriangleTin n){
         
         

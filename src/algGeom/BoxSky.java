@@ -175,6 +175,8 @@ public class BoxSky implements GLEventListener,
         
         selected=null;
         int i=0;
+        
+        //Trabajamos con Delaunay. Si el triángulo procesado intersecta con el rayo CamaraPosicion - CamaraLookAt, lo marcamos
         while (iterator.hasNext()) {
             Triangle_dt curr = iterator.next();
             if (!curr.isHalfplane()) {
@@ -193,7 +195,6 @@ public class BoxSky implements GLEventListener,
 
                     selected = t1;
                     selected_dt = curr;
-                    //System.out.println(i);
                 }
             }
             i++;
@@ -219,6 +220,7 @@ public class BoxSky implements GLEventListener,
 
         if(inicio_dt!=null && fin_dt!=null){
             
+            //Asignamos los puntos para visualizarlos en el canvas3d
             Ray3d route = new Ray3d(inicio.centroide(),fin.centroide());
             DrawSegment3d rou = new DrawSegment3d(new Segment3d(route.orig,route.dest));
             rou.drawObjectC(gl,0,0,1);
@@ -230,6 +232,10 @@ public class BoxSky implements GLEventListener,
         
     }
     
+    /**Encuentra la posición de la cámara
+     * 
+     * @return 
+     */
     private Vect3d findCameraPosition(){
         
         double[] mdl = getM(gl);
@@ -249,6 +255,11 @@ public class BoxSky implements GLEventListener,
         return new Vect3d(-mdl[12],-mdl[13],-mdl[14]);
     }
     
+    /**obtiene datos de la matriz GL_MODELVIEW
+     * 
+     * @param g
+     * @return 
+     */
     private static double[] getM(GL g){
         double mvmatrix[] = new double[16];
         g.glGetDoublev(GL.GL_MODELVIEW_MATRIX, mvmatrix,0);
@@ -256,6 +267,13 @@ public class BoxSky implements GLEventListener,
         return mvmatrix;
     }
     
+    /**Calcula el color correspondiente a la altura en el mapa
+     * 
+     * @param t
+     * @param min
+     * @param max
+     * @return 
+     */
     private Vect3d colorAltura(Triangle3d t, double min, double max){
         double media, porcentaje, r, g, b;
 
@@ -273,22 +291,23 @@ public class BoxSky implements GLEventListener,
         return new Vect3d(r,g,b);
     }
     
+    //Eventos de ratón y teclado.
     public void displayChanged(GLAutoDrawable drawable, boolean modeChanged, boolean deviceChanged) {}
     public void keyPressed(KeyEvent e){
         
         if(e.getKeyChar()=='i'){
         }
         
-        if(e.getKeyChar()=='a'){
+        if(e.getKeyChar()=='a' || e.getKeyCode()==37){
             view_trax+=20;
         }
-        if (e.getKeyChar()=='d'){
+        if (e.getKeyChar()=='d' || e.getKeyCode()==39){
             view_trax-=20;
         }
-        if(e.getKeyChar()=='s'){
+        if(e.getKeyChar()=='s' || e.getKeyCode()==40){
             view_tray+=20;
         }
-        if (e.getKeyChar()=='w'){
+        if (e.getKeyChar()=='w' || e.getKeyCode()==38){
             view_tray-=20;
         }
         if(e.getKeyChar()=='q'){
@@ -332,19 +351,30 @@ public class BoxSky implements GLEventListener,
     public void keyReleased(KeyEvent e){}
     public void keyTyped(KeyEvent e){}
     
-    
+    /**Devuelve el triángulo actual sobre el que estamos posicionados
+     * 
+     * @return 
+     */
     public Triangle3d getSelectedTriangle(){
         
         return selected;
         
     }
-    
+   
+    /**Devuelve el triángulo que se ha marcado como punto de inicio
+     * 
+     * @return 
+     */
     public Triangle3d getInicio(){
         
         return inicio;
         
     }
     
+    /** Devuelve el triángulo que se ha marcado como punto de fin
+     * 
+     * @return 
+     */
     public Triangle3d getFin(){
         
         return fin;

@@ -5,18 +5,9 @@ import javax.media.opengl.GL;
 
 public class DrawTin {
     
-    Tin tin;
     TNetwork tnet;
-    Vector<TriangleTin> triangulos;
     ArrayList<TriangleTin> arraytriangulos = new ArrayList<TriangleTin>();
-    
-    public DrawTin(Tin t){
-        
-        tin = t;
-        triangulos = tin.triangulos;
-        
-    }
-    
+
     public DrawTin(TNetwork t){
         
         tnet=t;

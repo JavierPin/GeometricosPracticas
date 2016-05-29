@@ -101,6 +101,7 @@ public class Box2 implements GLEventListener,
         perfil.setSize(390,270);
     			
         JFrame frame = new JFrame("Libreria 3D");
+        
  
         GridBagLayout layout = new GridBagLayout();
         frame.setLayout(layout);
@@ -294,36 +295,46 @@ public class Box2 implements GLEventListener,
         
     }
     
+    /**Método que calcula y envía a TerrainProfile la ruta y la polilínea de alturas
+     * 
+     * @param tin
+     * @param tOrig
+     * @param tDest 
+     */
     private void dibujaRuta(TNetwork tin, TriangleTin tOrig, TriangleTin tDest){
         
         Ray3d rr = new Ray3d(tOrig.centroide(),tDest.centroide());
         
-        
+        //vector de triángulos que forman la ruta y vector para almacenar alturas
         Vector<TriangleTin> ruta = tin.route(tOrig, tDest, rr);
         Vector<Vect3d> alturas = new Vector<Vect3d>();
+        
+        //A?adimos punto inicial y final a la ruta.
         ruta.add(0, tOrig);
         ruta.add(tDest);
         
         for (int i=0;i<ruta.size();i++){
             
-            //profile.addLine(new Segment3d(ruta.get(i).centroideAltura(),ruta.get(i+1).centroideAltura()));
+            alturas.add(new Vect3d(ruta.get(i).centroide().x,ruta.get(i).centroide().z,0));
             
-            alturas.add(new Vect3d(ruta.get(i).centroide().x,ruta.get(i).centroide().z,ruta.get(i).centroide().y));
+            //Para dibujar sobre el plano XY los puntos en el canvas3d
             DrawVect3d v = new DrawVect3d(new Vect3d(ruta.get(i).centroide().x, 0,ruta.get(i).centroide().z));
             v.drawObjectC(gl, 1,0,0,2);
             
         }
         
         for (int i=0; i<alturas.size()-1;i++){
-            
+            //a?adimos a la polilínea del perfil cada una de las líneas que conforman las alturas
             profile.addLine(new Segment3d(alturas.get(i),alturas.get(i+1)));
         }
         
-        DrawSegment3d rayo = new DrawSegment3d(new Segment3d(rr.orig,rr.dest));
-        rayo.drawObjectC(gl, 1,0.5f,0);
+        //Dibujamos la ruta mediante un segmento
+        DrawSegment3d trazado = new DrawSegment3d(new Segment3d(rr.orig,rr.dest));
+        trazado.drawObjectC(gl, 1,0.5f,0);
         
     }
 
+    //Eventos de raton y teclado
     public void displayChanged(GLAutoDrawable drawable, boolean modeChanged, boolean deviceChanged) {}
     public void mouseClicked(MouseEvent e) {}
     public void mouseEntered(MouseEvent e) {}
@@ -368,22 +379,22 @@ public class Box2 implements GLEventListener,
     }
     public void keyPressed(KeyEvent e){
         
-        if(e.getKeyChar()=='a'){
+        if(e.getKeyChar()=='a'|| e.getKeyCode()==37){
             view_trax+=10;
         }
-        if (e.getKeyChar()=='d'){
+        if (e.getKeyChar()=='d'|| e.getKeyCode()==39){
             view_trax-=10;
         }
-        if(e.getKeyChar()=='z'){
+        if(e.getKeyChar()=='s'|| e.getKeyCode()==40){
             view_tray+=10;
         }
-        if (e.getKeyChar()=='q'){
+        if (e.getKeyChar()=='w' || e.getKeyCode()==38){
             view_tray-=10;
         }
-        if(e.getKeyChar()=='w'){
+        if(e.getKeyChar()=='q'){
             view_traz+=10;
         }
-        if (e.getKeyChar()=='s'){
+        if (e.getKeyChar()=='z'){
             view_traz-=10;
         }
         

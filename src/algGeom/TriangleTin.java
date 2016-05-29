@@ -6,7 +6,6 @@ public class TriangleTin {
 
     /** un triangulo viene definido por tres puntos en el espacio*/
     public Segment3d a1, a2, a3;
-    private boolean displaced=false;
 
     /** Constructor por defecto a valor (0,0) */
     public TriangleTin() {
@@ -15,12 +14,22 @@ public class TriangleTin {
         a3 = new Segment3d (new Vect3d(0,0,0), new Vect3d(0,0,0));
     }
     
+    /**constructor mediante aristas
+     * 
+     * @param aa1
+     * @param aa2
+     * @param aa3 
+     */
     public TriangleTin(Segment3d aa1, Segment3d aa2, Segment3d aa3){
         a1=aa1;
         a2=aa2;
         a3=aa3;
     }
     
+    /**constructor mediante copia de Triangle3d
+     * 
+     * @param t 
+     */
     public TriangleTin(Triangle3d t){
 
         a1 = new Segment3d(t.a,t.b);
@@ -29,6 +38,10 @@ public class TriangleTin {
 
     }
     
+    /** constructor mediante copia de Triangle_dt
+     * 
+     * @param t 
+     */
     public TriangleTin(Triangle_dt t){
         
         Vect3d a = new Vect3d (t.a.x,t.a.y,t.a.z);
@@ -705,6 +718,14 @@ public class TriangleTin {
         return false;
     }
     
+    /**Método que desplaza un triángulo en base a dos puntos.
+     * Utilizado para desplazar los triángulos de delaunay hacia el origen para una mejor visualización
+     * 
+     * @param Xmin
+     * @param Xmax
+     * @param Ymin
+     * @param Ymax 
+     */
     public void toOrigin(double Xmin, double Xmax, double Ymin, double Ymax){
         
         a1.orig.x=(a1.orig.x-Xmin-(Xmax-Xmin)/2);
@@ -715,11 +736,16 @@ public class TriangleTin {
 
         a3.orig.x=(a3.orig.x-Xmin-(Xmax-Xmin)/2);
         a3.orig.y=(a3.orig.y-Ymin-(Ymax-Ymin)/2);
-
-        displaced=true;
         
     }
     
+    /**Deshace los cambios del método toOrigin
+     * 
+     * @param Xmin
+     * @param Xmax
+     * @param Ymin
+     * @param Ymax 
+     */
     public void undoToOrigin(double Xmin, double Xmax, double Ymin, double Ymax){
         a1.orig.x=(a1.orig.x+Xmin+(Xmax-Xmin)/2);
         a1.orig.y=(a1.orig.y+Ymin+(Ymax-Ymin)/2);
@@ -731,21 +757,13 @@ public class TriangleTin {
         a3.orig.y=(a3.orig.y+Ymin+(Ymax-Ymin)/2);
     }
     
+    /**Calcula el centroide del triángulo
+     * 
+     * @return 
+     */
     public Vect3d centroide(){
         
         return new Vect3d((a1.orig.x+a2.orig.x+a3.orig.x)/3,(a1.orig.y+a2.orig.y+a3.orig.y)/3,(a1.orig.z+a2.orig.z+a3.orig.z)/3);
-        
-    }
-    
-    public Vect3d centroideAltura(){
-        
-        return new Vect3d((a1.orig.x+a2.orig.x+a3.orig.x)/3,Math.abs((a1.orig.y+a2.orig.y+a3.orig.y)/3),(a1.orig.z+a2.orig.z+a3.orig.z)/3);
-        
-    }
-    
-    public boolean isDisplaced(){
-        
-        return displaced;
         
     }
     
