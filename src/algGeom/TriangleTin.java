@@ -1,115 +1,163 @@
 package algGeom;
 
 
-//import javax.vecmath.*;
-//import org.apache.commons.math3.geometry.euclidean.threed.Line;
-//import org.apache.commons.math3.geometry.euclidean.threed.Plane;
-//import org.apache.commons.math3.geometry.euclidean.threed.Vect3d;
-//import org.j3d.geom.IntersectionUtils;
-
-enum posicionPunto { POSITIV0, NEGATIV0, ENCIMA };
-enum posicionTrianguloRecta { PARALELO, COLINEAL, INTERSECTA, NO_INTERSECTA, NO_PARALELO};
-public class Triangle3d {
+public class TriangleTin {
 
 
     /** un triangulo viene definido por tres puntos en el espacio*/
-    protected Vect3d a,b,c;
+    public Segment3d a1, a2, a3;
 
     /** Constructor por defecto a valor (0,0) */
-    public Triangle3d() {
-        a = new Vect3d ();
-        b = new Vect3d ();
-        c = new Vect3d ();
+    public TriangleTin() {
+        a1 = new Segment3d (new Vect3d(0,0,0), new Vect3d(0,0,0));
+        a2 = new Segment3d (new Vect3d(0,0,0), new Vect3d(0,0,0));
+        a3 = new Segment3d (new Vect3d(0,0,0), new Vect3d(0,0,0));
     }
     
-    public Triangle3d(Triangle_dt t){
-        
-        a = new Vect3d(t.a.x, t.a.y, t.a.z);
-        b = new Vect3d(t.b.x, t.b.y, t.b.z);
-        c = new Vect3d(t.c.x, t.c.y, t.c.z);
+    /**constructor mediante aristas
+     * 
+     * @param aa1
+     * @param aa2
+     * @param aa3 
+     */
+    public TriangleTin(Segment3d aa1, Segment3d aa2, Segment3d aa3){
+        a1=aa1;
+        a2=aa2;
+        a3=aa3;
+    }
+    
+    /**constructor mediante copia de Triangle3d
+     * 
+     * @param t 
+     */
+    public TriangleTin(Triangle3d t){
 
+        a1 = new Segment3d(t.a,t.b);
+        a2 = new Segment3d(t.b,t.c);
+        a3 = new Segment3d(t.c,t.a);
+
+    }
+    
+    /** constructor mediante copia de Triangle_dt
+     * 
+     * @param t 
+     */
+    public TriangleTin(Triangle_dt t){
+        
+        Vect3d a = new Vect3d (t.a.x,t.a.y,t.a.z);
+        Vect3d b = new Vect3d (t.b.x,t.b.y,t.b.z);
+        Vect3d c = new Vect3d (t.c.x,t.c.y,t.c.z);
+        
+        a1 = new Segment3d(a,b);
+        a2 = new Segment3d(b,c);
+        a3 = new Segment3d(c,a);
     }
 
     /** Constructor a partir de coordenadas de los tres puntos*/
-    public Triangle3d(double ax, double ay, double az,
+    public TriangleTin(double ax, double ay, double az,
                        double bx, double by, double bz,
                        double cx, double cy, double cz) {
-        a = new Vect3d (ax,ay,az);
-        b = new Vect3d (bx,by,bz);
-        c = new Vect3d (cx,cy,cz);
+        Vect3d a = new Vect3d (ax,ay,az);
+        Vect3d b = new Vect3d (bx,by,bz);
+        Vect3d c = new Vect3d (cx,cy,cz);
+        
+        a1 = new Segment3d(a,b);
+        a2 = new Segment3d(b,c);
+        a3 = new Segment3d(c,a);
     }
 
     /** Constructor copia*/
-    public Triangle3d(Triangle3d t) {
-        a = new Vect3d (t.a);
-        b = new Vect3d (t.b);
-        c = new Vect3d (t.c);
+    public TriangleTin(TriangleTin t) {
+        a1 = t.a1;
+        a2 = t.a2;
+        a3 = t.a3;
     }
 
     /** Constructor a partir de tres Vect3d de javax*/
-    public Triangle3d (Vect3d va, Vect3d vb, Vect3d vc){
-        a = new Vect3d (va);
-        b = new Vect3d (vb);
-        c = new Vect3d (vc);
+    public TriangleTin (Vect3d va, Vect3d vb, Vect3d vc){
+        a1 = new Segment3d (va,vb);
+        a2 = new Segment3d (vb,vc);
+        a3 = new Segment3d (vc,va);
     }
 
     /**modifica los valores de los vertices de los triangulos */
     public void modifica (Vect3d va, Vect3d vb, Vect3d vc){
-        a = va;
-        b = vb;
-        c = vc;
+        a1 = new Segment3d (va,vb);
+        a2 = new Segment3d (vb,vc);
+        a3 = new Segment3d (vc,va);
     }
 
     /**Obtiene el Vect3d de a */
-    public Vect3d getA() {
-        return a;
+    public Segment3d getA1() {
+        return a1;
     }
 
     /**Obtiene el Punto b */
-    public Vect3d getB() {
-        return b;
+    public Segment3d getA2() {
+        return a2;
     }
 
     /**Obtiene el Punto c */
-    public Vect3d getC() {
-        return c;
+    public Segment3d getA3() {
+        return a3;
+    }
+    
+    public Vect3d getA(){
+        
+        return a1.orig;
+    }
+    
+    public Vect3d getB(){
+        
+        return a2.orig;
+    }
+    
+    public Vect3d getC(){
+        
+        return a3.orig;
     }
     
     /** Obtiene el punto i */
-    public Vect3d getPoint (int i){
-    	return (i==0 ? a : (i==1? b : c));
+    public Segment3d getSegment (int i){
+    	return (i==0 ? a1 : (i==1? a2 : a3));
     }
     
-    /** Obtiene un array con los vectores del triángulo a, b y c */
+    /** Obtiene un array con las aristas del triángulo a, b y c */
+    public Segment3d[] getSegments(){
+        Segment3d[] vt = {a1,a2,a3};
+        return vt;
+    }
+    
     public Vect3d[] getPoints(){
-        Vect3d[] vt = {a,b,c};
+        
+        Vect3d[] vt = {a1.orig,a2.orig,a3.orig};
         return vt;
     }
 
      /**Devuelve una copia del objeto Punto */
-     public Triangle3d copia(){
-         return new Triangle3d(a,b,c);
+     public TriangleTin copia(){
+         return new TriangleTin(a1,a2,a3);
      }
 
-     /**Modifica el valor de a*/
-     public void modificaA(Vect3d pa){
-         a = pa;
+     /**Modifica el valor de a1*/
+     public void modificaA1(Segment3d pa){
+         a1 = pa;
      }
 
-     /**Modifica el valor de b*/
-     public void modificaB(Vect3d pb){
-         b = pb;
+     /**Modifica el valor de a2*/
+     public void modificaA2(Segment3d pb){
+         a2 = pb;
      }
 
      /**Modifica el valor de c*/
-     public void modificaC(Vect3d pc){
-         c = pc;
+     public void modificaA3(Segment3d pc){
+         a3 = pc;
      }
 
     /** devuelve la normal al triángulo */
     public Vect3d Normal (){
-        Vect3d v1 = new Vect3d (b.resta (a));
-        Vect3d v2 = new Vect3d (c.resta (a));
+        Vect3d v1 = new Vect3d (a2.orig.resta (a1.orig));
+        Vect3d v2 = new Vect3d (a3.orig.resta (a2.orig));
         Vect3d n = new Vect3d (v1.XProduct(v2));
         double longi = n.modulo();
 
@@ -122,7 +170,7 @@ public class Triangle3d {
      - si está en la posiciÃ³n contraria, entonces es positivo */    
     public posicionPunto clasifica (Vect3d p){
         
-        Vect3d v = new Vect3d (p.resta(a));
+        Vect3d v = new Vect3d (p.resta(a1.orig));
         double len = v.modulo();
         if (BasicGeom.iguales (len, 0.0)){
             return posicionPunto.ENCIMA;
@@ -139,21 +187,21 @@ public class Triangle3d {
     /** determina si un punto es coplanar con el plano que contiene al triángulo */
     public boolean coplanar(Vect3d p){
         
-        Vect3d u = b.resta(a);
-        Vect3d v = c.resta(a);
-        Vect3d w = p.resta(a);
+        Vect3d u = a2.orig.resta(a1.orig);
+        Vect3d v = a3.orig.resta(a1.orig);
+        Vect3d w = p.resta(a1.orig);
         
         return u.XProduct(v).dot(w) <= BasicGeom.CERO;
     }
     
     /** Determina la caja envolvente de un triángulo */
     public AABB getAABB () {
-        Vect3d min = new Vect3d (BasicGeom.min3(a.x, b.x, c.x),
-                                 BasicGeom.min3(a.y, b.y, c.y),
-                                 BasicGeom.min3(a.z, b.z, c.z));
-        Vect3d max = new Vect3d (BasicGeom.max3(a.x, b.x, c.x),
-                                 BasicGeom.max3(a.y, b.y, c.y),
-                                 BasicGeom.max3(a.z, b.z, c.z));
+        Vect3d min = new Vect3d (BasicGeom.min3(a1.orig.x, a2.orig.x, a3.orig.x),
+                                 BasicGeom.min3(a1.orig.y, a2.orig.y, a3.orig.y),
+                                 BasicGeom.min3(a1.orig.z, a2.orig.z, a3.orig.z));
+        Vect3d max = new Vect3d (BasicGeom.max3(a1.orig.x, a2.orig.x, a3.orig.x),
+                                 BasicGeom.max3(a1.orig.y, a2.orig.y, a3.orig.y),
+                                 BasicGeom.max3(a1.orig.z, a2.orig.z, a3.orig.z));
         return (new AABB(min,max));
 
     }
@@ -195,7 +243,7 @@ public class Triangle3d {
     public posicionTrianguloRecta intersecta (Edge3d e, DoubleClass t){
         Vect3d aa = new Vect3d (e.orig);
         Vect3d bb = new Vect3d (e.dest);
-        Vect3d cc = new Vect3d (a); //algún punto del plano del triángulo
+        Vect3d cc = new Vect3d (a1.orig); //algún punto del plano del triángulo
         Vect3d n = new Vect3d (this.Normal());
         double denom = n.dot(bb.resta(aa));
         if (BasicGeom.iguales(denom, BasicGeom.CERO)){
@@ -213,9 +261,9 @@ public class Triangle3d {
     /** obtiene el poligono tras la proyeccion del triangulo en el plano xy*/
     public Polygon getProyeccion_XY (){
         Polygon result = new Polygon (0);
-        Point pa = new Point (a.x,a.y);
-        Point pb = new Point (b.x,b.y);
-        Point pc = new Point (c.x,c.y);
+        Point pa = new Point (a1.orig.x,a1.orig.y);
+        Point pb = new Point (a2.orig.x,a2.orig.y);
+        Point pc = new Point (a3.orig.x,a3.orig.y);
 
         result.anade(new Vertex (pa,result));
         result.anade(new Vertex (pb,result));
@@ -290,13 +338,13 @@ public class Triangle3d {
         
         // caso 3
         boolean clasifica = true;
-        if (t.clasifica(a) == posicionPunto.NEGATIV0){
+        if (t.clasifica(a1.orig) == posicionPunto.NEGATIV0){
             clasifica = false;
         }
-        if (t.clasifica(b) == posicionPunto.NEGATIV0){
+        if (t.clasifica(a2.orig) == posicionPunto.NEGATIV0){
             clasifica = false;
         }
-        if (t.clasifica(a) == posicionPunto.NEGATIV0){
+        if (t.clasifica(a1.orig) == posicionPunto.NEGATIV0){
             clasifica = false;
         }
         if (clasifica) return false;
@@ -306,10 +354,10 @@ public class Triangle3d {
         if (this.clasifica(t.a) == posicionPunto.POSITIV0){
             clasifica = false;
         }
-        if (t.clasifica(b) == posicionPunto.POSITIV0){
+        if (t.clasifica(a2.orig) == posicionPunto.POSITIV0){
             clasifica = false;
         }
-        if (t.clasifica(a) == posicionPunto.POSITIV0){
+        if (t.clasifica(a1.orig) == posicionPunto.POSITIV0){
             clasifica = false;
         }
         if (clasifica) return false;
@@ -338,9 +386,9 @@ public class Triangle3d {
         int numPos = 0;
         DoubleClass t = new DoubleClass(0);
 
-        triangulo[0] = a;
-        triangulo[1] = b;
-        triangulo[2] = c;
+        triangulo[0] = a1.orig;
+        triangulo[1] = a2.orig;
+        triangulo[2] = a3.orig;
 
         for (int i=0; i<3; i++){
             cl[i] = p.clasifica(triangulo[i]);
@@ -553,8 +601,8 @@ public class Triangle3d {
     /** Calcula la interseccion entre este triángulo y una recta */
     public boolean LineTriangle3d(Line3d r, Vect3d point){
         
-        Vect3d e1 = new Vect3d(b.resta(a));
-        Vect3d e2 = new Vect3d(c.resta(a));
+        Vect3d e1 = new Vect3d(a2.orig.resta(a1.orig));
+        Vect3d e2 = new Vect3d(a3.orig.resta(a1.orig));
         Vect3d direccion = r.getDestino().resta(r.getOrigen());
         
         Vect3d p = new Vect3d(direccion.XProduct(e2));
@@ -568,7 +616,7 @@ public class Triangle3d {
         
         tmp = 1.0/tmp;
         
-        Vect3d s = new Vect3d(r.getOrigen().resta(a));
+        Vect3d s = new Vect3d(r.getOrigen().resta(a1.orig));
         double u = tmp * s.dot(p);
         
         if (u<0.0 || u>1.0){
@@ -602,8 +650,8 @@ public class Triangle3d {
 
         float EPSILON = 0.000001f;
 
-        Vect3d e1 = new Vect3d(b.resta(a));
-        Vect3d e2 = new Vect3d(c.resta(a));
+        Vect3d e1 = new Vect3d(a2.orig.resta(a1.orig));
+        Vect3d e2 = new Vect3d(a3.orig.resta(a1.orig));
 
         Vect3d direccion = r.getDestino().resta(r.getOrigen());
         
@@ -618,7 +666,7 @@ public class Triangle3d {
 
         tmp = 1.0f / tmp;
         
-        Vect3d s = new Vect3d(r.getOrigen().resta(a));
+        Vect3d s = new Vect3d(r.getOrigen().resta(a1.orig));
         double u = (s.dot(p)) * tmp;
         
         if (u<0.0 || u>1.0){
@@ -658,51 +706,70 @@ public class Triangle3d {
     
     public boolean isPointIn(Vect3d v){
         
-        if(a.x == v.x && a.y == v.y && a.z == v.z){
+        if(a1.orig.x == v.x && a1.orig.y == v.y && a1.orig.z == v.z){
             return true;
         }
-        if(b.x == v.x && b.y == v.y && b.z == v.z){
+        if(a2.orig.x == v.x && a2.orig.y == v.y && a2.orig.z == v.z){
             return true;
         }
-        if(c.x == v.x && c.y == v.y && c.z == v.z){
+        if(a3.orig.x == v.x && a3.orig.y == v.y && a3.orig.z == v.z){
             return true;
         }
         return false;
     }
     
+    /**Método que desplaza un triángulo en base a dos puntos.
+     * Utilizado para desplazar los triángulos de delaunay hacia el origen para una mejor visualización
+     * 
+     * @param Xmin
+     * @param Xmax
+     * @param Ymin
+     * @param Ymax 
+     */
     public void toOrigin(double Xmin, double Xmax, double Ymin, double Ymax){
         
-        a.x=(a.x-Xmin-(Xmax-Xmin)/2);
-        a.y=(a.y-Ymin-(Ymax-Ymin)/2);
+        a1.orig.x=(a1.orig.x-Xmin-(Xmax-Xmin)/2);
+        a1.orig.y=(a1.orig.y-Ymin-(Ymax-Ymin)/2);
 
-        b.x=(b.x-Xmin-(Xmax-Xmin)/2);
-        b.y=(b.y-Ymin-(Ymax-Ymin)/2);
+        a2.orig.x=(a2.orig.x-Xmin-(Xmax-Xmin)/2);
+        a2.orig.y=(a2.orig.y-Ymin-(Ymax-Ymin)/2);
 
-        c.x=(c.x-Xmin-(Xmax-Xmin)/2);
-        c.y=(c.y-Ymin-(Ymax-Ymin)/2);
-
+        a3.orig.x=(a3.orig.x-Xmin-(Xmax-Xmin)/2);
+        a3.orig.y=(a3.orig.y-Ymin-(Ymax-Ymin)/2);
+        
     }
     
+    /**Deshace los cambios del método toOrigin
+     * 
+     * @param Xmin
+     * @param Xmax
+     * @param Ymin
+     * @param Ymax 
+     */
     public void undoToOrigin(double Xmin, double Xmax, double Ymin, double Ymax){
-        a.x=(a.x+Xmin+(Xmax-Xmin)/2);
-        a.y=(a.y+Ymin+(Ymax-Ymin)/2);
+        a1.orig.x=(a1.orig.x+Xmin+(Xmax-Xmin)/2);
+        a1.orig.y=(a1.orig.y+Ymin+(Ymax-Ymin)/2);
 
-        b.x=(b.x-Xmin+(Xmax-Xmin)/2);
-        b.y=(b.y+Ymin+(Ymax-Ymin)/2);
+        a2.orig.x=(a2.orig.x-Xmin+(Xmax-Xmin)/2);
+        a2.orig.y=(a2.orig.y+Ymin+(Ymax-Ymin)/2);
 
-        c.x=(c.x+Xmin+(Xmax-Xmin)/2);
-        c.y=(c.y+Ymin+(Ymax-Ymin)/2);
+        a3.orig.x=(a3.orig.x+Xmin+(Xmax-Xmin)/2);
+        a3.orig.y=(a3.orig.y+Ymin+(Ymax-Ymin)/2);
     }
     
+    /**Calcula el centroide del triángulo
+     * 
+     * @return 
+     */
     public Vect3d centroide(){
         
-        return new Vect3d((a.x+b.x+c.x)/3,(a.y+b.y+c.y)/3,(a.z+b.z+c.z)/3);
+        return new Vect3d((a1.orig.x+a2.orig.x+a3.orig.x)/3,(a1.orig.y+a2.orig.y+a3.orig.y)/3,(a1.orig.z+a2.orig.z+a3.orig.z)/3);
         
     }
     
       /**Muestra un punto 3d en pantalla*/
      public void out (){
-         System.out.println("Triangle3d: ("+ a +"-"+ b + "-"+ c +")");
+         System.out.println("Triangle3d: ("+ a1 +"-"+ a2 + "-"+ a3 +")");
      }
 
 }
