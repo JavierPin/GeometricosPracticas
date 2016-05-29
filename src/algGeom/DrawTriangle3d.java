@@ -13,6 +13,12 @@ public class DrawTriangle3d extends Draw{
         tr = t;
         n = tr.Normal();
     }
+    
+    public DrawTriangle3d (TriangleTin t){
+        
+        tr = new Triangle3d(t.getA(),t.getB(),t.getC());
+        n = tr.Normal();
+    }
 
     @Override public void drawObject (GL g){
         
