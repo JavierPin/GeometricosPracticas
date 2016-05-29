@@ -215,33 +215,15 @@ public class Box2 implements GLEventListener,
         Ymax=dt.delaunayYMax();
         Ymin=dt.delaunayYMin();
         
+        TNetwork tin = new TNetwork(dt);
+        DrawTin tintin = new DrawTin(tin);
+        tintin.drawObjectMap(gl);
+        
         //view_trax = (float)((Xmax+Xmin)/2.0);
 
-        Iterator<Triangle_dt> iterator = dt.trianglesIterator();
+       
         
-        while (iterator.hasNext()) {
-                Triangle_dt curr = iterator.next();
-                if (!curr.isHalfplane()) {
-                    
-                    Triangle3d t1 = new Triangle3d(curr);
-                    t1.toOrigin(Xmin, Xmax, Ymin, Ymax);
-
-                    DrawTriangle3d triangle = new DrawTriangle3d(t1);
-                    triangle.drawWireObjectC(gl, 0,0,0);
-                    
-                    Vect3d color = colorAltura(t1,dt.delaunayZMin(),dt.delaunayZMax());
-                    triangle.drawObjectC(gl, (float)color.getX(), (float)color.getY(), (float)color.getZ());
-                    //System.out.println("triangulo: ");
-                    //color.out();
-                }
-        }
-        
-            Ray3d r = new Ray3d(new Vect3d(0,0,0), new Vect3d(300,300,300));
-            DrawRay3d dr = new DrawRay3d(r);
-            //dr.drawObjectC(gl,0,1,1);
-
-        
-        Triangle_dt tri = dt.getTriangleAt(200);
+        Triangle_dt tri = dt.getTriangleAt(10800);
         Triangle3d tritri = new Triangle3d(tri);
         
         tritri.toOrigin(Xmin,Xmax,Ymin,Ymax);
